@@ -1,0 +1,101 @@
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import Table from '@material-ui/core/Table';
+import { Paper } from '@material-ui/core';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import './DisplayCostumes.css';
+import { InsertData } from '../../services/InsertData';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+
+
+const styles = theme => ({
+    root: {
+        width: '100%',
+        marginTop: theme.spacing(3),
+        overflowX: "hidden"
+       
+      },
+      table: {
+        minWidth: 658,
+    },
+
+    columns: {
+        width: "100%"
+    }
+});
+
+class DisplayCostumes extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            data:[],
+            costumeData: '',
+            redirectToReferrer: false,
+        };
+        this.onChange = this.onChange.bind(this);
+        this.getCostumes = this.getCostumes.bind(this);
+    }
+
+    onChange(e){
+        this.setState({costumeData:e.target.value});
+        }
+
+    getCostumes(){
+        InsertData('costumes', this.state).then((result) => {
+            let responseJson = result;
+            if(responseJson.costumeData){
+                sessionStorage.setItem("costumeData",JSON.stringify(responseJson));
+                this.setState({data: responseJson.costumeData});
+                console.log(this.state);
+            }
+            else{
+                alert(result.error);
+            }
+        });
+        
+    }
+
+    renderTableData(){
+        return this.state.data.map((costume, index) => {
+            const {costume_id, name, description} = costume;
+            return (
+                <TableRow key={costume_id}>
+                    <TableCell>{name}</TableCell>
+                    <TableCell>{description}</TableCell>
+                </TableRow>
+            )
+        })
+    }
+
+    render(){
+        const { classes } = this.props;
+        return(
+        <Paper className= {classes.root}>
+             <h4 id='title'>Costumes' Archive</h4>
+            <Table className={classes.table} id='costumes'>
+                <TableHead className="head">
+                    <TableRow>
+                        <TableCell className={classes.columns} align="left">Name</TableCell>
+                        <TableCell className={classes.columns} align="left">Description</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {this.renderTableData()}
+                </TableBody>
+            </Table>
+            {this.getCostumes()}
+       
+     </Paper>
+       )
+    }
+}
+
+DisplayCostumes.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+export default withStyles(styles)(DisplayCostumes);
+  
