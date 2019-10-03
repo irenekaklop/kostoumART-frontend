@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Autosuggest from 'react-autosuggest';
 import "./Autocomplete.css"
-import { InsertData } from '../../services/InsertData';
+import { PostData } from '../../services/PostData';
 
 function escapeRegexCharacters(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -63,7 +63,7 @@ export default class Autocomplete extends Component{
     };
 
     get_costumes(){
-        InsertData('costumes', this.state).then((result) => {
+        PostData('costumes', this.state).then((result) => {
             let responseJson = result;
             if(responseJson.costumeData){
                 sessionStorage.setItem("costumeData",JSON.stringify(responseJson));

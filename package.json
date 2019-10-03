@@ -4,8 +4,10 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.4.2",
+    "@types/react-textarea-autosize": "^4.3.4",
     "css-loader": "^3.2.0",
     "jquery": "^3.4.1",
+    "multiselect-dropdown-react": "^1.0.5",
     "react": "^16.9.0",
     "react-autosuggest": "^9.4.3",
     "react-confirm-alert": "^2.4.1",
@@ -13,7 +15,11 @@
     "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
+    "react-select": "^3.0.8",
     "react-table": "^6.10.3",
+    "react-textarea-count": "^1.0.3",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.88.1",
     "style-loader": "^1.0.0"
   },
   "scripts": {

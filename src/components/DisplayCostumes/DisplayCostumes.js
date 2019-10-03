@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import "./DisplayCostumes.css"
-import { InsertData } from '../../services/InsertData';
+import { PostData } from '../../services/PostData';
 
 class DisplayCostumes extends Component{
     constructor(props){
@@ -20,7 +20,7 @@ class DisplayCostumes extends Component{
     }
 
     getCostumes(){
-        InsertData('costumes', this.state).then((result) => {
+        PostData('costumes', this.state).then((result) => {
             let responseJson = result;
             if(responseJson.costumeData){
                 sessionStorage.setItem("costumeData",JSON.stringify(responseJson));

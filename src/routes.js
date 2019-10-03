@@ -6,6 +6,7 @@ import InsertCostume from './components/InsertCostume/InsertCostume';
 import SuccessInsert from './components/SuccessInsert/SuccessInsert';
 import Suggestions from './components/Autocomplete/Autocomplete';
 import DisplayCostumes from './components/DisplayCostumes/DisplayCostumes';
+import BoundedInput from './components/BoundedInput/BoundedInput';
 
 const Routes = () => (
     <BrowserRouter >
@@ -15,6 +16,7 @@ const Routes = () => (
     <Route exact path="/success" component={SuccessInsert}/>
     <Route exact path="/displayCostumes" component = {DisplayCostumes}/>
     <Route exact path="/suggestions" component = {Suggestions}/>
+    <Route exact path="/b"component = {BoundedInput}/>
     <Route path="*" component={NotFound}/>
     </Switch>
     </BrowserRouter>
