@@ -5,11 +5,13 @@
   "dependencies": {
     "@material-ui/core": "^4.4.2",
     "@types/react-textarea-autosize": "^4.3.4",
+    "bootstrap": "^4.3.1",
     "css-loader": "^3.2.0",
     "jquery": "^3.4.1",
     "multiselect-dropdown-react": "^1.0.5",
     "react": "^16.9.0",
     "react-autosuggest": "^9.4.3",
+    "react-bootstrap": "^1.0.0-beta.14",
     "react-confirm-alert": "^2.4.1",
     "react-dom": "^16.9.0",
     "react-linkify": "^1.0.0-alpha",

@@ -105,7 +105,11 @@ class BoundedInput extends Component{
         });
       }
     }
-  
+
+    result_status(){
+      return this.state.status;
+    }
+
     render() {
   
       const { count, progress, status, value } = this.state;
@@ -145,50 +149,4 @@ class BoundedInput extends Component{
     
   }
 
-  class View extends Component{
-    render() {
-      return (
-        <div className="page">
-          <h2>Character Counter with React!</h2>
-         
-          <div className="field">
-            <label>Recommended Max 30</label>
-            <BoundedInput type="text" recommendedMax="30" />
-          </div>
-          <div className="field">
-            <label>Recommended Min 15</label>
-            <BoundedInput type="text" recommendedMin="15" />
-          </div>
-          <div className="field">
-            <label>Recommended Min 15 / Recommended Max 30</label>
-            <BoundedInput type="text" recommendedMin="15" recommendedMax="30" />
-          </div>
-          <div className="field">
-            <label>Min 15</label>
-            <BoundedInput type="text" min="15" />
-          </div>
-          <div className="field">
-            <label>Min 15 / Max 30</label>
-            <BoundedInput type="text" min="15" max="30" />
-          </div>
-          <h4>Combinations</h4>
-          <div className="field">
-            <label>Min 15 / Recommended Min 30</label>
-            <BoundedInput type="text" min="15" recommendedMin="30" />
-          </div>
-          <div className="field">
-            <label>Min 150 / Recommended Min 300 / Max 500</label>
-            <BoundedInput type="textarea" min="150" recommendedMin="300" max="500" />
-          </div>
-          <h4>PIXEL WIDTH! WOW!</h4>
-          <p><strong>Use Case:</strong> Google uses 18px Roboto to dislay a search result's page title with a maximum line width of 600px. In most cases, any characters that extend beyond that width will be truncated. This pixel width counter could be implemented into SEO tools in a CMS to give the user useful feedback as they are writing page titles.</p>
-          <div className="field">
-            <label>Max 600px / Recommended Max 500px / Font Roboto 400 18px</label>
-            <BoundedInput type="text" max="600px" recommendedMax="500px" fontFamily="Roboto" fontSize="18" fontWeight="400" />
-          </div>
-        </div>
-      );
-    }
-  }
-
-  export default BoundedInput;
+export default BoundedInput;

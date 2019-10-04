@@ -1,7 +1,30 @@
 body {
     font-family: Helvetica, sans-serif;
   }
-  
+
+
+.button-save {
+  border: 1px solid #0066cc;
+  background-color: #0099cc;
+  color: #ffffff;
+  padding: 5px 10px;
+}
+
+.button-save:hover {
+  border: 1px solid #0099cc;
+  background-color: #00aacc;
+  color: #ffffff;
+  padding: 5px 10px;
+}
+
+.button-save:disabled,
+.button-save[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
 .select-box{
   margin-bottom: 20px;
   margin-top: 20px;

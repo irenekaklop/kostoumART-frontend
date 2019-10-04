@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import Autosuggest from 'react-autosuggest';
 import {PostData} from '../../services/PostData';
 import {Redirect} from 'react-router-dom'; 
 import Select from 'react-select';
 import "./InsertCostume.css";
-import BoundedInput from "../BoundedInput/BoundedInput.js";
+import { TextArea } from 'semantic-ui-react';
 
 const sex_data = [{
     label: 'Γυναίκα',
@@ -59,11 +58,30 @@ class InsertCostume extends Component {
             selectedSexOption: null,
             selectedUseOption: null,
 
-            redirectToReferrer: false,
+            //For validation reasons
+            description_MAXlegnth: 300,
+            description_status: false,
+            submit: false,
+            redirectToReferrer: false
         };
         this.insert = this.insert.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onChangeValue = this.onChangeValue.bind(this);
+        this.get_uses = this.get_uses.bind(this);
+    }
+
+    decription_legnth(){
+        return this.state.descr.length;
+    }
+
+    handleValidation(){
+        if(this.decription_legnth() < 300){
+            this.state.description_status = true;
+        }
+
+        if(this.state.name &&  this.state.description_status && this.state.selectedSexOption && this.state.selectedUseOption){
+            this.state.submit = true;
+        }
     }
 
     /*For mutli-selection of sex categories*/
@@ -137,7 +155,7 @@ class InsertCostume extends Component {
     /*Insert of costume*/
 
     insert() {
-        if(this.state.name && this.state.descr && this.state.selectedSexOption && this.state.selectedUseOption){
+        if(this.state.name && this.state.description_status && this.state.selectedSexOption && this.state.selectedUseOption){
             this.state.u_value = this.state.selectedUseOption.value;
             for(var key in this.state.selectedSexOption){
                     this.state.s_value = this.state.selectedSexOption[key].value;
@@ -165,8 +183,9 @@ class InsertCostume extends Component {
             sessionStorage.setItem('costumeData','');
             sessionStorage.clear();
         }
-
+        
         this.get_uses();
+
         //For selection of Sex: 
         const {selectedSexOption} = this.state;
     
@@ -178,8 +197,10 @@ class InsertCostume extends Component {
         }
         console.log(this.state);
         console.log(u_options, sex_data);
-        
-        return (
+       
+        this.handleValidation();
+
+        return ( 
             <div className="row " id="Body">
                 <h4>Insert Costume Data</h4>
                 <form>
@@ -188,16 +209,18 @@ class InsertCostume extends Component {
                         <input type="text" name="name" placeholder="Name" onChange={this.onChange}/>
                     </label>
                     <label>Description:</label>
-                    <BoundedInput type="text" recommendedMax="300" max='400' name ='description'/>
+                    <TextArea type="text" name="descr" onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></TextArea>
+                    <span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining
                     <label>
                         Use:
                         <Select className = "select-box"
                             value = {selectedUseOption}
                             options = {u_options}
-                            maxMenuHeight={170}
-                            closeMenuOnSelect={true}
+                            maxMenuHeight={200}
                             onChange = {this.handleUseSelect}
-                            />
+                            closeMenuOnSelect={true}
+                            
+                        />
                     </label>
                     <label>
                         Sex:
@@ -210,11 +233,12 @@ class InsertCostume extends Component {
                             options = {sex_data}
                         />
                     </label>
-                    <input type="submit" className="button" value="Save" onClick={this.insert}/>
+                    <button disabled = {!this.state.submit} type="submit" className="button-save" onClick={this.insert}>Save</button>
                 </form>
             </div>
         );
     }
 }
+
 export default InsertCostume;
 
