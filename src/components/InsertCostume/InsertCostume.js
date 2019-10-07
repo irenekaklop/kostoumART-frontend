@@ -4,13 +4,16 @@ import {Redirect} from 'react-router-dom';
 import Select from 'react-select';
 import "./InsertCostume.css";
 import { TextArea } from 'semantic-ui-react';
+import { Container, Row, Col } from 'reactstrap';
+import PlacesAutocomplete, {geocodeByAddress,getLatLng} from 'react-places-autocomplete';
+import Geosuggest from 'react-geosuggest';
 
 const sex_data = [{
     label: 'Γυναίκα',
     value: 'female_adult'
   },
   {
-    label: 'Adras',
+    label: 'Andras',
     value: 'male_adult'
     },
     {
@@ -57,6 +60,8 @@ class InsertCostume extends Component {
             //Select
             selectedSexOption: null,
             selectedUseOption: null,
+            //Geosuggest
+            address: '',
 
             //For validation reasons
             description_MAXlegnth: 300,
@@ -69,6 +74,17 @@ class InsertCostume extends Component {
         this.onChangeValue = this.onChangeValue.bind(this);
         this.get_uses = this.get_uses.bind(this);
     }
+
+    handleChange = address => {
+        this.setState({ address });
+      };
+      
+    handleSelect = address => {
+        geocodeByAddress(address)
+          .then(results => getLatLng(results[0]))
+          .then(latLng => console.log('Success', latLng))
+          .catch(error => console.error('Error', error));
+      };
 
     decription_legnth(){
         return this.state.descr.length;
@@ -113,6 +129,9 @@ class InsertCostume extends Component {
     };
 
     /*Functions for use suggestions*/
+    onSuggestSelect(suggest) {
+        console.log(suggest);
+    }
 
     onSuggestionsFetchRequested = ({ value }) => {
         this.setState({
@@ -201,41 +220,43 @@ class InsertCostume extends Component {
         this.handleValidation();
 
         return ( 
-            <div className="row " id="Body">
-                <h4>Insert Costume Data</h4>
-                <form>
-                    <label>
-                        Name:
-                        <input type="text" name="name" placeholder="Name" onChange={this.onChange}/>
-                    </label>
-                    <label>Description:</label>
+                <div className="main"> 
+                <form className="form">
+                    <label> Name:
+                    <input type="text" name="name" placeholder="Name" onChange={this.onChange}/></label>
+                    <label>Description:</label> 
                     <TextArea type="text" name="descr" onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></TextArea>
-                    <span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining
-                    <label>
-                        Use:
+                    <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
+                    <label> Use:
                         <Select className = "select-box"
                             value = {selectedUseOption}
                             options = {u_options}
                             maxMenuHeight={200}
                             onChange = {this.handleUseSelect}
-                            closeMenuOnSelect={true}
-                            
+                            closeMenuOnSelect={true}                    
                         />
                     </label>
                     <label>
                         Sex:
                         <Select className = "select-box"
                             value = {selectedSexOption} 
-                            isMulti
+                            isMulti                                
                             maxMenuHeight={150}
                             closeMenuOnSelect={true}
                             onChange = {this.handleSelect}
                             options = {sex_data}
                         />
                     </label>
+                   <label>
+                        Location: 
+                        <Geosuggest 
+                        ref={this._geosuggest.blur()}
+                        />
+                   </label>
                     <button disabled = {!this.state.submit} type="submit" className="button-save" onClick={this.insert}>Save</button>
                 </form>
-            </div>
+                </div>
+                
         );
     }
 }

@@ -1,7 +1,14 @@
 body {
-    font-family: Helvetica, sans-serif;
-  }
+  font-family: Helvetica, sans-serif;
+}
 
+.main{
+  padding: 1%;
+}
+
+.form{
+  padding: 1%;
+}
 
 .button-save {
   border: 1px solid #0066cc;
@@ -25,9 +32,12 @@ body {
   cursor: not-allowed;
 }
 
+.remaining-chars{
+  text-align: right;
+}
+
 .select-box{
-  margin-bottom: 20px;
-  margin-top: 20px;
+  width: 40%;
 }
 
 .react-autosuggest__container {
