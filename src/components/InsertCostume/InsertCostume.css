@@ -37,7 +37,8 @@ body {
 }
 
 .select-box{
-  width: 40%;
+  position: relative;
+  width: 50%;    text-align: left;
 }
 
 .react-autosuggest__container {

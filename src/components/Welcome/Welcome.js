@@ -11,6 +11,7 @@ class Welcome extends Component{
         );
     }
 }
+
 ///////////////////
 // MenuContainer //
 ///////////////////
@@ -23,7 +24,7 @@ class MenuContainer extends React.Component {
       activeItemPosition: 0,
       activeItemColor: '',
       menuItems: [
-        { text: 'Insert', link: '/insertCostume'},
+        { text: 'Insert', link: '/insert'},
         { text: 'Display', link: '/displayCostumes' },
       ],
     }
