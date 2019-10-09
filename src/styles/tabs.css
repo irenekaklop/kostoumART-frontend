@@ -18,11 +18,13 @@
     color: black; 
     border-radius: 5px 5px 0 0; } 
     
-.react-tabs__tab-panel { display: none; } 
+.react-tabs__tab-panel { display: none;
+    border-radius: 4px; } 
 
 .react-tabs__tab-panel--selected { 
-    display: block; 
-    background: #F3EDE2;} 
+    display: block;
+    background: rgb(243, 245, 219);
+    box-shadow: 0 0 4px #aaa;  } 
 
 .react-tabs__tab--disabled { color: gray; cursor: default; } 
 

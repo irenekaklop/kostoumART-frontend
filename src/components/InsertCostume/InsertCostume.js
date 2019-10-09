@@ -10,12 +10,6 @@ import {sexs, materials, techniques} from "../../utils/options";
 import CreatableSelect from 'react-select/creatable';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import { makeStyles } from '@material-ui/core/styles';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Typography from '@material-ui/core/Typography';
 
 function escapeRegexCharacters(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -37,8 +31,6 @@ class InsertCostume extends Component {
         this.state = {
             name: '',
             descr: '',
-            //Sex data on insert
-            s_value: '',
             //Uses' data
             u_data:[],
             usesData: '',
@@ -50,10 +42,16 @@ class InsertCostume extends Component {
             TPData: '',
             tp_value:'',
             newTPvalue: '',
+            //For backend insert
+            actors: '',
+            designer: '',
+            parts: '',
             //Material data on insert
             m_value: '',
             //Technique data on insert
             t_value: '',
+            //Sex data on insert
+            s_value: '',
             //Select
             selectedSexOption: null,
             selectedUseOption: null,
@@ -293,46 +291,43 @@ class InsertCostume extends Component {
                    <Container>
                    <div style={{ width: '100%' }}>
                         <label> Τίτλος
-                        <input type="text" name="name" placeholder="Name" onChange={this.onChange}/></label>
+                        <input className="small-input" type="text" name="name" placeholder="Name" onChange={this.onChange}/></label>
                         </div>
                         <div style={{ width: '100%' }}>
                         <label>Περιγραφή</label> 
-                        <TextArea type="text" name="descr" onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></TextArea>
+                        <TextArea className="textarea" type="text" name="descr" onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></TextArea>
                         <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
                         </div>
                    </Container>
-                    <label> Χρήση
-                        <Select className = "select-box"
-                            value = {selectedUseOption}
-                            options = {u_options}
-                            maxMenuHeight={200}
-                            onChange = {this.handleUseSelect}
-                            closeMenuOnSelect={true}  
-                            isSearchable            
-                        />
-                    </label>
-                    <label> Φύλο
-                        <Select className = "select-box"
-                            value = {selectedSexOption} 
-                            isMulti                                
-                            maxMenuHeight={150}
-                            closeMenuOnSelect={true}
-                            onChange = {this.handleSexSelect}
-                            options = {sexs}
-                            ignoreAccents      
-                        />
-                    </label>
-                    <label> Θεατρικές Παραστάσεις
-                        <Select className = "select-box"
-                            value = {selectedTPOption}
-                            options = {p_options}
-                            maxMenuHeight={200}
-                            onChange = {this.handleTPSelect}
-                            closeMenuOnSelect={true}  
-                            isSearchable            
-                        /> </label>
-                    <label> Σχεδιαστής
-                    <TextArea type="text" name="designer" onChange={this.onChange}/> </label> 
+                   <hr></hr>
+                   <Box display="flex" flexDirection="row">
+                       <Box  style={{ width: '50%' }}>
+                        <label> Χρήση
+                                <Select className = "select-box"
+                                    value = {selectedUseOption}
+                                    options = {u_options}
+                                    maxMenuHeight={200}
+                                    onChange = {this.handleUseSelect}
+                                    closeMenuOnSelect={true}  
+                                    isSearchable            
+                                />
+                            </label>
+                       </Box>
+                       <Box  style={{ width: '50%' }}>
+                            <label> Φύλο
+                                <Select className = "select-box"
+                                    value = {selectedSexOption} 
+                                    isMulti                                
+                                    maxMenuHeight={150}
+                                    closeMenuOnSelect={true}
+                                    onChange = {this.handleSexSelect}
+                                    options = {sexs}
+                                    ignoreAccents      
+                                />
+                            </label>
+                        </Box>
+                   </Box>
+                   <br></br>
                     <Box display="flex" flexDirection="row">
                         <Box  style={{ width: '50%' }}>
                         <label> Υλικό
@@ -363,10 +358,10 @@ class InsertCostume extends Component {
                         </label>
                         </Box>
                     </Box>
-                    <label> Ηθοποιοί
-                    <TextArea type="text" name="actors" onChange={this.onChange}/> </label> 
-                    <label> Ρόλος
-                    <TextArea type="text" name="parts" onChange={this.onChange}/> </label> 
+                    <br></br>
+                    <label> Σχεδιαστής
+                    <input className="small-input" type="text" name="designer" onChange={this.onChange}/> </label> 
+                    <hr></hr>
                     <Box display="flex" flexDirection="row" >
                         <Box style={{ width: '50%' }}> 
                         <label> Περιοχή Αναφοράς
@@ -387,8 +382,24 @@ class InsertCostume extends Component {
                             {this.handleLocationInfluence()}
                         </label>
                        </Box>
-                        
                    </Box>
+                   <hr></hr>
+                    <label> Θεατρικές Παραστάσεις
+                        <Select className = "select-box"
+                            value = {selectedTPOption}
+                            options = {p_options}
+                            maxMenuHeight={200}
+                            onChange = {this.handleTPSelect}
+                            closeMenuOnSelect={true}  
+                            isSearchable            
+                        /> </label>
+                        <br></br>
+                    <label> Ηθοποιοί
+                    <input className="small-input" type="text" name="actors" onChange={this.onChange}/> </label> 
+                    <br></br>
+                    <label> Ρόλος
+                    <input className="small-input" type="text" name="parts" onChange={this.onChange}/> </label> 
+                    <br></br>
                     <button disabled = {!this.state.submit} type="submit" className="button-save" onClick={this.insert}>Save</button>
                 </form>
                 </div>

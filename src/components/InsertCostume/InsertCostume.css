@@ -2,6 +2,19 @@ body {
   font-family: Helvetica, sans-serif;
 }
 
+.small-input{
+  width: 40%;
+  padding: 10px 20px;
+    font-family: Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+.textarea{
+  border-radius: 4px;
+}
+
 .main{
   padding: 1%;
 }
@@ -38,7 +51,8 @@ body {
 
 .select-box{
   position: relative;
-  width: 50%;    text-align: left;
+  width: 35%;    text-align: left;
+  border-radius: 4px;
 }
 
 .react-autosuggest__container {
@@ -98,5 +112,5 @@ body {
 }
   
 .react-autosuggest__suggestion--highlighted {
-    background-color: rgba(221, 221, 221, 0.747) !important; 
+  background-color: rgba(221, 221, 221, 0.747) !important; 
 }

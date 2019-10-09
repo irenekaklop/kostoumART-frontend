@@ -36,7 +36,8 @@ export const materials = [{
       value: 'Δέρμα'
     }];
 
-export const techniques = [{
+export const techniques = [
+{
     label: 'Ύφανση',
     value: 'Ύφανση'
 },
@@ -51,4 +52,17 @@ export const techniques = [{
 {
     label: 'Βαφή',
     value: 'Βαφή'
+}];
+
+export const use_categories = [{
+  label: 'Επίσημο',
+  value: 'Επίσημο'
+},
+{
+  label: 'Καθημερινό',
+  value: 'Καθημερινό'
+},
+{
+  label: 'Εργασίας',
+  value: 'Εργασίας'
 }];
