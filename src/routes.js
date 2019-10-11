@@ -9,6 +9,7 @@ import DisplayCostumes from './components/DisplayCostumes/DisplayCostumes';
 import BoundedInput from './components/BoundedInput/BoundedInput';
 import Insert from './components/Insert/Insert';
 import Geosuggest from './components/Geosuggest/Geosuggest';
+import InsertUse from './components/InsertUse/InsertUse';
 
 const Routes = () => (
     <BrowserRouter >
@@ -17,6 +18,7 @@ const Routes = () => (
     <Route exact path='/insert' component={Insert}/>
     <Route exact path='/geo' component = {Geosuggest}/>
     <Route exact path="/insertCostume" component={InsertCostume}/>
+    <Route exact path = "/insertUse" component={InsertUse}/>
     <Route exact path="/success" component={SuccessInsert}/>
     <Route exact path="/displayCostumes" component = {DisplayCostumes}/>
     <Route exact path="/suggestions" component = {Suggestions}/>

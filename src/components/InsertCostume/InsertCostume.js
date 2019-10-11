@@ -6,7 +6,7 @@ import "./InsertCostume.css";
 import "../Geosuggest/Geosuggest.css";
 import { TextArea, GridRow, Container } from 'semantic-ui-react';
 import Geosuggest from 'react-geosuggest';
-import {sexs, materials, techniques} from "../../utils/options";
+import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import CreatableSelect from 'react-select/creatable';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -61,8 +61,8 @@ class InsertCostume extends Component {
             //Geosuggest
             location:'',
             location_select:'',
-            location_infuence:'',
-            location_infuence_select:'',
+            location_influence:'',
+            location_influence_select:'',
 
             //For validation reasons
             description_MAXlegnth: 300,
@@ -74,6 +74,7 @@ class InsertCostume extends Component {
         this.onChange = this.onChange.bind(this);
         this.onChangeValue = this.onChangeValue.bind(this);
         this.get_uses = this.get_uses.bind(this);
+        this.enableSubmit = this.enableSubmit.bind(this);
     }
 
     /*Secure way to getData*/
@@ -98,9 +99,9 @@ class InsertCostume extends Component {
         console.log("HandleLocationChange:", this.state);
     };
 
-    handleLocationInfluenceSelect = (location_infuence_select) => {
-        this.setState({location_infuence_select });
-        console.log(`Option selected:`, location_infuence_select);
+    handleLocationInfluenceSelect = (location_influence_select) => {
+        this.setState({location_influence_select });
+        console.log(`Option selected:`, location_influence_select);
     }
     
     handleLocation(){
@@ -111,8 +112,8 @@ class InsertCostume extends Component {
     }
 
     handleLocationInfluence(){
-        if(this.state.location_infuence_select){
-            this.state.location_infuence = this.state.location_infuence_select.description;
+        if(this.state.location_influence_select){
+            this.state.location_influence = this.state.location_influence_select.description;
             console.log(this.state);
         }
 
@@ -123,13 +124,38 @@ class InsertCostume extends Component {
         return this.state.descr.length;
     }
 
-    handleValidation(){
-        if(this.decription_legnth() < 300){
-            this.state.description_status = true;
+    enableSubmit(){
+        if(this.state.name){ //If name is given, check if it already exist
+            PostData('costumeExists', this.state).then((result) => {
+                let responseJson = result;
+                console.log("result", responseJson);
+                if(result.exists =='true'){
+                    console.log("already exists");
+                    this.state.submit=false;
+                }
+                else{
+                    console.log("doesnt exists");
+                    //if everything is submitted
+                    if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
+                        console.log("ok legnth");
+                        if(this.state.name && this.state.descr && this.state.location && this.state.selectedMaterialOption
+                            && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption
+                            && this.state.location_influence && this.state.designer){
+                                this.state.submit = true;
+                            }
+                        else{
+                            console.log("something is missing");   
+                        }
+                    }
+                    else{
+                        this.state.submit = false;
+                        console.log("too big or too small description");
+                    }
+                }
+            })     
         }
-
-        if(this.state.name &&  this.state.description_status && this.state.selectedSexOption && this.state.selectedUseOption){
-            this.state.submit = true;
+        else{
+            console.log("no name");
         }
     }
 
@@ -213,7 +239,7 @@ class InsertCostume extends Component {
 
     /*Get Theatrical Plays from database*/
     get_theatrical_plays(){
-        PostData('get_theatrical_plays', this.state).then((result) => {
+       /* PostData('get_theatrical_plays', this.state).then((result) => {
             let responseJson = result;
             if(responseJson.TPData){
                 sessionStorage.setItem("TPData",JSON.stringify(responseJson));
@@ -223,27 +249,29 @@ class InsertCostume extends Component {
             else{
                 alert(result.error);
             }
-        });
+        });*/
     }
     
     /*Insert of costume*/
 
     insert() {
-        if(this.state.name && this.state.description_status){
-            this.state.u_value = this.state.selectedUseOption.value;
-            for(var key in this.state.selectedSexOption){
-                    this.state.s_value = this.state.selectedSexOption[key].value;
-                    PostData('insertCostume',this.state).then((result) => {
-                    let responseJson = result;
-                    if(responseJson.costumeData){
-                        sessionStorage.setItem('costumeData',JSON.stringify(responseJson));
-                        this.setState({redirectToReferrer: true});
-                    }
-                    else
-                        alert(result.error);
-                    });
-           }
-        }
+        this.state.u_value = this.state.selectedUseOption.value;
+        this.state.t_value = this.state.selectedTechniqueOption.value;
+        this.state.m_value = this.state.selectedMaterialOption.value;
+        this.state.tp_value = "";
+        for(var key in this.state.selectedSexOption){
+                this.state.s_value = this.state.selectedSexOption[key].value;
+                console.log("insert",this.state);
+                PostData('insertCostume',this.state).then((result) => {
+                let responseJson = result;
+                if(responseJson.costumeData){
+                    sessionStorage.setItem('costumeData',JSON.stringify(responseJson));
+                    this.setState({redirectToReferrer: true});
+                }
+                else
+                    alert(result.error);
+                });
+       }    
     }
 
     render() {
@@ -272,10 +300,20 @@ class InsertCostume extends Component {
         const u_options = [];
         const p_options = [];
 
-        for (var key in this.state.u_data){
-            u_options.push( {label: this.state.u_data[key].name, value: this.state.u_data[key].name});
+        /* Create Use Categories*/
+        for (var key in use_categories){
+            u_options.push( {label: use_categories[key].label, options: []});
         }
 
+        for (var key in this.state.u_data){
+            u_options.forEach(element => {
+                if(element.label === this.state.u_data[key].use_category){
+                    element.options.push({label: this.state.u_data[key].name, value: this.state.u_data[key].name});
+                }
+            });
+        }
+    
+        /*For theatrical Plays*/
         for (var key in this.state.TP_data){
             p_options.push({label: this.state.TP_data[key].title, value:  this.state.TP_data[key].title}); 
         }
@@ -283,7 +321,7 @@ class InsertCostume extends Component {
         console.log(this.state);
         console.log(u_options, sexs);
        
-        this.handleValidation();
+        this.enableSubmit();
 
         return ( 
                 <div className="main"> 
