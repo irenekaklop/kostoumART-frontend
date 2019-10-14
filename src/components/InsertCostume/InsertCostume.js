@@ -2,14 +2,15 @@ import React, {Component} from 'react';
 import {PostData} from '../../services/PostData';
 import {Redirect} from 'react-router-dom'; 
 import Select from 'react-select';
-import "./InsertCostume.css";
 import "../Geosuggest/Geosuggest.css";
 import { TextArea, GridRow, Container } from 'semantic-ui-react';
 import Geosuggest from 'react-geosuggest';
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import CreatableSelect from 'react-select/creatable';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import Insert from '../Insert/Insert';
+import '../Insert/Insert.css';
 
 function escapeRegexCharacters(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -26,9 +27,11 @@ function renderSuggestion(suggestion) {
 }
 
 class InsertCostume extends Component {
+    
     constructor(props){
         super(props);
         this.state = {
+            costumeData: '',
             name: '',
             descr: '',
             //Uses' data
@@ -68,7 +71,11 @@ class InsertCostume extends Component {
             description_MAXlegnth: 300,
             description_status: false,
             submit: false,
-            redirectToReferrer: false
+            redirectToReferrer: false,
+
+            /////////////////////////
+            cond1: false,
+            cond2: false
         };
         this.insert = this.insert.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -124,39 +131,84 @@ class InsertCostume extends Component {
         return this.state.descr.length;
     }
 
+    createNotification(type){
+        switch (type) {
+            case "error1":
+                return(
+                    <div>
+                        <NotificationContainer>{ NotificationManager.error('Η εγγραφή υπάρχει ήδη.') }</NotificationContainer>
+                    </div>
+                )
+            case "error2":
+                return(
+                    <div>
+                        <NotificationContainer>{ NotificationManager.warning("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
+                    </div>
+                )
+            case "insert-success":
+                return(
+                    <NotificationContainer>{ NotificationManager.success('Entry is successfully inserted to DB','Success!',2000) }</NotificationContainer>
+                )
+            
+        };
+    }
+
     enableSubmit(){
         if(this.state.name){ //If name is given, check if it already exist
             PostData('costumeExists', this.state).then((result) => {
                 let responseJson = result;
                 console.log("result", responseJson);
-                if(result.exists =='true'){
-                    console.log("already exists");
-                    this.state.submit=false;
+                if(result.exists==='true'){
+                    var result = null;
+                    if(this.state.costumeData===""){ //To prevent notification after insert()
+                        console.log("already exists");
+                        result=this.createNotification("error1");
+                        console.log(result);
+                        this.state.cond1 = false;
+                        return result;
+                    }
                 }
                 else{
                     console.log("doesnt exists");
-                    //if everything is submitted
-                    if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
-                        console.log("ok legnth");
-                        if(this.state.name && this.state.descr && this.state.location && this.state.selectedMaterialOption
-                            && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption
-                            && this.state.location_influence && this.state.designer){
-                                this.state.submit = true;
-                            }
-                        else{
-                            console.log("something is missing");   
-                        }
-                    }
-                    else{
-                        this.state.submit = false;
-                        console.log("too big or too small description");
-                    }
+                    this.state.cond1=true;
                 }
             })     
         }
         else{
             console.log("no name");
         }
+        
+        //if everything is submitted
+        if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
+            console.log("ok legnth");
+            this.state.cond2=true;
+        }
+        else if(this.decription_legnth() >= 300){
+            this.state.submit = false;
+            console.log("too big or too small description");
+            this.state.cond2=false;
+            var result=this.createNotification("error2");
+            console.log(result);
+            return result;
+        }
+        else{
+            this.state.submit = false;
+            this.state.cond2=false;
+            return result;
+        }
+
+        if(this.state.name && this.state.descr && this.state.location && this.state.selectedMaterialOption
+            && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption
+            && this.state.location_influence && this.state.designer){
+                if(this.state.cond1 && this.state.cond2){
+                    this.state.submit = true;
+                }
+            }
+        else{
+            console.log("something is missing");   
+        }
+
+        return null;
     }
 
     /*For selection of use categories*/
@@ -239,7 +291,7 @@ class InsertCostume extends Component {
 
     /*Get Theatrical Plays from database*/
     get_theatrical_plays(){
-       /* PostData('get_theatrical_plays', this.state).then((result) => {
+       PostData('get_theatrical_plays', this.state).then((result) => {
             let responseJson = result;
             if(responseJson.TPData){
                 sessionStorage.setItem("TPData",JSON.stringify(responseJson));
@@ -249,12 +301,13 @@ class InsertCostume extends Component {
             else{
                 alert(result.error);
             }
-        });*/
+        });
     }
     
     /*Insert of costume*/
 
     insert() {
+        var result;
         this.state.u_value = this.state.selectedUseOption.value;
         this.state.t_value = this.state.selectedTechniqueOption.value;
         this.state.m_value = this.state.selectedMaterialOption.value;
@@ -266,7 +319,10 @@ class InsertCostume extends Component {
                 let responseJson = result;
                 if(responseJson.costumeData){
                     sessionStorage.setItem('costumeData',JSON.stringify(responseJson));
-                    this.setState({redirectToReferrer: true});
+                    //this.setState({redirectToReferrer: true});
+                    result=this.createNotification("insert-success");
+                    console.log(result);
+                    return result;
                 }
                 else
                     alert(result.error);
@@ -275,17 +331,10 @@ class InsertCostume extends Component {
     }
 
     render() {
-        if (this.state.redirectToReferrer) {
-            return (
-                sessionStorage.setItem('costumeData',''),
-                sessionStorage.clear(),
-                <Redirect to={'/success'}/>)
-        }
-        else if (sessionStorage.getItem('costumeData')){
+       if (sessionStorage.getItem('costumeData')){
             sessionStorage.setItem('costumeData','');
             sessionStorage.clear();
-        }
-
+       }
         //For selection of Sex: 
         const {selectedSexOption} = this.state;
         //For selection of Use:
@@ -321,69 +370,61 @@ class InsertCostume extends Component {
         console.log(this.state);
         console.log(u_options, sexs);
        
-        this.enableSubmit();
-
         return ( 
+            
                 <div className="main"> 
+                <Insert activeItem ='costume'></Insert>
                 <form className="form">
+                
+                <NotificationContainer>{this.enableSubmit()}</NotificationContainer>
+
                    <Container>
-                   <div style={{ width: '100%' }}>
-                        <label> Τίτλος
-                        <input className="small-input" type="text" name="name" placeholder="Name" onChange={this.onChange}/></label>
-                        </div>
-                        <div style={{ width: '100%' }}>
-                        <label>Περιγραφή</label> 
-                        <TextArea className="textarea" type="text" name="descr" onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></TextArea>
+                        <label> <h4>Τίτλος</h4>
+                        <input className="small-input" type="text" name="name" onChange={this.onChange}/></label>
+                        
+                        <label><h4>Περιγραφή</h4></label> 
+                        <TextArea className="textarea" type="text" name="descr" onChange={this.onChange} /*maxLength={this.state.description_MAXlegnth}*/></TextArea>
                         <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
-                        </div>
-                   </Container>
-                   <hr></hr>
-                   <Box display="flex" flexDirection="row">
-                       <Box  style={{ width: '50%' }}>
-                        <label> Χρήση
-                                <Select className = "select-box"
-                                    value = {selectedUseOption}
-                                    options = {u_options}
-                                    maxMenuHeight={200}
-                                    onChange = {this.handleUseSelect}
-                                    closeMenuOnSelect={true}  
-                                    isSearchable            
-                                />
-                            </label>
-                       </Box>
-                       <Box  style={{ width: '50%' }}>
-                            <label> Φύλο
-                                <Select className = "select-box"
-                                    value = {selectedSexOption} 
-                                    isMulti                                
-                                    maxMenuHeight={150}
-                                    closeMenuOnSelect={true}
-                                    onChange = {this.handleSexSelect}
-                                    options = {sexs}
-                                    ignoreAccents      
-                                />
-                            </label>
-                        </Box>
-                   </Box>
-                   <br></br>
-                    <Box display="flex" flexDirection="row">
-                        <Box  style={{ width: '50%' }}>
-                        <label> Υλικό
-                            <CreatableSelect  className="select-box"
-                                isClearable
-                                onChange={this.handleMaterialSelect}
-                                value = {selectedMaterialOption}
-                                options = {materials}
+                        
+                    </Container>
+                    <hr></hr>
+                    <Container className='container'>
+                        <label> <h4>Χρήση</h4>
+                            <Select className = "select-Container" 
+                                value = {selectedUseOption}
+                                options = {u_options}
                                 maxMenuHeight={200}
+                                onChange = {this.handleUseSelect}
                                 closeMenuOnSelect={true}  
-                                isSearchable   
-                                ignoreAccents                
+                                isSearchable            
+                            />
+                            <a href='/insertUse'> Προσθήκη νέας χρήσης</a>
+                        </label>
+                        <label> <h4>Φύλο</h4>
+                            <Select className = "select-Container"
+                                value = {selectedSexOption} 
+                                isMulti                                
+                                maxMenuHeight={150}
+                                closeMenuOnSelect={true}
+                                onChange = {this.handleSexSelect}
+                                options = {sexs}
+                                ignoreAccents      
                             />
                         </label>
-                        </Box>
-                        <Box  style={{ width: '50%' }}>
-                        <label> Τεχνική
-                            <CreatableSelect  className="select-box"
+                        <label> <h4>Υλικό</h4>
+                        <CreatableSelect  className="select-Container"
+                            isClearable
+                            onChange={this.handleMaterialSelect}
+                            value = {selectedMaterialOption}
+                            options = {materials}
+                            maxMenuHeight={200}
+                            closeMenuOnSelect={true}  
+                            isSearchable                                   
+                            ignoreAccents                
+                        />
+                        </label>
+                        <label> <h4>Τεχνική</h4>
+                            <CreatableSelect  className="select-Container"
                                 isClearable
                                 onChange={this.handleTechniqueSelect}
                                 value = {selectedTechniqueOption}
@@ -394,24 +435,24 @@ class InsertCostume extends Component {
                                 ignoreAccents                 
                             />
                         </label>
-                        </Box>
-                    </Box>
-                    <br></br>
-                    <label> Σχεδιαστής
-                    <input className="small-input" type="text" name="designer" onChange={this.onChange}/> </label> 
+                        <label> <h4>Σχεδιαστής</h4>
+                        <input className="small-input" type="text" name="designer" onChange={this.onChange}/> </label> 
+                       </Container>
+                    
                     <hr></hr>
-                    <Box display="flex" flexDirection="row" >
-                        <Box style={{ width: '50%' }}> 
-                        <label> Περιοχή Αναφοράς
+
+                    <Container display="flex" flexDirection="row" >
+                        
+                        <label> <h4>Περιοχή Αναφοράς</h4>
                         <Geosuggest
                             onChange={this.handleLocationChange}
                             onSuggestSelect={this.handleLocationSelect}
                         />
                         {this.handleLocation()}
                         </label>
-                        </Box>
-                       <Box style={{ width: '50%' }}>
-                       <label> Χώρα/Περιοχή Επιρροής 
+                       
+                     
+                       <label> <h4>Χώρα/Περιοχή Επιρροής </h4>
                             <Geosuggest
                                 onChange={this.handleLocationInfluenceChange}
                                 onSuggestSelect={this.handleLocationInfluenceSelect}
@@ -419,11 +460,12 @@ class InsertCostume extends Component {
                             {this.handleLocation()}
                             {this.handleLocationInfluence()}
                         </label>
-                       </Box>
-                   </Box>
+                       
+                   </Container>
                    <hr></hr>
-                    <label> Θεατρικές Παραστάσεις
-                        <Select className = "select-box"
+                   <Container>
+                   <label> <h4>Θεατρικές Παραστάσεις</h4>
+                        <Select className = "select-Container"
                             value = {selectedTPOption}
                             options = {p_options}
                             maxMenuHeight={200}
@@ -431,14 +473,14 @@ class InsertCostume extends Component {
                             closeMenuOnSelect={true}  
                             isSearchable            
                         /> </label>
-                        <br></br>
-                    <label> Ηθοποιοί
+                    <label> <h4>Ηθοποιοί</h4>
                     <input className="small-input" type="text" name="actors" onChange={this.onChange}/> </label> 
-                    <br></br>
-                    <label> Ρόλος
+                    <label> <h4>Ρόλος</h4>
                     <input className="small-input" type="text" name="parts" onChange={this.onChange}/> </label> 
                     <br></br>
                     <button disabled = {!this.state.submit} type="submit" className="button-save" onClick={this.insert}>Save</button>
+                   </Container>
+                   
                 </form>
                 </div>
                 

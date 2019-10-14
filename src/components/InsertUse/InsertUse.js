@@ -5,10 +5,9 @@ import Select from 'react-select';
 import Box from '@material-ui/core/Box';
 import { TextArea, GridRow, Container } from 'semantic-ui-react';
 import {use_categories} from '../../utils/options';
-import {notification} from '../../utils/notifications';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import { ToastProvider, useToasts } from 'react-toast-notifications';
+import Insert from '../Insert/Insert';
 
 class InsertUse extends Component{
     constructor(props){
@@ -27,8 +26,33 @@ class InsertUse extends Component{
             redirectToReferrer: false,
             //Select var
             selectedCategoryOption: '',
+            /////////////////////////
+            cond1: false,
+            cond2: false
         };
         this.insert = this.insert.bind(this);
+    }
+
+    createNotification(type){
+        switch (type) {
+            case "error1":
+                return(
+                    <div>
+                        <NotificationContainer>{ NotificationManager.error('Διάλεξε άλλη κατηγορία χρήσης ή διαφορετικό όνομα','Η εγγραφή υπάρχει ήδη.') }</NotificationContainer>
+                    </div>
+                )
+            case "error2":
+                return(
+                    <div>
+                        <NotificationContainer>{ NotificationManager.warning('Too big description!', "Text should be under 300 characters") }</NotificationContainer>
+                    </div>
+                )
+            case "insert-success":
+                return(
+                    <NotificationContainer>{ NotificationManager.success('Success!') }</NotificationContainer>
+                )
+            
+        };
     }
 
     onSelect = ( selectedCategoryOption ) => { 
@@ -46,31 +70,47 @@ class InsertUse extends Component{
     }
 
     enableSubmit(){ 
+        var ret = null;
         //if everything is submitted
         if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
-            if(this.state.name && this.state.selectedCategoryOption){
-                //Check if entry already exists
-                this.state.use_category=this.state.selectedCategoryOption.value;
-                PostData('existsUse',this.state).then((result) => {
-                    let responseJson = result;
-                    if(result.exists ==='true'){
-                        console.log("already exists");
-                    }
-                    else{
-                        this.state.submit = true;
-                    }
-                })     
-                
-            }
-            else{
-                console.log("empty something");
-            }
+            this.state.cond1 = true;
+        }
+        else if(this.decription_legnth() > 300){
+            console.log("too big description or nothing");
+            ret=this.createNotification("error2");
+            this.state.cond1 = false;
+            return ret;
         }
         else{
-            console.log("too big description or nothing");
+            this.state.cond1 = false;
         }
 
+        if(this.state.name && this.state.selectedCategoryOption){
+            //Check if entry already exists
+            this.state.use_category=this.state.selectedCategoryOption.value;
+            PostData('existsUse',this.state).then((result) => {
+                if(result.exists ==='true'){
+                    if(this.state.useData===''){ 
+                        console.log("already exists");
+                        if(this.state.useData === ""){ //To prevent notification after insert()
+                            ret=this.createNotification("error1");
+                            this.state.cond2 = false;
+                            return ret;
+                        }
+                    }
+                }
+                else{
+                    this.state.cond2 = true;
+                }
+            })     
+            
+        }
         
+        if(this.state.cond1 && this.state.cond2){
+            this.state.submit = true;
+        }
+        
+        return ret;
     }
 
     insert(){
@@ -81,6 +121,9 @@ class InsertUse extends Component{
                 sessionStorage.setItem('useData',JSON.stringify(responseJson));
                 this.setState({redirectToReferrer: true});
                 //<ReactNotification name="notifications"/>
+                let ret=this.createNotification("insert-success");
+                console.log(ret);
+                return ret;
             }
             else{
                 alert(result.error);}
@@ -102,12 +145,12 @@ class InsertUse extends Component{
         }
         //Select vars
         const {selectedCategoryOption}= this.state;
-
-        this.enableSubmit();
         return(
             <div className="main"> 
+            <Insert activeItem='use'></Insert>
                 <form className="form">
-                    <Box  style={{ width: '50%' }}>
+                    <NotificationContainer>{this.enableSubmit()}</NotificationContainer>
+                    <Container>
                         <label> Κατηγορία χρήσης
                             <Select className = "select-box"
                                 value = {selectedCategoryOption}                           
@@ -118,20 +161,21 @@ class InsertUse extends Component{
                                 ignoreAccents      
                             />
                             </label>
-                        </Box>
                     <div style={{ width: '100%' }}>
                         <label> Όνομα Δραστηριότητας
-                        <input className="small-input" type="text" name="name" placeholder="Όνομα κατηγορίας" onChange={this.onChange}/></label>
+                        <input className="small-input" type="text" name="name" onChange={this.onChange}/></label>
                     </div>
                     <div style={{ width: '100%' }}>
                         <label>Περιγραφή</label> 
-                        <TextArea className="textarea" type="text" name="description" onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></TextArea>
+                        <TextArea className="textarea" type="text" name="description" onChange={this.onChange} ></TextArea>
+                        <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
                         </div>
                     <div style={{ width: '100%' }}>
                         <label>Ήθη/Έθιμα</label> 
-                        <input className="small-input" placeholder="Ήθη/Έθιμα" type="text" name="customs" onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></input>
+                        <input className="small-input" type="text" name="customs" onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></input>
                     </div>
                     <button disabled = {!this.state.submit} type="submit" className="button-save" onClick={this.insert}>Save</button>
+                    </Container>
                 </form>
             </div>
 

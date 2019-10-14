@@ -1,32 +1,53 @@
 import React, { Component, PropTypes } from 'react';
-import { Tabs } from 'react-tabs';
-import { TabList } from 'react-tabs';
-import { Tab } from 'react-tabs';
-import { TabPanel } from 'react-tabs';
-import InsertCostume from "../InsertCostume/InsertCostume";
 import "../../styles/tabs.css";
 import "./Insert.css";
-import InsertUse from '../InsertUse/InsertUse';
+import { Menu, Dropdown, Segment, MenuItem } from 'semantic-ui-react';
+
 
 class Insert extends Component{
-    render(){
-        return(
-            <div className="tabs-container">
-                <Tabs>
-                    <TabList>
-                        <Tab>Κοστούμι</Tab>
-                        <Tab>Χρήση</Tab>
-                    </TabList>
 
-                    <TabPanel>
-                        <InsertCostume/>
-                    </TabPanel>
-                    <TabPanel>
-                        <InsertUse></InsertUse>
-                    </TabPanel>
-                </Tabs>
-      </div>
-        );
+    constructor(props){
+        super(props);
+        this.state = { activeItem: props.activeItem }
+    }
+    
+    
+    handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
+    render(){
+        const { activeItem } = this.state
+
+        return (
+            <div>
+                <Menu pointing secondary>
+                <Menu.Item
+                    name='costume'
+                    active={activeItem === 'costume'}
+                    onClick={this.handleItemClick}
+                    href='/insertCostume'
+                >
+                </Menu.Item>
+               
+                <Menu.Item
+                    name='use'
+                    active={activeItem === 'use'}
+                    onClick={this.handleItemClick}
+                    href='/insertUse'>
+                   
+                </Menu.Item>
+
+                <Menu.Item
+                    name='tp'
+                    content = "theatrical play"
+                    active={activeItem === 'tp'}
+                    onClick={this.handleItemClick}
+                    href='/insertTP'>
+                   
+                </Menu.Item>
+                </Menu>
+            </div>
+            
+        )
     }
 }
 
