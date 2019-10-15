@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
 import {PostData} from '../../services/PostData';
-import {Redirect} from 'react-router-dom'; 
-import Select from 'react-select';
-import Box from '@material-ui/core/Box';
-import { TextArea, GridRow, Container } from 'semantic-ui-react';
-import {use_categories} from '../../utils/options';
+import { TextArea, GridRow, Container, Form, Input } from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import Insert from '../Insert/Insert';
+import InsertMenu from '../InsertMenu/InsertMenu';
+import "../InsertMenu/InsertMenu";
 
 class InsertTP extends Component{
     constructor(props){
@@ -41,7 +38,6 @@ class InsertTP extends Component{
             console.log(responseJson);
             if(responseJson.tpData){
                 sessionStorage.setItem('tpData',JSON.stringify(responseJson));
-                
             }
             else{
                 alert(result.error);}
@@ -63,18 +59,25 @@ class InsertTP extends Component{
         return(
             <div className="main"> 
             {this.enableSubmit()}
-            <Insert activeItem='tp'></Insert>
-                <form className="form">
-                    <Container>
-                        <label> <h4>Όνομα Παράστασης</h4>
-                        <input className="small-input" type="text" name="name" onChange={this.onChange}/></label>
-                        <label><h4>Θέατρο</h4>
-                        <input className="small-input" type="text" name="theater" onChange={this.onChange}/></label>
-                        <label><h4>Σκηνοθέτης</h4>
-                        <input className="small-input" type="text" name="director" onChange={this.onChange}/></label>
-                    <button disabled = {!this.state.submit} type="submit" className="button-save" onClick={this.insert}>Save</button>
-                    </Container>
-                </form>
+            <InsertMenu activeItem='tp'></InsertMenu>
+                <Form>
+                    <Form.Field required>
+                        <label>Όνομα Παράστασης</label>
+                        <Input type="text" name="name" placeholder="Τίτλος παράστασης" onChange={this.onChange}/>
+                    </Form.Field>
+                    <Form.Group widths='equal'>
+                    <Form.Field required>
+                    <label>Θέατρο</label>
+                        <Input type="text" name="theater" onChange={this.onChange}/>
+                    </Form.Field>
+                    <Form.Field required>
+                        <label>Σκηνοθέτης</label>
+                        <Input type="text" name="director" onChange={this.onChange}/>
+                    </Form.Field>
+                    </Form.Group>
+                    <button type="submit" className="button-save" onClick={this.insert}>Save</button>
+                    
+                </Form>
             </div>
 
         );

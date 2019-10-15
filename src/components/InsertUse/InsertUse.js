@@ -3,11 +3,11 @@ import {PostData} from '../../services/PostData';
 import {Redirect} from 'react-router-dom'; 
 import Select from 'react-select';
 import Box from '@material-ui/core/Box';
-import { TextArea, GridRow, Container } from 'semantic-ui-react';
+import { TextArea, GridRow, Container, Form, Input, FormSelect } from 'semantic-ui-react';
 import {use_categories} from '../../utils/options';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import Insert from '../Insert/Insert';
+import InsertMenu from '../InsertMenu/InsertMenu';
 
 class InsertUse extends Component{
     constructor(props){
@@ -119,7 +119,7 @@ class InsertUse extends Component{
             let responseJson = result;
             if(responseJson.useData){
                 sessionStorage.setItem('useData',JSON.stringify(responseJson));
-                this.setState({redirectToReferrer: true});
+                //this.setState({redirectToReferrer: true});
                 //<ReactNotification name="notifications"/>
                 let ret=this.createNotification("insert-success");
                 console.log(ret);
@@ -132,51 +132,60 @@ class InsertUse extends Component{
             
     }
 
+    handleSubmit = () => {
+        this.setState({ useData: '',
+    use_category: '',
+    name: '',
+    description: '',
+    customs: '',
+    other_use: '',
+    exists:'',
+    description_MAXlegnth: 300,
+    description_status: false,
+    submit: false,
+    redirectToReferrer: false,
+    //Select var
+    selectedCategoryOption: '', cond1: false, cond2: false});
+        this.insert();
+    }
+
     render(){
-        if (this.state.redirectToReferrer) {
-            return (
-                sessionStorage.setItem('useData',''),
-                sessionStorage.clear(),
-                <Redirect to={'/success'}/>)
-        }
-        else if (sessionStorage.getItem('useData')){
-            sessionStorage.setItem('useData','');
-            sessionStorage.clear();
-        }
         //Select vars
         const {selectedCategoryOption}= this.state;
+        const {name, description, customs} =this.state;
         return(
             <div className="main"> 
-            <Insert activeItem='use'></Insert>
-                <form className="form">
-                    <NotificationContainer>{this.enableSubmit()}</NotificationContainer>
-                    <Container>
-                        <label> Κατηγορία χρήσης
-                            <Select className = "select-box"
-                                value = {selectedCategoryOption}                           
-                                maxMenuHeight={150}
-                                closeMenuOnSelect={true}
-                                onChange = {this.onSelect}
-                                options = {use_categories}
-                                ignoreAccents      
-                            />
-                            </label>
-                    <div style={{ width: '100%' }}>
-                        <label> Όνομα Δραστηριότητας
-                        <input className="small-input" type="text" name="name" onChange={this.onChange}/></label>
-                    </div>
-                    <div style={{ width: '100%' }}>
+            <InsertMenu activeItem='use'></InsertMenu>
+                <NotificationContainer>{this.enableSubmit()}</NotificationContainer>
+                    <Form onSubmit={this.handleSubmit}>
+                        <Form.Group widths='equal'>
+                            <Form.Field>
+                                <label> Όνομα Δραστηριότητας </label> 
+                                <Input type="text" name="name" value={name} onChange={this.onChange}/>
+                            </Form.Field>
+                            <Form.Field>
+                            <label> Κατηγορία χρήσης</label>
+                            <Select
+                                    value = {selectedCategoryOption}                           
+                                    maxMenuHeight={150}
+                                    closeMenuOnSelect={true}
+                                    onChange = {this.onSelect}
+                                    options = {use_categories}
+                                />
+                            </Form.Field>
+                        </Form.Group>
+                       
+                        <Form.Field>
                         <label>Περιγραφή</label> 
-                        <TextArea className="textarea" type="text" name="description" onChange={this.onChange} ></TextArea>
-                        <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
-                        </div>
-                    <div style={{ width: '100%' }}>
-                        <label>Ήθη/Έθιμα</label> 
-                        <input className="small-input" type="text" name="customs" onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></input>
-                    </div>
-                    <button disabled = {!this.state.submit} type="submit" className="button-save" onClick={this.insert}>Save</button>
-                    </Container>
-                </form>
+                            <TextArea className="textarea" type="text" name="description" value={description} onChange={this.onChange} ></TextArea>
+                            <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
+                        </Form.Field>
+                        <Form.Field>
+                            <label>Ήθη/Έθιμα</label> 
+                            <input className="small-input" type="text" name="customs" value={customs} onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></input>
+                        </Form.Field>
+                        <Form.Button disabled={!this.state.submit} color='teal' content='Submit' />
+                </Form>
             </div>
 
         );

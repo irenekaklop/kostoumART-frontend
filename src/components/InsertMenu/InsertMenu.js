@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import "../../styles/tabs.css";
-import "./Insert.css";
+import "./InsertMenu.css";
 import { Menu, Dropdown, Segment, MenuItem } from 'semantic-ui-react';
 
 
@@ -20,29 +20,28 @@ class Insert extends Component{
         return (
             <div>
                 <Menu pointing secondary>
-                <Menu.Item
-                    name='costume'
-                    active={activeItem === 'costume'}
-                    onClick={this.handleItemClick}
-                    href='/insertCostume'
-                >
-                </Menu.Item>
-               
-                <Menu.Item
-                    name='use'
-                    active={activeItem === 'use'}
-                    onClick={this.handleItemClick}
-                    href='/insertUse'>
-                   
-                </Menu.Item>
 
                 <Menu.Item
+                    name='costume'
+                    content = "Κοστούμι"
+                    active={activeItem === 'costume'}
+                    onClick={this.handleItemClick}
+                    href='/insert/costume'
+                >
+                </Menu.Item>
+                <Menu.Item
+                    name='use'
+                    content = "Χρήση"
+                    active={activeItem === 'use'}
+                    onClick={this.handleItemClick}
+                    href='/insert/use'>
+                </Menu.Item>
+                <Menu.Item
                     name='tp'
-                    content = "theatrical play"
+                    content = "Θεατρική Παράσταση"
                     active={activeItem === 'tp'}
                     onClick={this.handleItemClick}
-                    href='/insertTP'>
-                   
+                    href='/insert/theatrical_play'>
                 </Menu.Item>
                 </Menu>
             </div>

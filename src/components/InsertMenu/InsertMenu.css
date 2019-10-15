@@ -7,7 +7,20 @@
   font-family: Helvetica, sans-serif;
 }
 
-  
+.control, fieldset {
+  margin: 6px 0;
+}
+
+label {
+  display: inline-block;
+  width: 200px;
+  vertical-align: top;
+}
+
+input + label {
+  width: auto;
+}
+
 .small-input{ 
   width: 40%;
   padding: 1%;
@@ -63,10 +76,9 @@
   }
   
   .select-box{
-    position: relative;
-    width: 40%;
     text-align: left;
     border-radius: 4px;
+
   }
   
   .react-autosuggest__container {

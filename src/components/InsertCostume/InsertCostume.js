@@ -3,14 +3,14 @@ import {PostData} from '../../services/PostData';
 import {Redirect} from 'react-router-dom'; 
 import Select from 'react-select';
 import "../Geosuggest/Geosuggest.css";
-import { TextArea, GridRow, Container } from 'semantic-ui-react';
+import { TextArea, GridRow, Container, Form, Input, FormSelect } from 'semantic-ui-react';
 import Geosuggest from 'react-geosuggest';
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import CreatableSelect from 'react-select/creatable';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import Insert from '../Insert/Insert';
-import '../Insert/Insert.css';
+import InsertMenu from '../InsertMenu/InsertMenu';
+import '../InsertMenu/InsertMenu.css';
 
 function escapeRegexCharacters(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -75,7 +75,8 @@ class InsertCostume extends Component {
 
             /////////////////////////
             cond1: false,
-            cond2: false
+            cond2: false,
+            cond3: false,
         };
         this.insert = this.insert.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -154,6 +155,22 @@ class InsertCostume extends Component {
     }
 
     enableSubmit(){
+        //if everything is submitted
+        if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
+            this.state.cond2=true;
+        }
+        else if(this.decription_legnth() >= 300){
+            this.state.submit = false;
+            console.log("too big or too small description");
+            this.state.cond2=false;
+            var result=this.createNotification("error2");
+            console.log(result);
+            return result;
+        }
+        else{
+            this.state.cond2=false;
+        }
+
         if(this.state.name){ //If name is given, check if it already exist
             PostData('costumeExists', this.state).then((result) => {
                 let responseJson = result;
@@ -175,37 +192,19 @@ class InsertCostume extends Component {
             })     
         }
         else{
+            this.cond1=false;
             console.log("no name");
         }
-        
-        //if everything is submitted
-        if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
-            console.log("ok legnth");
-            this.state.cond2=true;
-        }
-        else if(this.decription_legnth() >= 300){
-            this.state.submit = false;
-            console.log("too big or too small description");
-            this.state.cond2=false;
-            var result=this.createNotification("error2");
-            console.log(result);
-            return result;
-        }
-        else{
-            this.state.submit = false;
-            this.state.cond2=false;
-            return result;
-        }
 
-        if(this.state.name && this.state.descr && this.state.location && this.state.selectedMaterialOption
-            && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption
-            && this.state.location_influence && this.state.designer){
-                if(this.state.cond1 && this.state.cond2){
-                    this.state.submit = true;
-                }
+        if(this.state.location && this.state.selectedMaterialOption && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption){
+               this.state.cond3 = true;
             }
         else{
             console.log("something is missing");   
+        }
+
+        if(this.state.cond1 && this.state.cond2 && this.state.cond3){
+            this.state.submit = true;
         }
 
         return null;
@@ -303,11 +302,65 @@ class InsertCostume extends Component {
             }
         });
     }
-    
+
+    clearData(){
+        this.state.name = '';
+        this.state.descr = '';
+    }
+
     /*Insert of costume*/
+    
+    handleSubmit = () => {
+        this.setState({costumeData: '',
+        name: '',
+        descr: '',
+        //Uses' data
+        u_data:[],
+        usesData: '',
+        //for Use suggestion on insert
+        u_value: '', 
+        newValue: '',
+        //Theatrical Plays data
+        TP_data:[],
+        TPData: '',
+        tp_value:'',
+        newTPvalue: '',
+        //For backend insert
+        actors: '',
+        designer: '',
+        parts: '',
+        //Material data on insert
+        m_value: '',
+        //Technique data on insert
+        t_value: '',
+        //Sex data on insert
+        s_value: '',
+        //Select
+        selectedSexOption: null,
+        selectedUseOption: null,
+        selectedMaterialOption: null,
+        selectedTechniqueOption: null,
+        selectedTPOption: null,
+        //Geosuggest
+        location:'',
+        location_select:'',
+        location_influence:'',
+        location_influence_select:'',
+
+        //For validation reasons
+        description_MAXlegnth: 300,
+        description_status: false,
+        submit: false,
+        redirectToReferrer: false,
+
+        /////////////////////////
+        cond1: false,
+        cond2: false,
+        cond3: false});
+        this.insert();
+    }
 
     insert() {
-        var result;
         this.state.u_value = this.state.selectedUseOption.value;
         this.state.t_value = this.state.selectedTechniqueOption.value;
         this.state.m_value = this.state.selectedMaterialOption.value;
@@ -319,22 +372,18 @@ class InsertCostume extends Component {
                 let responseJson = result;
                 if(responseJson.costumeData){
                     sessionStorage.setItem('costumeData',JSON.stringify(responseJson));
-                    //this.setState({redirectToReferrer: true});
-                    result=this.createNotification("insert-success");
-                    console.log(result);
-                    return result;
+                    this.setState({redirectToReferrer: true});
+                    let ret=this.createNotification("insert-success");
+                    console.log(ret);
                 }
                 else
                     alert(result.error);
                 });
-       }    
+       } 
     }
 
+ 
     render() {
-       if (sessionStorage.getItem('costumeData')){
-            sessionStorage.setItem('costumeData','');
-            sessionStorage.clear();
-       }
         //For selection of Sex: 
         const {selectedSexOption} = this.state;
         //For selection of Use:
@@ -345,6 +394,8 @@ class InsertCostume extends Component {
         const {selectedTechniqueOption} = this.state;
         //For selection of Theatrical Plays
         const {selectedTPOption} = this.state;
+
+        const {name, descr, designer, actors, parts} = this.state;
 
         const u_options = [];
         const p_options = [];
@@ -371,36 +422,34 @@ class InsertCostume extends Component {
         console.log(u_options, sexs);
        
         return ( 
-            
                 <div className="main"> 
-                <Insert activeItem ='costume'></Insert>
-                <form className="form">
-                
+                <InsertMenu activeItem ='costume'></InsertMenu>
                 <NotificationContainer>{this.enableSubmit()}</NotificationContainer>
-
-                   <Container>
-                        <label> <h4>Τίτλος</h4>
-                        <input className="small-input" type="text" name="name" onChange={this.onChange}/></label>
-                        
-                        <label><h4>Περιγραφή</h4></label> 
-                        <TextArea className="textarea" type="text" name="descr" onChange={this.onChange} /*maxLength={this.state.description_MAXlegnth}*/></TextArea>
+                <Form onSubmit={this.handleSubmit}>
+                    <Form.Field required>
+                        <label>Τίτλος</label>
+                        <Input type="text" name="name" value={name} onChange={this.onChange}/>
+                    </Form.Field>
+                    <Form.Field required>
+                        <label>Περιγραφή</label> 
+                        <TextArea className="textarea" type="text" name="descr"  value={descr} onChange={this.onChange} /*maxLength={this.state.description_MAXlegnth}*/></TextArea>
                         <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
-                        
-                    </Container>
+                    </Form.Field>                    
                     <hr></hr>
-                    <Container className='container'>
-                        <label> <h4>Χρήση</h4>
+                    <Form.Group widths="equal">
+                        <Form.Field required>
+                            <label>Χρήση</label>
                             <Select className = "select-Container" 
                                 value = {selectedUseOption}
                                 options = {u_options}
                                 maxMenuHeight={200}
                                 onChange = {this.handleUseSelect}
                                 closeMenuOnSelect={true}  
-                                isSearchable            
-                            />
+                                isSearchable/>
                             <a href='/insertUse'> Προσθήκη νέας χρήσης</a>
-                        </label>
-                        <label> <h4>Φύλο</h4>
+                        </Form.Field>
+                        <Form.Field required>
+                        <label>Φύλο</label>
                             <Select className = "select-Container"
                                 value = {selectedSexOption} 
                                 isMulti                                
@@ -409,9 +458,10 @@ class InsertCostume extends Component {
                                 onChange = {this.handleSexSelect}
                                 options = {sexs}
                                 ignoreAccents      
-                            />
-                        </label>
-                        <label> <h4>Υλικό</h4>
+                        />
+                        </Form.Field>
+                        <Form.Field required>
+                        <label>Υλικό</label>
                         <CreatableSelect  className="select-Container"
                             isClearable
                             onChange={this.handleMaterialSelect}
@@ -422,8 +472,9 @@ class InsertCostume extends Component {
                             isSearchable                                   
                             ignoreAccents                
                         />
-                        </label>
-                        <label> <h4>Τεχνική</h4>
+                        </Form.Field>
+                        <Form.Field required>
+                        <label>Τεχνική</label>
                             <CreatableSelect  className="select-Container"
                                 isClearable
                                 onChange={this.handleTechniqueSelect}
@@ -434,37 +485,35 @@ class InsertCostume extends Component {
                                 isSearchable        
                                 ignoreAccents                 
                             />
-                        </label>
-                        <label> <h4>Σχεδιαστής</h4>
-                        <input className="small-input" type="text" name="designer" onChange={this.onChange}/> </label> 
-                       </Container>
-                    
+                        </Form.Field>
+                    </Form.Group>
+                    <Form.Field>
+                    <label>Σχεδιαστής</label> 
+                        <Input type="text" name="designer" value={designer} onChange={this.onChange}/>
+                    </Form.Field>
                     <hr></hr>
-
-                    <Container display="flex" flexDirection="row" >
-                        
-                        <label> <h4>Περιοχή Αναφοράς</h4>
-                        <Geosuggest
-                            onChange={this.handleLocationChange}
-                            onSuggestSelect={this.handleLocationSelect}
-                        />
-                        {this.handleLocation()}
-                        </label>
-                       
-                     
-                       <label> <h4>Χώρα/Περιοχή Επιρροής </h4>
+                    <Form.Group widths="equal">
+                        <Form.Field required>
+                            <label>Περιοχή Αναφοράς</label>
+                            <Geosuggest
+                                onChange={this.handleLocationChange}
+                                onSuggestSelect={this.handleLocationSelect}
+                            />
+                            {this.handleLocation()}
+                        </Form.Field>
+                        <Form.Field>
+                        <label>Χώρα/Περιοχή Επιρροής</label>
                             <Geosuggest
                                 onChange={this.handleLocationInfluenceChange}
                                 onSuggestSelect={this.handleLocationInfluenceSelect}
                             />
                             {this.handleLocation()}
                             {this.handleLocationInfluence()}
-                        </label>
-                       
-                   </Container>
-                   <hr></hr>
-                   <Container>
-                   <label> <h4>Θεατρικές Παραστάσεις</h4>
+                        </Form.Field>
+                    </Form.Group>
+                    <hr></hr>
+                    <Form.Field>
+                        <label>Θεατρικές Παραστάσεις</label>
                         <Select className = "select-Container"
                             value = {selectedTPOption}
                             options = {p_options}
@@ -472,16 +521,21 @@ class InsertCostume extends Component {
                             onChange = {this.handleTPSelect}
                             closeMenuOnSelect={true}  
                             isSearchable            
-                        /> </label>
-                    <label> <h4>Ηθοποιοί</h4>
-                    <input className="small-input" type="text" name="actors" onChange={this.onChange}/> </label> 
-                    <label> <h4>Ρόλος</h4>
-                    <input className="small-input" type="text" name="parts" onChange={this.onChange}/> </label> 
+                        /> 
+                        </Form.Field>
+                    <Form.Group widths="equal">
+                        <Form.Field>
+                        <label>Ηθοποιοί</label>
+                        <Input type="text" name="actors" value={actors} onChange={this.onChange}/>  
+                        </Form.Field>
+                        <Form.Field>
+                        <label>Ρόλος</label>
+                        <Input type="text" name="parts" value={parts} onChange={this.onChange}/>
+                        </Form.Field>
+                    </Form.Group>
                     <br></br>
-                    <button disabled = {!this.state.submit} type="submit" className="button-save" onClick={this.insert}>Save</button>
-                   </Container>
-                   
-                </form>
+                    <Form.Button disabled = {!this.state.submit} color='teal' content='Submit'/>
+                </Form>
                 </div>
                 
         );
