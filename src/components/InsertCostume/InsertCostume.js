@@ -82,7 +82,7 @@ class InsertCostume extends Component {
         this.onChange = this.onChange.bind(this);
         this.onChangeValue = this.onChangeValue.bind(this);
         this.get_uses = this.get_uses.bind(this);
-        this.enableSubmit = this.enableSubmit.bind(this);
+        this.validate = this.validate.bind(this);
     }
 
     /*Secure way to getData*/
@@ -146,6 +146,12 @@ class InsertCostume extends Component {
                         <NotificationContainer>{ NotificationManager.warning("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
                     </div>
                 )
+            case "error-missing-value":
+                return(
+                    <div>
+                        <NotificationContainer>{ NotificationManager.error("Παρακαλώ συμπληρώστε όλα τα απαραίτητα πεδία",'Σφάλμα', 2000) }</NotificationContainer>
+                    </div>
+                )
             case "insert-success":
                 return(
                     <NotificationContainer>{ NotificationManager.success('Entry is successfully inserted to DB','Success!',2000) }</NotificationContainer>
@@ -154,21 +160,17 @@ class InsertCostume extends Component {
         };
     }
 
-    enableSubmit(){
+    validate(){
+        var cond1, cond3 = false;
         //if everything is submitted
         if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
-            this.state.cond2=true;
+            cond1=true;
         }
         else if(this.decription_legnth() >= 300){
-            this.state.submit = false;
             console.log("too big or too small description");
-            this.state.cond2=false;
             var result=this.createNotification("error2");
             console.log(result);
             return result;
-        }
-        else{
-            this.state.cond2=false;
         }
 
         if(this.state.name){ //If name is given, check if it already exist
@@ -181,34 +183,29 @@ class InsertCostume extends Component {
                         console.log("already exists");
                         result=this.createNotification("error1");
                         console.log(result);
-                        this.state.cond1 = false;
                         return result;
                     }
                 }
                 else{
                     console.log("doesnt exists");
-                    this.state.cond1=true;
+                    //Validation Succeed
+                    if (cond1 && cond3){
+                        this.insert();
+                    }
                 }
-            })     
+               
+            })
         }
-        else{
-            this.cond1=false;
-            console.log("no name");
-        }
-
         if(this.state.location && this.state.selectedMaterialOption && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption){
-               this.state.cond3 = true;
-            }
-        else{
-            console.log("something is missing");   
+            cond3 = true;
         }
-
-        if(this.state.cond1 && this.state.cond2 && this.state.cond3){
-            this.state.submit = true;
+        else if(!this.state.location || !this.state.name || !this.state.descr|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
+            console.log("something is missing");
+            var result=this.createNotification("error-missing-value");
+            return result;
         }
-
-        return null;
     }
+
 
     /*For selection of use categories*/
     handleUseSelect = (selectedUseOption) => {
@@ -304,25 +301,13 @@ class InsertCostume extends Component {
     }
 
     clearData(){
-        this.state.name = '';
-        this.state.descr = '';
-    }
-
-    /*Insert of costume*/
-    
-    handleSubmit = () => {
         this.setState({costumeData: '',
         name: '',
         descr: '',
-        //Uses' data
-        u_data:[],
-        usesData: '',
         //for Use suggestion on insert
         u_value: '', 
         newValue: '',
         //Theatrical Plays data
-        TP_data:[],
-        TPData: '',
         tp_value:'',
         newTPvalue: '',
         //For backend insert
@@ -357,14 +342,23 @@ class InsertCostume extends Component {
         cond1: false,
         cond2: false,
         cond3: false});
-        this.insert();
+        this._geoSuggest.clear();
+   
+    }
+
+    /*Insert of costume*/
+    
+    handleSubmit = () => {
+        this.validate();
     }
 
     insert() {
         this.state.u_value = this.state.selectedUseOption.value;
         this.state.t_value = this.state.selectedTechniqueOption.value;
         this.state.m_value = this.state.selectedMaterialOption.value;
-        this.state.tp_value = "";
+        if(this.state.tp_value){
+            this.state.tp_value = this.state.selectedTPOption.value;
+        }
         for(var key in this.state.selectedSexOption){
                 this.state.s_value = this.state.selectedSexOption[key].value;
                 console.log("insert",this.state);
@@ -374,12 +368,12 @@ class InsertCostume extends Component {
                     sessionStorage.setItem('costumeData',JSON.stringify(responseJson));
                     this.setState({redirectToReferrer: true});
                     let ret=this.createNotification("insert-success");
-                    console.log(ret);
+                    this.clearData();
                 }
                 else
                     alert(result.error);
                 });
-       } 
+       }
     }
 
  
@@ -424,7 +418,7 @@ class InsertCostume extends Component {
         return ( 
                 <div className="main"> 
                 <InsertMenu activeItem ='costume'></InsertMenu>
-                <NotificationContainer>{this.enableSubmit()}</NotificationContainer>
+                <NotificationContainer></NotificationContainer>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Field required>
                         <label>Τίτλος</label>
@@ -496,6 +490,7 @@ class InsertCostume extends Component {
                         <Form.Field required>
                             <label>Περιοχή Αναφοράς</label>
                             <Geosuggest
+                                ref={el=>this._geoSuggest=el}
                                 onChange={this.handleLocationChange}
                                 onSuggestSelect={this.handleLocationSelect}
                             />
@@ -534,7 +529,7 @@ class InsertCostume extends Component {
                         </Form.Field>
                     </Form.Group>
                     <br></br>
-                    <Form.Button disabled = {!this.state.submit} color='teal' content='Submit'/>
+                    <Form.Button color='teal' content='Submit'/>
                 </Form>
                 </div>
                 
