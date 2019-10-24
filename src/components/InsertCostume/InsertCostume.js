@@ -196,6 +196,7 @@ class InsertCostume extends Component {
                
             })
         }
+        
         if(this.state.location && this.state.selectedMaterialOption && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption){
             cond3 = true;
         }
@@ -367,11 +368,11 @@ class InsertCostume extends Component {
                 if(responseJson.costumeData){
                     sessionStorage.setItem('costumeData',JSON.stringify(responseJson));
                     this.setState({redirectToReferrer: true});
-                    let ret=this.createNotification("insert-success");
+                    if(key===0){
+                        let ret=this.createNotification("insert-success");
+                    }
                     this.clearData();
                 }
-                else
-                    alert(result.error);
                 });
        }
     }

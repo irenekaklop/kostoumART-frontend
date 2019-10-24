@@ -14,8 +14,7 @@ class DisplayCostumes extends Component{
             direction: null,
             column: null,
             //Search
-            selectedCostumeId: null,
-
+            selectedCostumeName: null,
         };
         this.onChange = this.onChange.bind(this);
         this.getCostumes = this.getCostumes.bind(this);
@@ -25,7 +24,7 @@ class DisplayCostumes extends Component{
     componentDidMount(){
         this.getCostumes();
     }
-
+    
     onChange(e){
         this.setState({costumeData:e.target.value});
     }
@@ -55,6 +54,7 @@ class DisplayCostumes extends Component{
                 sessionStorage.setItem("costumeData",JSON.stringify(responseJson));
                 this.setState({data: responseJson.costumeData});
                 console.log(this.state);
+                this.transformTable();
             }
             else{
                 alert(result.error);
@@ -62,12 +62,12 @@ class DisplayCostumes extends Component{
         });
     }
 
-    handleDelete(selectedCostumeId) {
-        this.setState({selectedCostumeId}); 
+    handleDelete(selectedCostumeName) {
+        this.setState({selectedCostumeName}); 
     }
 
     deleteCostume(){
-        if(this.state.selectedCostumeId){
+        if(this.state.selectedCostumeName){
             PostData('deleteCostume', this.state).then((result) => {
                 let responseJson = result;
                 console.log(result);
@@ -79,8 +79,37 @@ class DisplayCostumes extends Component{
                     console.log("not DELETED");
                 }
             });
-            this.state.selectedCostumeId=null;
+            this.state.selectedCostumeName=null;
         }
+    }
+
+    transformTable(){
+          var output = [];
+          
+          this.state.data.forEach(function(item) {
+            var existing = output.filter(function(v, i) {
+              return v.name == item.name;
+            });
+            if (existing.length) {
+              var existingIndex = output.indexOf(existing[0]);
+              output[existingIndex].sex = output[existingIndex].sex.concat(item.sex);
+            } else {
+              if (typeof item.sex == 'string')
+                item.sex = [item.sex];
+              output.push(item);
+            }
+          });
+          
+          output.forEach(
+              function(item){
+                  if(item.sex.length){
+                    item.sex = item.sex.join(", ");
+                  }
+                  
+              }
+          )
+          this.setState({data: output});
+          console.log(this.state);
     }
 
     renderTableData() {
@@ -101,7 +130,7 @@ class DisplayCostumes extends Component{
                 <Table.Cell>{actors}</Table.Cell>
                 <Table.Cell>{roles}</Table.Cell>
                 <Table.Cell><Button icon
-                onClick={()=>{this.handleDelete(costume_id);}}><Icon name="delete"/></Button></Table.Cell>
+                onClick={()=>{this.handleDelete(name);}}><Icon name="delete"/></Button></Table.Cell>
                 </Table.Row>
             )
         })
@@ -109,7 +138,7 @@ class DisplayCostumes extends Component{
 
 
     render() {   
-        const { column, direction} = this.state
+        const { column, direction} = this.state;
         this.deleteCostume();
         return (
             <div className="container__table">
@@ -134,7 +163,7 @@ class DisplayCostumes extends Component{
                       <Table.HeaderCell></Table.HeaderCell>
                   </Table.Header>
                   <Table.Body>
-                      {this.renderTableData()}
+                     {this.renderTableData()} 
                   </Table.Body>
               </Table>
            

@@ -51,7 +51,10 @@ class InsertUse extends Component{
                 return(
                     <NotificationContainer>{ NotificationManager.success('Success!') }</NotificationContainer>
                 )
-            
+            case "error-missing-value":
+                return(
+                    <NotificationContainer>{ NotificationManager.error("Παρακαλώ συμπληρώστε όλα τα απαραίτητα πεδία",'Σφάλμα', 2000) }</NotificationContainer>
+                      )
         };
     }
 
@@ -69,7 +72,7 @@ class InsertUse extends Component{
         return this.state.description.length;
     }
 
-    enableSubmit(){ 
+    validate(){ 
         var ret = null;
         //if everything is submitted
         if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
@@ -81,33 +84,32 @@ class InsertUse extends Component{
             this.state.cond1 = false;
             return ret;
         }
-        else{
-            this.state.cond1 = false;
-        }
 
         if(this.state.name && this.state.selectedCategoryOption){
             //Check if entry already exists
             this.state.use_category=this.state.selectedCategoryOption.value;
             PostData('existsUse',this.state).then((result) => {
                 if(result.exists ==='true'){
-                    if(this.state.useData===''){ 
-                        console.log("already exists");
-                        if(this.state.useData === ""){ //To prevent notification after insert()
-                            ret=this.createNotification("error1");
-                            this.state.cond2 = false;
-                            return ret;
-                        }
+                    console.log("already exists");
+                    if(this.state.useData === ""){ //To prevent notification after insert()
+                        ret=this.createNotification("error1");
+                        this.state.cond2 = false;
+                         return ret;
                     }
                 }
                 else{
-                    this.state.cond2 = true;
+                    if(this.state.cond1){
+                        this.insert();
+                    }
                 }
             })     
             
         }
-        
-        if(this.state.cond1 && this.state.cond2){
-            this.state.submit = true;
+
+        if(!this.state.description || !this.state.name || !this.state.selectedCategoryOption){
+            console.log("something is missing");
+            var result=this.createNotification("error-missing-value");
+            return result;
         }
         
         return ret;
@@ -123,6 +125,7 @@ class InsertUse extends Component{
                 //<ReactNotification name="notifications"/>
                 let ret=this.createNotification("insert-success");
                 console.log(ret);
+                this.clearEntries();
                 return ret;
             }
             else{
@@ -133,20 +136,23 @@ class InsertUse extends Component{
     }
 
     handleSubmit = () => {
+        this.validate();
+    }
+
+    clearEntries(){
         this.setState({ useData: '',
-    use_category: '',
-    name: '',
-    description: '',
-    customs: '',
-    other_use: '',
-    exists:'',
-    description_MAXlegnth: 300,
-    description_status: false,
-    submit: false,
-    redirectToReferrer: false,
-    //Select var
-    selectedCategoryOption: '', cond1: false, cond2: false});
-        this.insert();
+        use_category: '',
+        name: '',
+        description: '',
+        customs: '',
+        other_use: '',
+        exists:'',
+        description_MAXlegnth: 300,
+        description_status: false,
+        submit: false,
+        redirectToReferrer: false,
+        //Select var
+        selectedCategoryOption: '', cond1: false, cond2: false});
     }
 
     render(){
@@ -156,14 +162,14 @@ class InsertUse extends Component{
         return(
             <div className="main"> 
             <InsertMenu activeItem='use'></InsertMenu>
-                <NotificationContainer>{this.enableSubmit()}</NotificationContainer>
+                <NotificationContainer></NotificationContainer>
                     <Form onSubmit={this.handleSubmit}>
                         <Form.Group widths='equal'>
-                            <Form.Field>
+                            <Form.Field required>
                                 <label> Όνομα Δραστηριότητας </label> 
                                 <Input type="text" name="name" value={name} onChange={this.onChange}/>
                             </Form.Field>
-                            <Form.Field>
+                            <Form.Field required>
                             <label> Κατηγορία χρήσης</label>
                             <Select
                                     value = {selectedCategoryOption}                           
@@ -175,7 +181,7 @@ class InsertUse extends Component{
                             </Form.Field>
                         </Form.Group>
                        
-                        <Form.Field>
+                        <Form.Field required>
                         <label>Περιγραφή</label> 
                             <TextArea className="textarea" type="text" name="description" value={description} onChange={this.onChange} ></TextArea>
                             <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
@@ -184,7 +190,7 @@ class InsertUse extends Component{
                             <label>Ήθη/Έθιμα</label> 
                             <input className="small-input" type="text" name="customs" value={customs} onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></input>
                         </Form.Field>
-                        <Form.Button disabled={!this.state.submit} color='teal' content='Submit' />
+                        <Form.Button color='teal' content='Submit' />
                 </Form>
             </div>
 
