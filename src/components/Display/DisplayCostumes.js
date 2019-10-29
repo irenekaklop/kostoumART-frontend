@@ -5,6 +5,8 @@ import { PostData } from '../../services/PostData';
 import { Table, Search, Icon, Button } from "semantic-ui-react";
 import _ from 'lodash';
 import DisplayMenu from '../DisplayMenu/DisplayMenu';
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 class DisplayCostumes extends Component{
     constructor(props){
@@ -28,6 +30,22 @@ class DisplayCostumes extends Component{
     
     onChange(e){
         this.setState({costumeData:e.target.value});
+    }
+
+    createNotification(type){
+        switch (type) {
+            case "error":
+                return(
+                    <div>
+                        <NotificationContainer>{ NotificationManager.error('Η εγγραφή δεν διαγράφηκε!') }</NotificationContainer>
+                    </div>
+                )
+            case "delete-success":
+                return(
+                    <NotificationContainer>{ NotificationManager.success('Η εγγραφή διαγράφηκε','Success!',2000) }</NotificationContainer>
+                )
+            
+        };
     }
 
     handleSort = (clickedColumn) => () => {
@@ -74,10 +92,14 @@ class DisplayCostumes extends Component{
                 console.log(result);
                 if(responseJson.deleted === 1){
                     console.log("DELETED");
+                    var result=this.createNotification("delete-success");
                     this.getCostumes();
+                    return result;
                 }
                 else{
                     console.log("not DELETED");
+                    var result=this.createNotification("error");
+                    return result;
                 }
             });
             this.state.selectedCostumeName=null;
@@ -144,6 +166,7 @@ class DisplayCostumes extends Component{
         return (
             <div className="container__table">
                 <DisplayMenu activeItem = 'costume'></DisplayMenu>
+                <NotificationContainer></NotificationContainer>
                 <Table celled >
                     <Table.Header fullWidth>
                             <Table.HeaderCell 

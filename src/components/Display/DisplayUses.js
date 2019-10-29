@@ -5,6 +5,8 @@ import { PostData } from '../../services/PostData';
 import { Table, Search, Icon, Button } from "semantic-ui-react";
 import _ from 'lodash';
 import DisplayMenu from '../DisplayMenu/DisplayMenu';
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 class DisplayUses extends Component{
     constructor(props){
@@ -28,6 +30,22 @@ class DisplayUses extends Component{
     
     onChange(e){
         this.setState({usesData:e.target.value});
+    }
+
+    createNotification(type){
+        switch (type) {
+            case "error":
+                return(
+                    <div>
+                        <NotificationContainer>{ NotificationManager.error('Η εγγραφή δεν διαγράφηκε!') }</NotificationContainer>
+                    </div>
+                )
+            case "delete-success":
+                return(
+                    <NotificationContainer>{ NotificationManager.success('Η εγγραφή διαγράφηκε','Success!',2000) }</NotificationContainer>
+                )
+            
+        };
     }
 
     handleSort = (clickedColumn) => () => {
@@ -75,9 +93,13 @@ class DisplayUses extends Component{
                 if(responseJson.deleted === 1){
                     console.log("DELETED");
                     this.getUses();
+                    var result=this.createNotification("delete-success");
+                    return result;
                 }
                 else{
                     console.log("not DELETED");
+                    var result=this.createNotification("error");
+                    return result;
                 }
             });
             this.state.selectedUseName=null;
@@ -137,6 +159,7 @@ class DisplayUses extends Component{
         return (
             <div className="container__table">
                 <DisplayMenu activeItem = 'use'></DisplayMenu>
+                <NotificationContainer></NotificationContainer>
                 <Table celled >
                     <Table.Header fullWidth>
                         <Table.HeaderCell 
