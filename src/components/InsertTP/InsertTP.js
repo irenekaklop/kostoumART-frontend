@@ -89,7 +89,7 @@ class InsertTP extends Component{
                 }
             })
         }
-        else{
+        else if(!this.state.name || !this.state.theater){
             let result=this.createNotification("error-missing-value");
             return result;
         }
@@ -133,16 +133,16 @@ class InsertTP extends Component{
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Field required>
                         <label>Όνομα Παράστασης</label>
-                        <Input type="text" name={name} placeholder="Τίτλος παράστασης" onChange={this.onChange}/>
+                        <Input type="text" name="name" value={name} placeholder="Τίτλος παράστασης" onChange={this.onChange}/>
                     </Form.Field>
                     <Form.Group widths='equal'>
                     <Form.Field required>
                     <label>Θέατρο</label>
-                        <Input type="text" name={theater} onChange={this.onChange}/>
+                        <Input type="text" name="theater" value={theater} onChange={this.onChange}/>
                     </Form.Field>
                     <Form.Field>
                         <label>Σκηνοθέτης</label>
-                        <Input type="text" name={director} onChange={this.onChange}/>
+                        <Input type="text" name="director" value={director} onChange={this.onChange}/>
                     </Form.Field>
                     </Form.Group>
                     <Form.Button color='teal' content='Submit' />

@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import "react-table/react-table.css";
-import "./DisplayCostumes.css"
+import '../DisplayMenu/DisplayElement.css'
 import { PostData } from '../../services/PostData';
 import { Table, Search, Icon, Button } from "semantic-ui-react";
 import _ from 'lodash';
+import DisplayMenu from '../DisplayMenu/DisplayMenu';
 
 class DisplayCostumes extends Component{
     constructor(props){
@@ -88,7 +89,7 @@ class DisplayCostumes extends Component{
           
           this.state.data.forEach(function(item) {
             var existing = output.filter(function(v, i) {
-              return v.name == item.name;
+              return v.costume_name == item.costume_name;
             });
             if (existing.length) {
               var existingIndex = output.indexOf(existing[0]);
@@ -114,23 +115,23 @@ class DisplayCostumes extends Component{
 
     renderTableData() {
         return this.state.data.map((costume, index) => {
-            const { costume_id, name, description, sex, costume_use, material, technique, location, location_influence, designer, theatrical_play, actors, roles } = costume //destructuring
+            const { costume_id, use_name, costume_name, description, sex, material, technique, location, location_influence, designer, tp_title, actors, roles } = costume //destructuring
             return (
                 <Table.Row key={costume_id}>
-                <Table.Cell collapsing>{name}</Table.Cell>
+                <Table.Cell collapsing>{costume_name}</Table.Cell>
                 <Table.Cell>{description}</Table.Cell>
                 <Table.Cell collapsing>{sex}</Table.Cell>
-                <Table.Cell collapsing>{costume_use}</Table.Cell>
+                <Table.Cell collapsing>{use_name}</Table.Cell>
                 <Table.Cell collapsing>{material}</Table.Cell>
                 <Table.Cell collapsing>{technique}</Table.Cell>
                 <Table.Cell collapsing>{location}</Table.Cell>
                 <Table.Cell collapsing>{location_influence}</Table.Cell>
                 <Table.Cell collapsing>{designer}</Table.Cell>
-                <Table.Cell>{theatrical_play}</Table.Cell>
+                <Table.Cell>{tp_title}</Table.Cell>
                 <Table.Cell>{actors}</Table.Cell>
                 <Table.Cell>{roles}</Table.Cell>
-                <Table.Cell><Button icon
-                onClick={()=>{this.handleDelete(name);}}><Icon name="delete"/></Button></Table.Cell>
+                <Table.Cell collapsing><Button icon
+                onClick={()=>{this.handleDelete(costume_name);}}><Icon name="delete" color="red"/></Button></Table.Cell>
                 </Table.Row>
             )
         })
@@ -142,30 +143,30 @@ class DisplayCostumes extends Component{
         this.deleteCostume();
         return (
             <div className="container__table">
-              <Table celled >
-                  <Table.Header fullWidth>
-                        <Table.HeaderCell 
-                        sorted={column === 'name' ? direction : null}
-                        onClick={this.handleSort('name')}
-                        >Τίτλος</Table.HeaderCell>
-                        <Table.HeaderCell>Περιγραφή</Table.HeaderCell>
-                        <Table.HeaderCell>Φύλο</Table.HeaderCell>
-                        <Table.HeaderCell>Χρήση</Table.HeaderCell>
-                        <Table.HeaderCell>Υλικό κατασκευής</Table.HeaderCell>
-                        <Table.HeaderCell>Τεχνική Κατασκευής</Table.HeaderCell>
-                        <Table.HeaderCell>Περιοχή Αναφοράς</Table.HeaderCell>
-                        <Table.HeaderCell>Χώρα Επιρροής</Table.HeaderCell>
-                        <Table.HeaderCell>Σχεδιαστής</Table.HeaderCell>
-                        <Table.HeaderCell>Θεατρικές Παραστάσεις</Table.HeaderCell>
-                        <Table.HeaderCell>Ρόλος </Table.HeaderCell>
-                        <Table.HeaderCell>Ηθοποιός </Table.HeaderCell>
-                        <Table.HeaderCell></Table.HeaderCell>
-                      <Table.HeaderCell></Table.HeaderCell>
-                  </Table.Header>
-                  <Table.Body>
-                     {this.renderTableData()} 
-                  </Table.Body>
-              </Table>
+                <DisplayMenu activeItem = 'costume'></DisplayMenu>
+                <Table celled >
+                    <Table.Header fullWidth>
+                            <Table.HeaderCell 
+                            sorted={column === 'costume_name' ? direction : null}
+                            onClick={this.handleSort('costume_name')}
+                            >Τίτλος</Table.HeaderCell>
+                            <Table.HeaderCell>Περιγραφή</Table.HeaderCell>
+                            <Table.HeaderCell>Φύλο</Table.HeaderCell>
+                            <Table.HeaderCell>Χρήση</Table.HeaderCell>
+                            <Table.HeaderCell>Υλικό κατασκευής</Table.HeaderCell>
+                            <Table.HeaderCell>Τεχνική Κατασκευής</Table.HeaderCell>
+                            <Table.HeaderCell>Περιοχή Αναφοράς</Table.HeaderCell>
+                            <Table.HeaderCell>Χώρα Επιρροής</Table.HeaderCell>
+                            <Table.HeaderCell>Σχεδιαστής</Table.HeaderCell>
+                            <Table.HeaderCell>Θεατρικές Παραστάσεις</Table.HeaderCell>
+                            <Table.HeaderCell>Ρόλος </Table.HeaderCell>
+                            <Table.HeaderCell>Ηθοποιός </Table.HeaderCell>
+                            <Table.HeaderCell></Table.HeaderCell>
+                    </Table.Header>
+                    <Table.Body>
+                        {this.renderTableData()} 
+                    </Table.Body>
+                </Table>
            
           </div>
         );

@@ -357,21 +357,27 @@ class InsertCostume extends Component {
         this.state.u_value = this.state.selectedUseOption.value;
         this.state.t_value = this.state.selectedTechniqueOption.value;
         this.state.m_value = this.state.selectedMaterialOption.value;
-        if(this.state.tp_value){
+        if(this.state.selectedTPOption){
             this.state.tp_value = this.state.selectedTPOption.value;
         }
+        var not = false;
         for(var key in this.state.selectedSexOption){
                 this.state.s_value = this.state.selectedSexOption[key].value;
-                console.log("insert",this.state);
+                console.log("insert",key, this.state);
                 PostData('insertCostume',this.state).then((result) => {
                 let responseJson = result;
                 if(responseJson.costumeData){
+                    
                     sessionStorage.setItem('costumeData',JSON.stringify(responseJson));
                     this.setState({redirectToReferrer: true});
-                    if(key===0){
-                        let ret=this.createNotification("insert-success");
-                    }
                     this.clearData();
+                    if(!not){
+                        
+                        let ret=this.createNotification("insert-success");
+                        not = true;
+                        return ret;
+                    }
+                    
                 }
                 });
        }

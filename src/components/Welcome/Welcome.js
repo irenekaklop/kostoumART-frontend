@@ -25,7 +25,7 @@ class MenuContainer extends React.Component {
       activeItemColor: '',
       menuItems: [
         { text: 'Insert', link: '/insert'},
-        { text: 'Display', link: '/displayCostumes' },
+        { text: 'Display', link: '/display' },
       ],
     }
     
