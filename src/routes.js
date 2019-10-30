@@ -16,12 +16,12 @@ import DisplayTPs from './components/Display/DisplayTP';
 const Routes = () => (
     <BrowserRouter >
     <Switch>
-    <Route exact path="/" component={Welcome}/>
+    <Route exact path="/kostoumart-dashboard" component={Welcome}/>
     <Route exact path='/insert' component={InsertCostume}/>
     <Route exact path='/geo' component = {Geosuggest}/>
-    <Route exact path="/insert/costume" component={InsertCostume}/>
-    <Route exact path = "/insert/use" component={InsertUse}/>
-    <Route exact path = "/insert/theatrical_play" component={InsertTP}/>
+    <Route exact path="*/insert/costume" component={InsertCostume}/>
+    <Route exact path = "*/insert/use" component={InsertUse}/>
+    <Route exact path = "*/insert/theatrical_play" component={InsertTP}/>
     <Route exact path="/success" component={SuccessInsert}/>
     <Route exact path="/display" component = {DisplayCostumes}/>
     <Route exact path="/display/costumes" component = {DisplayCostumes}/>
