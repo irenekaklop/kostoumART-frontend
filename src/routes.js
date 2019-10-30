@@ -2,13 +2,13 @@ import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Welcome from './components/Welcome/Welcome';
 import NotFound from './components/NotFound/NotFound';
-import InsertCostume from './components/InsertCostume/InsertCostume';
+import InsertCostume from './components/Insert/InsertCostume';
 import SuccessInsert from './components/SuccessInsert/SuccessInsert';
 import Suggestions from './components/Autocomplete/Autocomplete';
 import DisplayCostumes from './components/Display/DisplayCostumes';
 import Geosuggest from './components/Geosuggest/Geosuggest';
-import InsertUse from './components/InsertUse/InsertUse';
-import InsertTP from './components/InsertTP/InsertTP';
+import InsertUse from './components/Insert/InsertUse';
+import InsertTP from './components/Insert/InsertTP';
 import DisplayUses from './components/Display/DisplayUses';
 import DisplayTPs from './components/Display/DisplayTP';
 

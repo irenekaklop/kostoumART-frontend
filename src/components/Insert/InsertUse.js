@@ -7,7 +7,7 @@ import { TextArea, GridRow, Container, Form, Input, FormSelect } from 'semantic-
 import {use_categories} from '../../utils/options';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import InsertMenu from '../InsertMenu/InsertMenu';
+import InsertMenu from './InsertMenu';
 
 class InsertUse extends Component{
     constructor(props){

@@ -3,8 +3,8 @@ import {PostData} from '../../services/PostData';
 import { TextArea, GridRow, Container, Form, Input } from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import InsertMenu from '../InsertMenu/InsertMenu';
-import "../InsertMenu/InsertMenu";
+import InsertMenu from './InsertMenu';
+import "./InsertMenu";
 
 class InsertTP extends Component{
     constructor(props){

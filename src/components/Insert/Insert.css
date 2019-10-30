@@ -43,10 +43,14 @@ input + label {
   padding: 1%;
 }
   
-.select-Container{
+.select-container{
   width: 40%;
   margin-top: 1%;
   margin-bottom: 1%;
+}
+
+.select-container-link{
+  width: 50%;
 }
 
   .button-save {

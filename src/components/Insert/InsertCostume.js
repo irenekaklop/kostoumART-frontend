@@ -9,8 +9,8 @@ import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import CreatableSelect from 'react-select/creatable';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import InsertMenu from '../InsertMenu/InsertMenu';
-import '../InsertMenu/InsertMenu.css';
+import InsertMenu from './InsertMenu';
+import './Insert.css';
 
 function escapeRegexCharacters(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -440,18 +440,18 @@ class InsertCostume extends Component {
                     <Form.Group widths="equal">
                         <Form.Field required>
                             <label>Χρήση</label>
-                            <Select className = "select-Container" 
+                            <Select
                                 value = {selectedUseOption}
                                 options = {u_options}
                                 maxMenuHeight={200}
                                 onChange = {this.handleUseSelect}
                                 closeMenuOnSelect={true}  
                                 isSearchable/>
-                            <a href='/insertUse'> Προσθήκη νέας χρήσης</a>
+                            <a href='/insert/use'> Προσθήκη νέας χρήσης</a>
                         </Form.Field>
                         <Form.Field required>
                         <label>Φύλο</label>
-                            <Select className = "select-Container"
+                            <Select 
                                 value = {selectedSexOption} 
                                 isMulti                                
                                 maxMenuHeight={150}
@@ -463,7 +463,7 @@ class InsertCostume extends Component {
                         </Form.Field>
                         <Form.Field required>
                         <label>Υλικό</label>
-                        <CreatableSelect  className="select-Container"
+                        <CreatableSelect
                             isClearable
                             onChange={this.handleMaterialSelect}
                             value = {selectedMaterialOption}
@@ -476,7 +476,7 @@ class InsertCostume extends Component {
                         </Form.Field>
                         <Form.Field required>
                         <label>Τεχνική</label>
-                            <CreatableSelect  className="select-Container"
+                            <CreatableSelect
                                 isClearable
                                 onChange={this.handleTechniqueSelect}
                                 value = {selectedTechniqueOption}
@@ -516,7 +516,7 @@ class InsertCostume extends Component {
                     <hr></hr>
                     <Form.Field>
                         <label>Θεατρικές Παραστάσεις</label>
-                        <Select className = "select-Container"
+                        <Select className='select-container-link'
                             value = {selectedTPOption}
                             options = {p_options}
                             maxMenuHeight={200}
@@ -524,6 +524,7 @@ class InsertCostume extends Component {
                             closeMenuOnSelect={true}  
                             isSearchable            
                         /> 
+                        <a href='/insert/theatrical_play'> Προσθήκη νέας παράστασης</a>
                         </Form.Field>
                     <Form.Group widths="equal">
                         <Form.Field>

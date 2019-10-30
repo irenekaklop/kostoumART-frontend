@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import "../../styles/tabs.css";
-import "./InsertMenu.css";
+import "./Insert.css";
 import { Menu, Dropdown, Segment, MenuItem } from 'semantic-ui-react';
 
 
