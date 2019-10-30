@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import './Welcome.scss';
+import './Welcome.css';
 import {Router, Route, browserHistory, IndexRoute} from 'react-router-dom';
 
 class Welcome extends Component{
