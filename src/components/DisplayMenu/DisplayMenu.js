@@ -24,7 +24,7 @@ class DisplayMenu extends Component{
                     content = "Κοστούμι"
                     active={activeItem === 'costume'}
                     onClick={this.handleItemClick}
-                    href ='/display/costumes'
+                    href ='/display-costumes'
                 >
                 </Menu.Item>
                 <Menu.Item
@@ -32,14 +32,14 @@ class DisplayMenu extends Component{
                     content = "Χρήση"
                     active={activeItem === 'use'}
                     onClick={this.handleItemClick}
-                    href ='/display/uses'>
+                    href ='/display-uses'>
                 </Menu.Item>
                 <Menu.Item
                     name='tp'
                     content = "Θεατρική Παράσταση"
                     active={activeItem === 'tp'}
                     onClick={this.handleItemClick}
-                    href ='/display/tps'>
+                    href ='/display-tps'>
                 </Menu.Item>
                 </Menu>
             </div>

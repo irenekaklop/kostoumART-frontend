@@ -26,7 +26,7 @@ class Insert extends Component{
                     content = "Κοστούμι"
                     active={activeItem === 'costume'}
                     onClick={this.handleItemClick}
-                    href = "/insert/costume"
+                    href = "/insert-costume"
                 >
                 </Menu.Item>
                 <Menu.Item
@@ -34,14 +34,14 @@ class Insert extends Component{
                     content = "Χρήση"
                     active={activeItem === 'use'}
                     onClick={this.handleItemClick}
-                    href = "/insert/use">
+                    href = "/insert-use">
                 </Menu.Item>
                 <Menu.Item
                     name='tp'
                     content = "Θεατρική Παράσταση"
                     active={activeItem === 'tp'}
                     onClick={this.handleItemClick}
-                    href = "/insert/theatrical_play">
+                    href = "/insert-theatrical_play">
                 </Menu.Item>
                 </Menu>
             </div>
