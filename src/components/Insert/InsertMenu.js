@@ -41,7 +41,7 @@ class Insert extends Component{
                     content = "Θεατρική Παράσταση"
                     active={activeItem === 'tp'}
                     onClick={this.handleItemClick}
-                    href = "/insert-theatrical_play">
+                    href = "/insert-tp">
                 </Menu.Item>
                 </Menu>
             </div>

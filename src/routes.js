@@ -19,14 +19,14 @@ const Routes = () => (
     <Route exact path="/kostoumart-dashboard" component={Welcome}/>
     <Route exact path='/insert' component={InsertCostume}/>
     <Route exact path='/geo' component = {Geosuggest}/>
-    <Route exact path="*/insert/costume" component={InsertCostume}/>
-    <Route exact path = "*/insert/use" component={InsertUse}/>
-    <Route exact path = "*/insert/theatrical_play" component={InsertTP}/>
+    <Route exact path="/insert-costume" component={InsertCostume}/>
+    <Route exact path = "/insert-use" component={InsertUse}/>
+    <Route exact path = "/insert-tp" component={InsertTP}/>
     <Route exact path="/success" component={SuccessInsert}/>
     <Route exact path="/display" component = {DisplayCostumes}/>
-    <Route exact path="/display/costumes" component = {DisplayCostumes}/>
-    <Route exact path='/display/uses' component = {DisplayUses}/>
-    <Route exact path='/display/tps' component = {DisplayTPs}/>
+    <Route exact path="/display-costumes" component = {DisplayCostumes}/>
+    <Route exact path='/display-uses' component = {DisplayUses}/>
+    <Route exact path='/display-tps' component = {DisplayTPs}/>
     <Route exact path="/suggestions" component = {Suggestions}/>
     <Route path="*" component={NotFound}/>
     </Switch>
