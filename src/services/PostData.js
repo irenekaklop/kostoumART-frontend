@@ -1,5 +1,6 @@
 export function PostData(type, data) {
-    let BaseURL = 'http://localhost/react-costume-platform-php/api/index.php';
+    let BaseURL = 'http://localhost/kostoumart-frontend/api/index.php';
+    //let BaseURL = 'http://localhost/kostoumart-frontend/api/index.php';
     
     return new Promise((resolve, reject) =>{
         fetch(BaseURL+'?tp='+type,{

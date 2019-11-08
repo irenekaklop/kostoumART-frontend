@@ -66,19 +66,22 @@ class DisplayCostumes extends Component{
         })
     }
 
-    getCostumes(){
-        PostData('costumes', this.state).then((result) => {
-            let responseJson = result;
-            if(responseJson.costumeData){
-                sessionStorage.setItem("costumeData",JSON.stringify(responseJson));
-                this.setState({data: responseJson.costumeData});
-                console.log(this.state);
-                this.transformTable();
+    getCostumes = _ => {
+        let self = this;
+        fetch("http://localhost:8108/costumes", {
+            method: 'GET'
+        }).then(function(response) {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server");
             }
-            else{
-                alert(result.error);
-            }
+            return response.json();
+        }).then(function(data) {
+            console.log(data);
+            self.setState({data: data});
+        }).catch(function(err) {
+            console.log(err)
         });
+        console.log(this.state.data);
     }
 
     handleDelete(selectedCostumeName) {
@@ -87,7 +90,7 @@ class DisplayCostumes extends Component{
 
     deleteCostume(){
         if(this.state.selectedCostumeName){
-            PostData('deleteCostume', this.state).then((result) => {
+           /* PostData('deleteCostume', this.state).then((result) => {
                 let responseJson = result;
                 console.log(result);
                 if(responseJson.deleted === 1){
@@ -102,7 +105,7 @@ class DisplayCostumes extends Component{
                     return result;
                 }
             });
-            this.state.selectedCostumeName=null;
+            this.state.selectedCostumeName=null;*/
         }
     }
 
@@ -163,6 +166,7 @@ class DisplayCostumes extends Component{
     render() {   
         const { column, direction} = this.state;
         this.deleteCostume();
+        console.log(this.state.data);
         return (
             <div className="container__table">
                 <DisplayMenu activeItem = 'costume'></DisplayMenu>
