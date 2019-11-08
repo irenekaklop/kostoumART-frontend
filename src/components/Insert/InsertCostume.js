@@ -11,7 +11,7 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import InsertMenu from './InsertMenu';
 import './Insert.css';
-import Axios from 'Axios';
+import axios from 'axios';
 
 function escapeRegexCharacters(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -227,8 +227,8 @@ class InsertCostume extends Component {
     /*Get costumes from db*/
     
     getCostumes = _ => {
-        //Axios.get('http://88.197.53.80/kostoumart-api/costumes")
-        Axios.get("http://localhost:8108/costumes")
+        //axios.get('http://88.197.53.80/kostoumart-api/costumes")
+        axios.get("http://localhost:8108/costumes")
         .then(res => {
             const costumeData = res.data.response;
             this.setState({ costumeData });
@@ -240,8 +240,8 @@ class InsertCostume extends Component {
     /* Get uses from database*/ 
     get_uses = _ => {
         let self = this;
-        //Axios.get("http://88.197.53.80/kostoumart-api/uses")
-        Axios.get("http://localhost:8108/uses")
+        //axios.get("http://88.197.53.80/kostoumart-api/uses")
+        axios.get("http://localhost:8108/uses")
         .then(res => {
             const u_data = res.data.response;
             this.setState({ u_data });
@@ -252,8 +252,8 @@ class InsertCostume extends Component {
 
     /*Get Theatrical Plays from database*/
     get_theatrical_plays = _ => {
-        //Axios.get("ttp://88.197.53.80/kostoumart-api/tps")
-        Axios.get("http://localhost:8108/tps")
+        //axios.get("ttp://88.197.53.80/kostoumart-api/tps")
+        axios.get("http://localhost:8108/tps")
         .then(res => {
             const TP_data = res.data.response;
             this.setState({ TP_data });
@@ -376,8 +376,8 @@ class InsertCostume extends Component {
                 this.state.s_value = this.state.selectedSexOption[key].value;
                 console.log("insert",key, this.state);
                 let data = this.state;
-                //Axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
-                Axios.post('http://localhost:8108/costumes', data)
+                //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
+                axios.post('http://localhost:8108/costumes', data)
                 .then(res => {
                     if(res.statusText ==="OK"){
                         let ret=this.createNotification("insert-success");
