@@ -5,6 +5,7 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import InsertMenu from './InsertMenu';
 import "./InsertMenu";
+import axios from "axios";
 
 class InsertTP extends Component{
     constructor(props){
@@ -27,6 +28,10 @@ class InsertTP extends Component{
         this.insert = this.insert.bind(this);
     }
 
+    componentDidMount(){
+        this.getTPs();
+    }
+    
     createNotification(type){
         switch (type) {
             case "error1":
@@ -57,37 +62,50 @@ class InsertTP extends Component{
         console.log(this.state)
     };
 
+    getTPs = _ => {
+        axios.get("http://localhost:8108/tps")
+        .then(res => {
+            const tpData = res.data.response;
+            this.setState({ tpData });
+            console.log(this.state);
+        }
+        )
+    }
+
+    tp_exists(){
+        const tp_list = this.state.tpData;
+        //check this name and use category already exist
+        for(var i=0; i < tp_list.length; i++){
+            if(tp_list[i].title === this.state.name){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     insert(){
-            PostData('insertTP',this.state).then((result) => {
-            let responseJson = result;
-            console.log(responseJson);
-            if(responseJson.tpData){
-                sessionStorage.setItem('tpData',JSON.stringify(responseJson));
-                let ret = this.createNotification("insert-success");
+        let data ={title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater};
+        axios.post('http://localhost:8108/tps', data)
+        .then(res => {
+            if(res.statusText ==="OK"){
+                let ret=this.createNotification("insert-success");
                 this.clearData();
                 return ret;
             }
-            else{
-                alert(result.error);}
-            }
-            );  
+          })    
+
     }
 
     validate(){
         if(this.state.name && this.state.theater){
             //Check if exists
-            PostData('existTP', this.state).then((result) => {
-                if(result.exists === 'true'){
-                    if(this.state.tpData===''){ 
-                        console.log("already exists");
-                        let ret=this.createNotification("error1");
-                        return ret;
-                    }
-                }
-                else{
-                    this.insert();
-                }
-            })
+            if(this.tp_exists()){
+                let ret=this.createNotification("error1");
+                return ret;
+            }
+            else{
+                this.insert();
+            }
         }
         else if(!this.state.name || !this.state.theater){
             let result=this.createNotification("error-missing-value");

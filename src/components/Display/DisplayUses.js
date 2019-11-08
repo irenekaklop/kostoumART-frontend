@@ -7,6 +7,7 @@ import _ from 'lodash';
 import DisplayMenu from '../DisplayMenu/DisplayMenu';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import axios from "axios";
 
 class DisplayUses extends Component{
     constructor(props){
@@ -66,18 +67,15 @@ class DisplayUses extends Component{
         })
     }
 
-    getUses(){
-        PostData('get_all_uses', this.state).then((result) => {
-            let responseJson = result;
-            if(responseJson.usesData){
-                sessionStorage.setItem("usesData",JSON.stringify(responseJson));
-                this.setState({data: responseJson.usesData});
-                console.log(this.state);
-            }
-            else{
-                alert(result.error);
-            }
-        });
+    
+    getUses = _ => {
+        axios.get("http://localhost:8108/uses")
+        .then(res => {
+            const data = res.data.response;
+            this.setState({ data });
+            console.log(this.state);
+        }
+        )
     }
 
     handleDelete(selectedUseName) {

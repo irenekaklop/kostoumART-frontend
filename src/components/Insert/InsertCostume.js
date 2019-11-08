@@ -11,6 +11,7 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import InsertMenu from './InsertMenu';
 import './Insert.css';
+import Axios from 'axios';
 
 function escapeRegexCharacters(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -89,6 +90,7 @@ class InsertCostume extends Component {
     componentDidMount(){
         this.get_uses();
         this.get_theatrical_plays();
+        this.getCostumes();
     }
 
     /*Geosuggest functions*/
@@ -160,54 +162,6 @@ class InsertCostume extends Component {
         };
     }
 
-    validate(){
-        var cond1, cond3 = false;
-        //if everything is submitted
-        if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
-            cond1=true;
-        }
-        else if(this.decription_legnth() >= 300){
-            console.log("too big or too small description");
-            var result=this.createNotification("error2");
-            console.log(result);
-            return result;
-        }
-
-        if(this.state.name){ //If name is given, check if it already exist
-            PostData('costumeExists', this.state).then((result) => {
-                let responseJson = result;
-                console.log("result", responseJson);
-                if(result.exists==='true'){
-                    var result = null;
-                    if(this.state.costumeData===""){ //To prevent notification after insert()
-                        console.log("already exists");
-                        result=this.createNotification("error1");
-                        console.log(result);
-                        return result;
-                    }
-                }
-                else{
-                    console.log("doesnt exists");
-                    //Validation Succeed
-                    if (cond1 && cond3){
-                        this.insert();
-                    }
-                }
-               
-            })
-        }
-        
-        if(this.state.location && this.state.selectedMaterialOption && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption){
-            cond3 = true;
-        }
-        else if(!this.state.location || !this.state.name || !this.state.descr|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
-            console.log("something is missing");
-            var result=this.createNotification("error-missing-value");
-            return result;
-        }
-    }
-
-
     /*For selection of use categories*/
     handleUseSelect = (selectedUseOption) => {
         this.setState({selectedUseOption});
@@ -270,36 +224,56 @@ class InsertCostume extends Component {
         return this.state.u_data.filter(usesData => regex.test(usesData.name));
     };
 
-    /* Get uses from database*/ 
-    get_uses(){
-        PostData('get_uses', this.state).then((result) => {
-            let responseJson = result;
-            if(responseJson.usesData){
-                sessionStorage.setItem("usesData",JSON.stringify(responseJson));
-                this.setState({u_data: responseJson.usesData});
-                console.log(this.state);
-            }
-            else{
-                alert(result.error);
-            }
-        });
+    /*Get costumes from db*/
+    
+    getCostumes = _ => {
+        Axios.get("http://localhost:8108/costumes")
+        .then(res => {
+            const costumeData = res.data.response;
+            this.setState({ costumeData });
+            console.log(this.state);
+        }
+        )
     }
 
+    /* Get uses from database*/ 
+    get_uses = _ => {
+        let self = this;
+        fetch("http://localhost:8108/uses", {
+            method: 'GET'
+        }).then(function(response) {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response.json();
+        }).then(function(response) {
+            console.log(response.response);
+            self.setState({u_data:response.response});
+        }).catch(function(err) {
+            console.log(err)
+        });
+        console.log(this.state.data);
+    }
 
     /*Get Theatrical Plays from database*/
-    get_theatrical_plays(){
-       PostData('get_theatrical_plays', this.state).then((result) => {
-            let responseJson = result;
-            if(responseJson.TPData){
-                sessionStorage.setItem("TPData",JSON.stringify(responseJson));
-                this.setState({TP_data: responseJson.TPData});
-                console.log("Theatrical Plays",this.state);
+    get_theatrical_plays = _ => {
+        let self = this;
+        fetch("http://localhost:8108/tps", {
+            method: 'GET'
+        }).then(function(response) {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server");
             }
-            else{
-                alert(result.error);
-            }
+            return response.json();
+        }).then(function(response) {
+            console.log(response.response);
+            self.setState({TP_data:response.response});
+        }).catch(function(err) {
+            console.log(err)
         });
+        console.log(this.state.data);
     }
+ 
 
     clearData(){
         this.setState({costumeData: '',
@@ -347,10 +321,60 @@ class InsertCostume extends Component {
    
     }
 
-    /*Insert of costume*/
-    
+    costume_exists(){
+        const c_list = this.state.costumeData;
+        //check if new name already exist
+        for(var i=0; i < c_list.length; i++){
+            if(c_list[i].name === this.state.name){
+                return true;
+            }
+        }
+        return false;
+    }
+
     handleSubmit = () => {
         this.validate();
+    }
+
+    
+    validate(){
+        var cond1, cond2, cond3 = false;
+        console.log(this.state);
+        //if everything is submitted
+        if(this.decription_legnth() < 300 && this.decription_legnth() > 0){
+            cond1=true;
+        }
+        else if(this.decription_legnth() >= 300){
+            console.log("too big or too small description");
+            var result=this.createNotification("error2");
+            console.log(result);
+            return result;
+        }
+
+        if(this.state.name){ //If name is given, check if it already exist
+            if(this.costume_exists()){ //costume already exists
+                let result=this.createNotification("error1");
+                return result;
+            }
+            else{
+                console.log(cond1, cond3);
+                cond2=true;
+            }
+        }
+        
+        if(this.state.location && this.state.selectedMaterialOption && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption){
+            cond3 = true;
+        }
+        else if(!this.state.location || !this.state.name || !this.state.descr|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
+            console.log("something is missing");
+            var result=this.createNotification("error-missing-value");
+            return result;
+        }
+
+        if(cond1 && cond2 && cond3){
+            this.insert();
+            console.log("insert");
+        }
     }
 
     insert() {
@@ -360,30 +384,21 @@ class InsertCostume extends Component {
         if(this.state.selectedTPOption){
             this.state.tp_value = this.state.selectedTPOption.value;
         }
-        var not = false;
         for(var key in this.state.selectedSexOption){
                 this.state.s_value = this.state.selectedSexOption[key].value;
                 console.log("insert",key, this.state);
-                PostData('insertCostume',this.state).then((result) => {
-                let responseJson = result;
-                if(responseJson.costumeData){
-                    
-                    sessionStorage.setItem('costumeData',JSON.stringify(responseJson));
-                    this.setState({redirectToReferrer: true});
-                    this.clearData();
-                    if(!not){
-                        
+                let data = this.state;
+                Axios.post('http://localhost:8108/costumes', data)
+                .then(res => {
+                    if(res.statusText ==="OK"){
                         let ret=this.createNotification("insert-success");
-                        not = true;
+                        this.clearData();
                         return ret;
                     }
-                    
-                }
-                });
+                })    
        }
     }
 
- 
     render() {
         //For selection of Sex: 
         const {selectedSexOption} = this.state;

@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import {PostData} from '../../services/PostData';
-import {Redirect} from 'react-router-dom'; 
 import Select from 'react-select';
 import Box from '@material-ui/core/Box';
 import { TextArea, GridRow, Container, Form, Input, FormSelect } from 'semantic-ui-react';
@@ -8,12 +6,13 @@ import {use_categories} from '../../utils/options';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import InsertMenu from './InsertMenu';
+import axios from 'axios';
 
 class InsertUse extends Component{
     constructor(props){
         super(props);
         this.state = { 
-            useData: '',
+            u_data: '',
             use_category: '',
             name: '',
             description: '',
@@ -31,6 +30,11 @@ class InsertUse extends Component{
             cond2: false
         };
         this.insert = this.insert.bind(this);
+    }
+
+    /*Secure way to getData*/
+    componentDidMount(){
+        this.get_uses();
     }
 
     createNotification(type){
@@ -72,6 +76,28 @@ class InsertUse extends Component{
         return this.state.description.length;
     }
 
+    /* Get uses from database*/ 
+    get_uses = _ => {
+        axios.get("http://localhost:8108/uses")
+        .then(res => {
+            const u_data = res.data.response;
+            this.setState({ u_data });
+            console.log(this.state);
+        }
+        )
+    }
+
+    use_exists(){
+        const uses_list = this.state.u_data;
+        //check this name and use category already exist
+        for(var i=0; i < uses_list.length; i++){
+            if(uses_list[i].use_category=== this.state.use_category && uses_list[i].name === this.state.name){
+                return true;
+            }
+        }
+        return false;
+    }
+
     validate(){ 
         var ret = null;
         //if everything is submitted
@@ -88,22 +114,14 @@ class InsertUse extends Component{
         if(this.state.name && this.state.selectedCategoryOption){
             //Check if entry already exists
             this.state.use_category=this.state.selectedCategoryOption.value;
-            PostData('existsUse',this.state).then((result) => {
-                if(result.exists ==='true'){
-                    console.log("already exists");
-                    if(this.state.useData === ""){ //To prevent notification after insert()
-                        ret=this.createNotification("error1");
-                        this.state.cond2 = false;
-                         return ret;
-                    }
-                }
-                else{
-                    if(this.state.cond1){
-                        this.insert();
-                    }
-                }
-            })     
-            
+            if(this.use_exists()){
+                ret=this.createNotification("error1");
+                this.state.cond2 = false;
+                return ret;
+            }
+            else{
+                this.insert();
+            }
         }
 
         if(!this.state.description || !this.state.name || !this.state.selectedCategoryOption){
@@ -117,22 +135,16 @@ class InsertUse extends Component{
 
     insert(){
         this.state.use_category=this.state.selectedCategoryOption.value;
-        PostData('insertUse',this.state).then((result) => {
-            let responseJson = result;
-            if(responseJson.useData){
-                sessionStorage.setItem('useData',JSON.stringify(responseJson));
-                //this.setState({redirectToReferrer: true});
-                //<ReactNotification name="notifications"/>
+        const data = { name: this.state.name, category: this.state.use_category, description: this.state.description, customs: this.state.description }
+        axios.post('http://localhost:8108/uses', data)
+        .then(res => {
+            if(res.statusText ==="OK"){
                 let ret=this.createNotification("insert-success");
-                console.log(ret);
-                this.clearEntries();
+                this.clearData();
                 return ret;
             }
-            else{
-                alert(result.error);}
-                console.log(responseJson);
-            });
-            
+          })    
+
     }
 
     handleSubmit = () => {

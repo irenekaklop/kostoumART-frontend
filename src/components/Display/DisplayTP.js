@@ -7,6 +7,7 @@ import _ from 'lodash';
 import DisplayMenu from '../DisplayMenu/DisplayMenu';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import axios from 'axios';
 
 class DisplayTPs extends Component{
     constructor(props){
@@ -66,20 +67,17 @@ class DisplayTPs extends Component{
         })
     }
 
-    getTPs(){
-        PostData('get_all_theatrical_plays', this.state).then((result) => {
-            let responseJson = result;
-            if(responseJson.TPsData){
-                sessionStorage.setItem("TPsData",JSON.stringify(responseJson));
-                this.setState({data: responseJson.TPsData});
-                console.log(this.state);
-            }
-            else{
-                alert(result.error);
-            }
-        });
+    
+    getTPs = _ => {
+        axios.get("http://localhost:8108/tps")
+        .then(res => {
+            const data = res.data.response;
+            this.setState({ data });
+            console.log(this.state);
+        }
+        )
     }
-
+ 
     handleDelete(selectedTPName) {
         this.setState({selectedTPName}); 
     }

@@ -7,6 +7,7 @@ import _ from 'lodash';
 import DisplayMenu from '../DisplayMenu/DisplayMenu';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import axios from "axios";
 
 class DisplayCostumes extends Component{
     constructor(props){
@@ -67,21 +68,13 @@ class DisplayCostumes extends Component{
     }
 
     getCostumes = _ => {
-        let self = this;
-        fetch("http://localhost:8108/costumes", {
-            method: 'GET'
-        }).then(function(response) {
-            if (response.status >= 400) {
-              throw new Error("Bad response from server");
-            }
-            return response.json();
-        }).then(function(data) {
-            console.log(data);
-            self.setState({data: data});
-        }).catch(function(err) {
-            console.log(err)
-        });
-        console.log(this.state.data);
+        axios.get("http://localhost:8108/costumes")
+        .then(res => {
+            const data = res.data.response;
+            this.setState({ data });
+            console.log(this.state);
+        }
+        )
     }
 
     handleDelete(selectedCostumeName) {
