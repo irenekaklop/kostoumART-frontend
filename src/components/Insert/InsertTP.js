@@ -63,6 +63,7 @@ class InsertTP extends Component{
     };
 
     getTPs = _ => {
+        //axios.get("http://88.197.53.80/kostoumart-api/tps")
         axios.get("http://localhost:8108/tps")
         .then(res => {
             const tpData = res.data.response;
@@ -85,6 +86,7 @@ class InsertTP extends Component{
     
     insert(){
         let data ={title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater};
+        //axios.post("http://88.197.53.80/kostoumart-api/tps")
         axios.post('http://localhost:8108/tps', data)
         .then(res => {
             if(res.statusText ==="OK"){

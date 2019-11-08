@@ -69,6 +69,7 @@ class DisplayTPs extends Component{
 
     
     getTPs = _ => {
+        //axios.get("http://88.197.53.80/kostoumart-api/tps")
         axios.get("http://localhost:8108/tps")
         .then(res => {
             const data = res.data.response;

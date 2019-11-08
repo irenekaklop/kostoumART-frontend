@@ -11,7 +11,7 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import InsertMenu from './InsertMenu';
 import './Insert.css';
-import Axios from 'axios';
+import Axios from 'Axios';
 
 function escapeRegexCharacters(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -227,6 +227,7 @@ class InsertCostume extends Component {
     /*Get costumes from db*/
     
     getCostumes = _ => {
+        //Axios.get('http://88.197.53.80/kostoumart-api/costumes")
         Axios.get("http://localhost:8108/costumes")
         .then(res => {
             const costumeData = res.data.response;
@@ -239,39 +240,26 @@ class InsertCostume extends Component {
     /* Get uses from database*/ 
     get_uses = _ => {
         let self = this;
-        fetch("http://localhost:8108/uses", {
-            method: 'GET'
-        }).then(function(response) {
-            if (response.status >= 400) {
-              throw new Error("Bad response from server");
-            }
-            return response.json();
-        }).then(function(response) {
-            console.log(response.response);
-            self.setState({u_data:response.response});
-        }).catch(function(err) {
-            console.log(err)
-        });
-        console.log(this.state.data);
+        //Axios.get("http://88.197.53.80/kostoumart-api/uses")
+        Axios.get("http://localhost:8108/uses")
+        .then(res => {
+            const u_data = res.data.response;
+            this.setState({ u_data });
+            console.log(this.state);
+        }
+        )
     }
 
     /*Get Theatrical Plays from database*/
     get_theatrical_plays = _ => {
-        let self = this;
-        fetch("http://localhost:8108/tps", {
-            method: 'GET'
-        }).then(function(response) {
-            if (response.status >= 400) {
-              throw new Error("Bad response from server");
-            }
-            return response.json();
-        }).then(function(response) {
-            console.log(response.response);
-            self.setState({TP_data:response.response});
-        }).catch(function(err) {
-            console.log(err)
-        });
-        console.log(this.state.data);
+        //Axios.get("ttp://88.197.53.80/kostoumart-api/tps")
+        Axios.get("http://localhost:8108/tps")
+        .then(res => {
+            const TP_data = res.data.response;
+            this.setState({ TP_data });
+            console.log(this.state);
+        }
+        )
     }
  
 
@@ -388,6 +376,7 @@ class InsertCostume extends Component {
                 this.state.s_value = this.state.selectedSexOption[key].value;
                 console.log("insert",key, this.state);
                 let data = this.state;
+                //Axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
                 Axios.post('http://localhost:8108/costumes', data)
                 .then(res => {
                     if(res.statusText ==="OK"){

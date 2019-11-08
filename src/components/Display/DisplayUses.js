@@ -69,6 +69,7 @@ class DisplayUses extends Component{
 
     
     getUses = _ => {
+        //axios.get("http://88.197.53.80/kostoumart-api/uses")
         axios.get("http://localhost:8108/uses")
         .then(res => {
             const data = res.data.response;

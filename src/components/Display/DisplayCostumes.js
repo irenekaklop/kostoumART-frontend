@@ -68,6 +68,7 @@ class DisplayCostumes extends Component{
     }
 
     getCostumes = _ => {
+        //axios.get("http://88.197.53.80/kostoumart-api/costumes")
         axios.get("http://localhost:8108/costumes")
         .then(res => {
             const data = res.data.response;
