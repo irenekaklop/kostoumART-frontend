@@ -86,22 +86,15 @@ class DisplayTPs extends Component{
     deleteTP(){
         console.log(this.state.selectedTPName);
         if(this.state.selectedTPName){
-            PostData('delete_tp', this.state).then((result) => {
-                let responseJson = result;
-                console.log(result);
-                if(responseJson.deleted === 1){
-                    console.log("DELETED");
+            axios.delete("http://localhost:8108/tps", {params: { name: this.state.selectedTPName }})
+            .then(res=> {
+                if(res.statusText ==="OK"){
+                    let ret=this.createNotification("delete-success");
                     this.getTPs();
-                    var result=this.createNotification("delete-success");
-                    return result;
+                    this.state.selectedTPName = "";
+                    return ret;
                 }
-                else{
-                    console.log("not DELETED");
-                    var result=this.createNotification("error");
-                    return result;
-                }
-            });
-            this.state.selectedTPName=null;
+            })
         }
     }
 

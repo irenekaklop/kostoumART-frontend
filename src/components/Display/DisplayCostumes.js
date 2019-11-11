@@ -79,27 +79,20 @@ class DisplayCostumes extends Component{
     }
 
     handleDelete(selectedCostumeName) {
-        this.setState({selectedCostumeName}); 
+        this.setState({selectedCostumeName});
     }
 
     deleteCostume(){
         if(this.state.selectedCostumeName){
-           /* PostData('deleteCostume', this.state).then((result) => {
-                let responseJson = result;
-                console.log(result);
-                if(responseJson.deleted === 1){
-                    console.log("DELETED");
-                    var result=this.createNotification("delete-success");
+            axios.delete("http://localhost:8108/costumes", {params: { name: this.state.selectedCostumeName }})
+            .then(res=> {
+                if(res.statusText ==="OK"){
+                    let ret=this.createNotification("delete-success");
                     this.getCostumes();
-                    return result;
+                    this.state.selectedCostumeName = "";
+                    return ret;
                 }
-                else{
-                    console.log("not DELETED");
-                    var result=this.createNotification("error");
-                    return result;
-                }
-            });
-            this.state.selectedCostumeName=null;*/
+            })
         }
     }
 
@@ -159,8 +152,8 @@ class DisplayCostumes extends Component{
 
     render() {   
         const { column, direction} = this.state;
-        this.deleteCostume();
         console.log(this.state.data);
+        this.deleteCostume();
         return (
             <div className="container__table">
                 <DisplayMenu activeItem = 'costume'></DisplayMenu>

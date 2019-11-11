@@ -1,14 +1,19 @@
 import React, {Component} from 'react';
 import './Header.css';
+import logo from '../../logo.png'
 
 class Header extends Component{
     render() {
         return(
             <div className="callout headcolor" id="Header">
-                <div className="row column">
-                    <a href="/kostoumart-dashboard"><h1 id="tit">{this.props.name}</h1></a>
+                <div className="row column" id="header">
+                    <a href='/kostoumart-dashboard'>
+                    <img  src={logo}/>
+                    <h1 id="tit">KostoumART</h1></a>
                 </div>
             </div>
+           
+            
         )
     }
 }

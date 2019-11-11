@@ -86,22 +86,15 @@ class DisplayUses extends Component{
     deleteUse(){
         console.log(this.state.selectedUseName);
         if(this.state.selectedUseName){
-            PostData('delete_use', this.state).then((result) => {
-                let responseJson = result;
-                console.log(result);
-                if(responseJson.deleted === 1){
-                    console.log("DELETED");
+            axios.delete("http://localhost:8108/uses", {params: { name: this.state.selectedUseName }})
+            .then(res=> {
+                if(res.statusText ==="OK"){
+                    let ret=this.createNotification("delete-success");
                     this.getUses();
-                    var result=this.createNotification("delete-success");
-                    return result;
+                    this.state.selectedUseName = "";
+                    return ret;
                 }
-                else{
-                    console.log("not DELETED");
-                    var result=this.createNotification("error");
-                    return result;
-                }
-            });
-            this.state.selectedUseName=null;
+            })
         }
     }
 
