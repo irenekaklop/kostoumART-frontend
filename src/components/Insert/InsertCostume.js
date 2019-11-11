@@ -528,7 +528,7 @@ class InsertCostume extends Component {
                             closeMenuOnSelect={true}  
                             isSearchable            
                         /> 
-                        <a href='/insert-theatrical_play'> Προσθήκη νέας παράστασης</a>
+                        <a href='/insert-tp'> Προσθήκη νέας παράστασης</a>
                         </Form.Field>
                     <Form.Group widths="equal">
                         <Form.Field>
