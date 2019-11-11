@@ -137,7 +137,7 @@ class InsertUse extends Component{
     insert(){
         this.state.use_category=this.state.selectedCategoryOption.value;
         const data = { name: this.state.name, category: this.state.use_category, description: this.state.description, customs: this.state.description }
-        axios.post("http://88.197.53.80/kostoumart-api/uses")
+        axios.post("http://88.197.53.80/kostoumart-api/uses", data)
         //axios.post('http://localhost:8108/uses', data)
         .then(res => {
             if(res.statusText ==="OK"){

@@ -86,7 +86,8 @@ class DisplayTPs extends Component{
     deleteTP(){
         console.log(this.state.selectedTPName);
         if(this.state.selectedTPName){
-            axios.delete("http://localhost:8108/tps", {params: { name: this.state.selectedTPName }})
+            axios.delete("http://88.197.53.80/kostoumart-api/tps", {params: { name: this.state.selectedTPName }})
+            //axios.delete("http://localhost:8108/tps", {params: { name: this.state.selectedTPName }})
             .then(res=> {
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");

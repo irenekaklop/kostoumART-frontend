@@ -69,8 +69,8 @@ class DisplayUses extends Component{
 
     
     getUses = _ => {
-        //axios.get("http://88.197.53.80/kostoumart-api/uses")
-        axios.get("http://localhost:8108/uses")
+        axios.get("http://88.197.53.80/kostoumart-api/uses")
+        //axios.get("http://localhost:8108/uses")
         .then(res => {
             const data = res.data.response;
             this.setState({ data });
@@ -86,7 +86,8 @@ class DisplayUses extends Component{
     deleteUse(){
         console.log(this.state.selectedUseName);
         if(this.state.selectedUseName){
-            axios.delete("http://localhost:8108/uses", {params: { name: this.state.selectedUseName }})
+            axios.delete("http://88.197.53.80/kostoumart-api/uses", {params: { name: this.state.selectedUseName }})
+            //axios.delete("http://localhost:8108/uses", {params: { name: this.state.selectedUseName }})
             .then(res=> {
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");

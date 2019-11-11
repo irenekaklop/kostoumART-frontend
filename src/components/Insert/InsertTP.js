@@ -86,8 +86,8 @@ class InsertTP extends Component{
     
     insert(){
         let data ={title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater};
-        //axios.post("http://88.197.53.80/kostoumart-api/tps")
-        axios.post('http://localhost:8108/tps', data)
+        axios.post("http://88.197.53.80/kostoumart-api/tps", data)
+        //axios.post('http://localhost:8108/tps', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 let ret=this.createNotification("insert-success");

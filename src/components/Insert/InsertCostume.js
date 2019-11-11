@@ -376,8 +376,8 @@ class InsertCostume extends Component {
                 this.state.s_value = this.state.selectedSexOption[key].value;
                 console.log("insert",key, this.state);
                 let data = this.state;
-                //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
-                axios.post('http://localhost:8108/costumes', data)
+                axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
+                //axios.post('http://localhost:8108/costumes', data)
                 .then(res => {
                     if(res.statusText ==="OK"){
                         let ret=this.createNotification("insert-success");
