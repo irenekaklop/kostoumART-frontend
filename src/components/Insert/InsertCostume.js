@@ -451,7 +451,7 @@ class InsertCostume extends Component {
                                 onChange = {this.handleUseSelect}
                                 closeMenuOnSelect={true}  
                                 isSearchable/>
-                            <a href='/insert/use'> Προσθήκη νέας χρήσης</a>
+                            <a href='/insert-use'> Προσθήκη νέας χρήσης</a>
                         </Form.Field>
                         <Form.Field required>
                         <label>Φύλο</label>
@@ -528,7 +528,7 @@ class InsertCostume extends Component {
                             closeMenuOnSelect={true}  
                             isSearchable            
                         /> 
-                        <a href='*/insert/theatrical_play'> Προσθήκη νέας παράστασης</a>
+                        <a href='/insert-theatrical_play'> Προσθήκη νέας παράστασης</a>
                         </Form.Field>
                     <Form.Group widths="equal">
                         <Form.Field>

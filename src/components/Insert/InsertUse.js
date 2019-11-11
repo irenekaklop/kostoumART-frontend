@@ -78,8 +78,8 @@ class InsertUse extends Component{
 
     /* Get uses from database*/ 
     get_uses = _ => {
-        axios.get("http://88.197.53.80/kostoumart-api/uses")
-        //axios.get("http://localhost:8108/uses")
+        //axios.get("http://88.197.53.80/kostoumart-api/uses")
+        axios.get("http://localhost:8108/uses")
         .then(res => {
             const u_data = res.data.response;
             this.setState({ u_data });
@@ -137,8 +137,8 @@ class InsertUse extends Component{
     insert(){
         this.state.use_category=this.state.selectedCategoryOption.value;
         const data = { name: this.state.name, category: this.state.use_category, description: this.state.description, customs: this.state.description }
-        axios.post("http://88.197.53.80/kostoumart-api/uses", data)
-        //axios.post('http://localhost:8108/uses', data)
+        //axios.post("http://88.197.53.80/kostoumart-api/uses", data)
+        axios.post('http://localhost:8108/uses', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 let ret=this.createNotification("insert-success");
