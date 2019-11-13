@@ -5,10 +5,10 @@ import logo from '../../logo.png'
 class Header extends Component{
     render() {
         return(
-            <div className="callout headcolor" id="Header">
+            <div className="App-header">
                 <div className="row column" id="header">
-                    <a href='/kostoumart-dashboard'>
-                    <img  src={logo}/>
+                    <a className="App-logo" href='/kostoumart-dashboard'>
+                    <img src={logo}/>
                     <h1 id="tit">KostoumART</h1></a>
                 </div>
             </div>

@@ -1,0 +1,16 @@
+.root{
+    overflow-x: auto;
+    width: fit-content;
+    margin-left:auto; 
+    margin-right:auto;
+    margin-top: 1%;
+    box-shadow: 0 0px 3px rgba(0, 0, 0, 0.7);
+}
+
+.table{
+    overflow-y: scroll;  /* or auto */
+}
+
+.table.bold {
+    font-weight:600;
+}

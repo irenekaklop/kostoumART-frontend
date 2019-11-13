@@ -1,24 +1,43 @@
 import React, { Component } from "react";
-import "react-table/react-table.css";
-import '../DisplayMenu/DisplayElement.css'
-import { PostData } from '../../services/PostData';
-import { Table, Search, Icon, Button } from "semantic-ui-react";
 import _ from 'lodash';
 import DisplayMenu from '../DisplayMenu/DisplayMenu';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import axios from "axios";
+import "./DisplayTable.css";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import CheckIcon from '@material-ui/icons/Check';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import { timingSafeEqual } from "crypto";
 
 class DisplayUses extends Component{
     constructor(props){
         super(props);
         this.state = {
             data:[],
+            use: "",
             usesData: '',
             direction: null,
             column: null,
             //Search
             selectedUseName: null,
+            //Edit
+            editing: null, //the ID of entry that is going to update
+            name: null,
+            description: null,
+            use_category: null,
+            customs: null,
+
         };
         this.onChange = this.onChange.bind(this);
         this.getUses = this.getUses.bind(this);
@@ -29,8 +48,25 @@ class DisplayUses extends Component{
         this.getUses();
     }
     
-    onChange(e){
-        this.setState({usesData:e.target.value});
+    onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
+
+    startEditing = id => {
+        this.setState({editing: id});
+       /* let useID = id;
+        let link = "http://localhost:8108/uses/"+useID;
+        axios.get(link)
+        .then(  res => {
+            const use = res.data.response;
+            this.state.name = use[0].name;
+            this.state.description = use[0].description;
+            console.log("get", this.state);
+        }
+        )*/
+    }
+
+    stopEditing = id => {
+        this.setState({editing: null})
+        console.log(this.state);
     }
 
     createNotification(type){
@@ -69,8 +105,8 @@ class DisplayUses extends Component{
 
     
     getUses = _ => {
-        axios.get("http://88.197.53.80/kostoumart-api/uses")
-        //axios.get("http://localhost:8108/uses")
+        //axios.get("http://88.197.53.80/kostoumart-api/uses")
+        axios.get("http://localhost:8108/uses")
         .then(res => {
             const data = res.data.response;
             this.setState({ data });
@@ -86,8 +122,8 @@ class DisplayUses extends Component{
     deleteUse(){
         console.log(this.state.selectedUseName);
         if(this.state.selectedUseName){
-            axios.delete("http://88.197.53.80/kostoumart-api/uses", {params: { name: this.state.selectedUseName }})
-            //axios.delete("http://localhost:8108/uses", {params: { name: this.state.selectedUseName }})
+            //axios.delete("http://88.197.53.80/kostoumart-api/uses", {params: { name: this.state.selectedUseName }})
+            axios.delete("http://localhost:8108/uses", {params: { name: this.state.selectedUseName }})
             .then(res=> {
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");
@@ -99,48 +135,39 @@ class DisplayUses extends Component{
         }
     }
 
-    /*In case of multiple entries under the same name merge SEX values into one entry*/
-    transformTable(){
-          var output = [];
-          
-          this.state.data.forEach(function(item) {
-            var existing = output.filter(function(v, i) {
-              return v.name == item.name;
-            });
-            if (existing.length) {
-              var existingIndex = output.indexOf(existing[0]);
-              output[existingIndex].sex = output[existingIndex].sex.concat(item.sex);
-            } else {
-              if (typeof item.sex == 'string')
-                item.sex = [item.sex];
-              output.push(item);
-            }
-          });
-          
-          output.forEach(
-              function(item){
-                  if(item.sex.length){
-                    item.sex = item.sex.join(", ");
-                  }
-                  
-              }
-          )
-          this.setState({data: output});
-          console.log(this.state);
-    }
-
     renderTableData() {
         return this.state.data.map((use, index) => {
             const { useID, name, use_category,description, customs } = use //destructuring
             return (
-                <Table.Row key={useID}>
-                <Table.Cell collapsing>{name}</Table.Cell>
-                <Table.Cell collapsing>{use_category}</Table.Cell>
-                <Table.Cell>{description}</Table.Cell>
-                <Table.Cell collapsing>{customs}</Table.Cell>
-                <Table.Cell collapsing><Button icon
-                onClick={()=>{this.handleDelete(name);}}><Icon name="delete" color="red"/></Button></Table.Cell>
-                </Table.Row>
+                <TableRow key={useID}>
+                    <TableCell></TableCell>
+                    <TableCell>
+                    {this.state.editing && this.state.editing === useID ? (
+                            <TextField onChange={e=>this.onChange}></TextField>) : (
+                            name
+                        )}
+                        </TableCell>
+                    <TableCell>{this.state.editing && this.state.editing === useID ? (
+                            <TextField value = {use_category} name = {this.state.use_category} onChange={e=>this.onChange}></TextField>) : (
+                            use_category
+                        )}</TableCell>
+                    <TableCell>{this.state.editing && this.state.editing === useID ? (
+                            <TextField value = {description} name = {this.state.description} onChange={e=>this.onChange}></TextField>) : (
+                            description
+                        )}</TableCell>
+                    <TableCell>{this.state.editing && this.state.editing === useID ? (
+                            <TextField value = {customs} name = {this.state.customs} onChange={e=>this.onChange}></TextField>) : (
+                            customs
+                        )}</TableCell>
+                    <TableCell>
+                        <IconButton><DeleteIcon onClick={()=>{this.handleDelete(name);}}></DeleteIcon></IconButton>
+                        {this.state.editing && this.state.editing === useID? (
+                            <IconButton><CheckIcon onClick={() => this.stopEditing()}/></IconButton>
+                            ) : (
+                            <IconButton><EditIcon onClick={() => this.startEditing(useID)}/></IconButton>
+                        )}
+                       </TableCell>
+                </TableRow>
             )
         })
     }
@@ -153,22 +180,23 @@ class DisplayUses extends Component{
             <div className="container__table">
                 <DisplayMenu activeItem = 'use'></DisplayMenu>
                 <NotificationContainer></NotificationContainer>
-                <Table celled >
-                    <Table.Header fullWidth>
-                        <Table.HeaderCell 
-                        sorted={column === 'name' ? direction : null}
-                        onClick={this.handleSort('name')}
-                        >Όνομα Δραστηριότητας</Table.HeaderCell>
-                        <Table.HeaderCell>Περιγραφή</Table.HeaderCell>
-                        <Table.HeaderCell>Κατηγορία Χρήσης</Table.HeaderCell>
-                        <Table.HeaderCell>Έθιμα</Table.HeaderCell>
-                        <Table.HeaderCell></Table.HeaderCell>
-                    </Table.Header>
-                    <Table.Body>
-                        {this.renderTableData()} 
-                    </Table.Body>
-                </Table>
-           
+                <Typography component="div">
+                    <Paper className="root">
+                        <Table className="table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell padding="checkbox"><Checkbox/></TableCell>
+                                    <TableCell><strong>Όνομα Δραστηριότητας</strong></TableCell>
+                                    <TableCell><strong>Περιγραφή</strong></TableCell>
+                                    <TableCell><strong>Κατηγορία Χρήσης</strong></TableCell>
+                                    <TableCell><strong>Έθιμα</strong></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>{this.renderTableData()}</TableBody>
+                        </Table>
+                    </Paper>
+                </Typography>
           </div>
         );
       }

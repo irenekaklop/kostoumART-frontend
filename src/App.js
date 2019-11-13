@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import './styles/foundation.min.css';
 import './styles/custom.css';
 import './styles/react-confirm-alert.css';
 import Header from './components/Header/Header';

@@ -1,13 +1,20 @@
 import React, { Component } from "react";
-import "react-table/react-table.css";
-import '../DisplayMenu/DisplayElement.css'
-import { PostData } from '../../services/PostData';
-import { Table, Search, Icon, Button } from "semantic-ui-react";
 import _ from 'lodash';
 import DisplayMenu from '../DisplayMenu/DisplayMenu';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import axios from 'axios';
+import axios from "axios";
+import "./DisplayTable.css";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 class DisplayTPs extends Component{
     constructor(props){
@@ -49,25 +56,6 @@ class DisplayTPs extends Component{
         };
     }
 
-    handleSort = (clickedColumn) => () => {
-        const { column, data, direction } = this.state
-        if (column !== clickedColumn) {
-          this.setState({
-            column: clickedColumn,
-            data: _.sortBy(data, [clickedColumn]),
-            direction: 'ascending',
-          })
-    
-          return
-        }
-    
-        this.setState({
-          data: data.reverse(),
-          direction: direction === 'ascending' ? 'descending' : 'ascending',
-        })
-    }
-
-    
     getTPs = _ => {
         //axios.get("http://88.197.53.80/kostoumart-api/tps")
         axios.get("http://localhost:8108/tps")
@@ -86,8 +74,8 @@ class DisplayTPs extends Component{
     deleteTP(){
         console.log(this.state.selectedTPName);
         if(this.state.selectedTPName){
-            axios.delete("http://88.197.53.80/kostoumart-api/tps", {params: { name: this.state.selectedTPName }})
-            //axios.delete("http://localhost:8108/tps", {params: { name: this.state.selectedTPName }})
+            //axios.delete("http://88.197.53.80/kostoumart-api/tps", {params: { name: this.state.selectedTPName }})
+            axios.delete("http://localhost:8108/tps", {params: { name: this.state.selectedTPName }})
             .then(res=> {
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");
@@ -99,78 +87,48 @@ class DisplayTPs extends Component{
         }
     }
 
-    /*In case of multiple entries under the same name merge SEX values into one entry*/
-    transformTable(){
-          var output = [];
-          
-          this.state.data.forEach(function(item) {
-            var existing = output.filter(function(v, i) {
-              return v.name == item.name;
-            });
-            if (existing.length) {
-              var existingIndex = output.indexOf(existing[0]);
-              output[existingIndex].sex = output[existingIndex].sex.concat(item.sex);
-            } else {
-              if (typeof item.sex == 'string')
-                item.sex = [item.sex];
-              output.push(item);
-            }
-          });
-          
-          output.forEach(
-              function(item){
-                  if(item.sex.length){
-                    item.sex = item.sex.join(", ");
-                  }
-                  
-              }
-          )
-          this.setState({data: output});
-          console.log(this.state);
-    }
-
     renderTableData() {
         return this.state.data.map((tp, index) => {
             const { theatrical_play_id, title, date, actors, director, theater } = tp //destructuring
             return (
-                <Table.Row key={theatrical_play_id}>
-                <Table.Cell collapsing>{title}</Table.Cell>
-                <Table.Cell collapsing>{date}</Table.Cell>
-                <Table.Cell collapsing>{actors}</Table.Cell>
-                <Table.Cell collapsing>{director}</Table.Cell>
-                <Table.Cell collapsing>{theater}</Table.Cell>
-                <Table.Cell collapsing><Button icon
-                onClick={()=>{this.handleDelete(title);}}><Icon name="delete" color="red"/></Button></Table.Cell>
-                </Table.Row>
+                <TableRow key={theatrical_play_id}>
+                <TableCell></TableCell>
+                <TableCell>{title}</TableCell>
+                <TableCell>{date}</TableCell>
+                <TableCell >{actors}</TableCell>
+                <TableCell>{director}</TableCell>
+                <TableCell>{theater}</TableCell>
+                <TableCell><IconButton><DeleteIcon onClick={()=>{this.handleDelete(title);}}></DeleteIcon> </IconButton></TableCell>
+                </TableRow>
             )
         })
     }
 
 
     render() {   
-        const { column, direction} = this.state;
         this.deleteTP();
         return (
-            <div className="container__table">
+            <div>
                 <DisplayMenu activeItem = 'tp'></DisplayMenu>
                 <NotificationContainer></NotificationContainer>
-                <Table celled >
-                    <Table.Header fullWidth>
-                            <Table.HeaderCell 
-                            sorted={column === 'title' ? direction : null}
-                            onClick={this.handleSort('title')}
-                            >Όνομα Παράστασης</Table.HeaderCell>
-                            <Table.HeaderCell>Χρονολογία</Table.HeaderCell>
-                            <Table.HeaderCell>Ηθοποιοί</Table.HeaderCell>
-                            <Table.HeaderCell>Σκηνοθέτης</Table.HeaderCell>
-                            <Table.HeaderCell>Θέατρο</Table.HeaderCell>
-                        <Table.HeaderCell></Table.HeaderCell>
-                    </Table.Header>
-                    <Table.Body>
-                        {this.renderTableData()} 
-                    </Table.Body>
-                </Table>
-           
+                <Typography component="div">
+                    <Paper className="root">
+                        <Table className="table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell padding="checkbox"><Checkbox/></TableCell>
+                                    <TableCell><strong>Όνομα Παράστασης</strong></TableCell>
+                                    <TableCell><strong>Χρονολογία</strong></TableCell>
+                                    <TableCell><strong>Ηθοποιοί</strong></TableCell>
+                                    <TableCell><strong>Σκηνοθέτης</strong></TableCell>
+                                    <TableCell><strong>Θέατρο</strong></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>{this.renderTableData()} </TableBody>
+                        </Table>
+                    </Paper>
+                </Typography>           
           </div>
         );
       }

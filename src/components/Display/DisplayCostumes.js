@@ -1,13 +1,21 @@
 import React, { Component } from "react";
-import "react-table/react-table.css";
-import '../DisplayMenu/DisplayElement.css'
-import { PostData } from '../../services/PostData';
-import { Table, Search, Icon, Button } from "semantic-ui-react";
 import _ from 'lodash';
 import DisplayMenu from '../DisplayMenu/DisplayMenu';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import axios from "axios";
+import "./DisplayTable.css";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Box from "@material-ui/core/Box";
 
 class DisplayCostumes extends Component{
     constructor(props){
@@ -68,8 +76,8 @@ class DisplayCostumes extends Component{
     }
 
     getCostumes = _ => {
-        axios.get("http://88.197.53.80/kostoumart-api/costumes")
-        //axios.get("http://localhost:8108/costumes")
+        //axios.get("http://88.197.53.80/kostoumart-api/costumes")
+        axios.get("http://localhost:8108/costumes")
         .then(res => {
             const data = res.data.response;
             this.setState({ data });
@@ -84,8 +92,8 @@ class DisplayCostumes extends Component{
 
     deleteCostume(){
         if(this.state.selectedCostumeName){
-            axios.delete("http://88.197.53.80/kostoumart-api/costumes", {params: { name: this.state.selectedCostumeName }})
-            //axios.delete("http://localhost:8108/costumes", {params: { name: this.state.selectedCostumeName }})
+            //axios.delete("http://88.197.53.80/kostoumart-api/costumes", {params: { name: this.state.selectedCostumeName }})
+            axios.delete("http://localhost:8108/costumes", {params: { name: this.state.selectedCostumeName }})
             .then(res=> {
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");
@@ -130,22 +138,22 @@ class DisplayCostumes extends Component{
         return this.state.data.map((costume, index) => {
             const { costume_id, use_name, costume_name, description, sex, material, technique, location, location_influence, designer, tp_title, actors, roles } = costume //destructuring
             return (
-                <Table.Row key={costume_id}>
-                <Table.Cell collapsing>{costume_name}</Table.Cell>
-                <Table.Cell>{description}</Table.Cell>
-                <Table.Cell collapsing>{sex}</Table.Cell>
-                <Table.Cell collapsing>{use_name}</Table.Cell>
-                <Table.Cell collapsing>{material}</Table.Cell>
-                <Table.Cell collapsing>{technique}</Table.Cell>
-                <Table.Cell collapsing>{location}</Table.Cell>
-                <Table.Cell collapsing>{location_influence}</Table.Cell>
-                <Table.Cell collapsing>{designer}</Table.Cell>
-                <Table.Cell>{tp_title}</Table.Cell>
-                <Table.Cell>{actors}</Table.Cell>
-                <Table.Cell>{roles}</Table.Cell>
-                <Table.Cell collapsing><Button icon
-                onClick={()=>{this.handleDelete(costume_name);}}><Icon name="delete" color="red"/></Button></Table.Cell>
-                </Table.Row>
+                <TableRow key={costume_id}>
+                <TableCell></TableCell>
+                <TableCell>{costume_name}</TableCell>
+                <TableCell>{description}</TableCell>
+                <TableCell>{sex}</TableCell>
+                <TableCell>{use_name}</TableCell>
+                <TableCell>{material}</TableCell>
+                <TableCell>{technique}</TableCell>
+                <TableCell>{location}</TableCell>
+                <TableCell>{location_influence}</TableCell>
+                <TableCell>{designer}</TableCell>
+                <TableCell>{tp_title}</TableCell>
+                <TableCell>{actors}</TableCell>
+                <TableCell>{roles}</TableCell>
+                <TableCell><IconButton><DeleteIcon onClick={()=>{this.handleDelete(costume_name);}}></DeleteIcon> </IconButton></TableCell>
+                </TableRow>
             )
         })
     }
@@ -156,33 +164,39 @@ class DisplayCostumes extends Component{
         console.log(this.state.data);
         this.deleteCostume();
         return (
-            <div className="container__table">
+            <div>
                 <DisplayMenu activeItem = 'costume'></DisplayMenu>
                 <NotificationContainer></NotificationContainer>
-                <Table celled >
-                    <Table.Header fullWidth>
-                            <Table.HeaderCell 
-                            sorted={column === 'costume_name' ? direction : null}
-                            onClick={this.handleSort('costume_name')}
-                            >Τίτλος</Table.HeaderCell>
-                            <Table.HeaderCell>Περιγραφή</Table.HeaderCell>
-                            <Table.HeaderCell>Φύλο</Table.HeaderCell>
-                            <Table.HeaderCell>Χρήση</Table.HeaderCell>
-                            <Table.HeaderCell>Υλικό κατασκευής</Table.HeaderCell>
-                            <Table.HeaderCell>Τεχνική Κατασκευής</Table.HeaderCell>
-                            <Table.HeaderCell>Περιοχή Αναφοράς</Table.HeaderCell>
-                            <Table.HeaderCell>Χώρα Επιρροής</Table.HeaderCell>
-                            <Table.HeaderCell>Σχεδιαστής</Table.HeaderCell>
-                            <Table.HeaderCell>Θεατρικές Παραστάσεις</Table.HeaderCell>
-                            <Table.HeaderCell>Ρόλος </Table.HeaderCell>
-                            <Table.HeaderCell>Ηθοποιός </Table.HeaderCell>
-                            <Table.HeaderCell></Table.HeaderCell>
-                    </Table.Header>
-                    <Table.Body>
+                <Typography component="div">
+                <Paper className="root">
+                <Table className="table">
+                    <TableHead>
+                        <TableRow>
+                        <TableCell padding="checkbox">
+                            <Checkbox
+                            /></TableCell>
+                        <TableCell><strong>Τίτλος</strong></TableCell>
+                        <TableCell><strong>Περιγραφή</strong></TableCell>
+                        <TableCell><strong>Φύλο</strong></TableCell>
+                        <TableCell><strong>Χρήση</strong></TableCell>
+                        <TableCell><strong>Υλικό κατασκευής</strong></TableCell>
+                        <TableCell><strong>Τεχνική Κατασκευής</strong></TableCell>
+                        <TableCell><strong>Περιοχή Αναφοράς</strong></TableCell>
+                        <TableCell><strong>Χώρα Επιρροής</strong></TableCell>
+                        <TableCell><strong>Σχεδιαστής</strong></TableCell>
+                        <TableCell><strong>Θεατρικές Παραστάσεις</strong></TableCell>
+                        <TableCell><strong>Ρόλος</strong></TableCell>
+                        <TableCell><strong>Ηθοποιός</strong></TableCell>
+                        <TableCell></TableCell>
+                        </TableRow> 
+                    </TableHead>
+                    <TableBody>
                         {this.renderTableData()} 
-                    </Table.Body>
+                    </TableBody>
                 </Table>
-           
+                </Paper>
+                </Typography>
+               
           </div>
         );
       }

@@ -5,19 +5,23 @@ body {
     font-size: 14px;
   }
   
-  .ReactTable {
-    height: 500px;
-    margin-left:20px; 
-    margin-right:20px;
-  }
+.ReactTable {
+  height: 500px;
+  margin-left:20px;     
+  margin-right:20px;
+}
   
-  .rt-tbody,
-  .rt-thead {
+.rt-tbody,
+.rt-thead {
     overflow-x: hidden !important;
-  }
+}
   
-  .container__table {
-    width: 95%;
-    padding: 1%;
-    overflow-y: scroll;  /* or auto */
-  }
+.container__table {
+  width: 95%;
+  padding: 1%;
+  overflow-y: scroll;  /* or auto */
+}
+
+.header{
+  font-weight: bold;
+}

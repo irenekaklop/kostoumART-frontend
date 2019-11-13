@@ -12,7 +12,6 @@ import InsertTP from './components/Insert/InsertTP';
 import DisplayUses from './components/Display/DisplayUses';
 import DisplayTPs from './components/Display/DisplayTP';
 
-
 const Routes = () => (
     <BrowserRouter >
     <Switch>
