@@ -6,6 +6,7 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 import InsertMenu from './InsertMenu';
 import "./InsertMenu";
 import axios from "axios";
+import { TextField, Button, Paper } from '@material-ui/core';
 
 class InsertTP extends Component{
     constructor(props){
@@ -139,7 +140,7 @@ class InsertTP extends Component{
 
     render(){
         //To clear values after
-        const {name, theater, director} = this.state;
+        const {name, theater, director, date} = this.state;
 
         if (sessionStorage.getItem('tpData')){
                 sessionStorage.setItem('tpData','');
@@ -149,24 +150,25 @@ class InsertTP extends Component{
         return(
             <div className="main"> 
             <InsertMenu activeItem='tp'></InsertMenu>
-                <NotificationContainer></NotificationContainer>
-                <Form onSubmit={this.handleSubmit}>
-                    <Form.Field required>
-                        <label>Όνομα Παράστασης</label>
-                        <Input type="text" name="name" value={name} placeholder="Τίτλος παράστασης" onChange={this.onChange}/>
-                    </Form.Field>
-                    <Form.Group widths='equal'>
-                    <Form.Field required>
-                    <label>Θέατρο</label>
-                        <Input type="text" name="theater" value={theater} onChange={this.onChange}/>
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Σκηνοθέτης</label>
-                        <Input type="text" name="director" value={director} onChange={this.onChange}/>
-                    </Form.Field>
-                    </Form.Group>
-                    <Form.Button color='teal' content='Submit' />
-                </Form>
+            <NotificationContainer></NotificationContainer>
+            <Paper className="form">
+                <form onSubmit={this.handleSubmit}>
+                   <TextField  required label="Όνομα Παράστασης" name="name" value={name} onChange={this.onChange}></TextField>
+                    <br/>
+                    <TextField  required label="Ημερομηνία" name="date" value={date} onChange={this.onChange}></TextField>
+                    <br/>
+                    <TextField  required label="Σκηνοθέτης" name="director" value={director} onChange={this.onChange}></TextField>
+                    <br/>
+                    <TextField  required label="Θέατρο" name="theater" value={theater} onChange={this.onChange}></TextField>
+                    <br/> <br/><br/><br/>
+                    <div className="button-submit">
+                        <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
+                    </div>
+                </form>
+                
+            </Paper>
+                
+               
             </div>
 
         );

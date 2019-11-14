@@ -40,7 +40,8 @@ input + label {
 }
   
 .form{
-  padding: 1%;
+  margin: auto;
+  padding: 25px;
 }
   
 .select-container{
@@ -53,6 +54,10 @@ input + label {
   width: 50%;
 }
 
+.button-submit{
+  width: 95px;
+  margin: auto;
+}
   .button-save {
     border: 1px solid #0066cc;
     background-color: #0099cc;

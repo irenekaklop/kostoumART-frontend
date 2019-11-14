@@ -76,8 +76,8 @@ class DisplayCostumes extends Component{
     }
 
     getCostumes = _ => {
-        //axios.get("http://88.197.53.80/kostoumart-api/costumes")
-        axios.get("http://localhost:8108/costumes")
+        axios.get("http://88.197.53.80/kostoumart-api/costumes")
+        //axios.get("http://localhost:8108/costumes")
         .then(res => {
             const data = res.data.response;
             this.setState({ data });
@@ -92,8 +92,8 @@ class DisplayCostumes extends Component{
 
     deleteCostume(){
         if(this.state.selectedCostumeName){
-            //axios.delete("http://88.197.53.80/kostoumart-api/costumes", {params: { name: this.state.selectedCostumeName }})
-            axios.delete("http://localhost:8108/costumes", {params: { name: this.state.selectedCostumeName }})
+            axios.delete("http://88.197.53.80/kostoumart-api/costumes", {params: { name: this.state.selectedCostumeName }})
+            //axios.delete("http://localhost:8108/costumes", {params: { name: this.state.selectedCostumeName }})
             .then(res=> {
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");

@@ -4,6 +4,7 @@ import {Redirect} from 'react-router-dom';
 import Select from 'react-select';
 import "../Geosuggest/Geosuggest.css";
 import { TextArea, GridRow, Container, Form, Input, FormSelect } from 'semantic-ui-react';
+import { Button } from '@material-ui/core';
 import Geosuggest from 'react-geosuggest';
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import CreatableSelect from 'react-select/creatable';
@@ -227,8 +228,8 @@ class InsertCostume extends Component {
     /*Get costumes from db*/
     
     getCostumes = _ => {
-        //axios.get('http://88.197.53.80/kostoumart-api/costumes")
-        axios.get("http://localhost:8108/costumes")
+        axios.get('http://88.197.53.80/kostoumart-api/costumes')
+        //axios.get("http://localhost:8108/costumes")
         .then(res => {
             const costumeData = res.data.response;
             this.setState({ costumeData });
@@ -240,8 +241,8 @@ class InsertCostume extends Component {
     /* Get uses from database*/ 
     get_uses = _ => {
         let self = this;
-        //axios.get("http://88.197.53.80/kostoumart-api/uses")
-        axios.get("http://localhost:8108/uses")
+        axios.get("http://88.197.53.80/kostoumart-api/uses")
+        //axios.get("http://localhost:8108/uses")
         .then(res => {
             const u_data = res.data.response;
             this.setState({ u_data });
@@ -252,8 +253,8 @@ class InsertCostume extends Component {
 
     /*Get Theatrical Plays from database*/
     get_theatrical_plays = _ => {
-        //axios.get("ttp://88.197.53.80/kostoumart-api/tps")
-        axios.get("http://localhost:8108/tps")
+        axios.get("ttp://88.197.53.80/kostoumart-api/tps")
+        //axios.get("http://localhost:8108/tps")
         .then(res => {
             const TP_data = res.data.response;
             this.setState({ TP_data });
@@ -376,8 +377,8 @@ class InsertCostume extends Component {
                 this.state.s_value = this.state.selectedSexOption[key].value;
                 console.log("insert",key, this.state);
                 let data = this.state;
-                axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
-                //axios.post('http://localhost:8108/costumes', data)
+                //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
+                axios.post('http://localhost:8108/costumes', data)
                 .then(res => {
                     if(res.statusText ==="OK"){
                         let ret=this.createNotification("insert-success");
@@ -540,8 +541,10 @@ class InsertCostume extends Component {
                         <Input type="text" name="parts" value={parts} onChange={this.onChange}/>
                         </Form.Field>
                     </Form.Group>
-                    <br></br>
-                    <Form.Button color='teal' content='Submit'/>
+                    <br/><br/><br/>
+                    <div className="button-submit">
+                    <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
+                    </div>
                 </Form>
                 </div>
                 

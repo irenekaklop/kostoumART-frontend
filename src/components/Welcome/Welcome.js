@@ -24,8 +24,8 @@ class MenuContainer extends React.Component {
       activeItemPosition: 0,
       activeItemColor: '',
       menuItems: [
-        { text: 'Insert', link: 'insert'},
-        { text: 'Display', link: 'display' },
+        { text: 'Εισαγωγή δεδομένων', link: 'insert'},
+        { text: 'Προβολή δεδομένων', link: 'display' },
       ],
     }
     

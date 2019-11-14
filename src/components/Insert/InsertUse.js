@@ -7,6 +7,8 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import InsertMenu from './InsertMenu';
 import axios from 'axios';
+import { TextField, TextareaAutosize, Button, Paper, InputLabel } from '@material-ui/core';
+
 
 class InsertUse extends Component{
     constructor(props){
@@ -78,8 +80,8 @@ class InsertUse extends Component{
 
     /* Get uses from database*/ 
     get_uses = _ => {
-        //axios.get("http://88.197.53.80/kostoumart-api/uses")
-        axios.get("http://localhost:8108/uses")
+        axios.get("http://88.197.53.80/kostoumart-api/uses")
+        //axios.get("http://localhost:8108/uses")
         .then(res => {
             const u_data = res.data.response;
             this.setState({ u_data });
@@ -137,8 +139,8 @@ class InsertUse extends Component{
     insert(){
         this.state.use_category=this.state.selectedCategoryOption.value;
         const data = { name: this.state.name, category: this.state.use_category, description: this.state.description, customs: this.state.description }
-        //axios.post("http://88.197.53.80/kostoumart-api/uses", data)
-        axios.post('http://localhost:8108/uses', data)
+        axios.post("http://88.197.53.80/kostoumart-api/uses", data)
+        //axios.post('http://localhost:8108/uses', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 let ret=this.createNotification("insert-success");
@@ -176,8 +178,9 @@ class InsertUse extends Component{
         return(
             <div className="main"> 
             <InsertMenu activeItem='use'></InsertMenu>
-                <NotificationContainer></NotificationContainer>
-                    <Form onSubmit={this.handleSubmit}>
+            <NotificationContainer></NotificationContainer>
+            <Paper className="form">
+            <Form onSubmit={this.handleSubmit}>
                         <Form.Group widths='equal'>
                             <Form.Field required>
                                 <label> Όνομα Δραστηριότητας </label> 
@@ -204,8 +207,14 @@ class InsertUse extends Component{
                             <label>Ήθη/Έθιμα</label> 
                             <input className="small-input" type="text" name="customs" value={customs} onChange={this.onChange} maxLength={this.state.description_MAXlegnth}></input>
                         </Form.Field>
-                        <Form.Button color='teal' content='Submit' />
+                        <br/><br/><br/>
+                        <div className="button-submit">
+                        <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
+                        </div>
                 </Form>
+            </Paper>
+              
+               
             </div>
 
         );
