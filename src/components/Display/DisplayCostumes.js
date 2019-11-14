@@ -164,7 +164,7 @@ class DisplayCostumes extends Component{
         console.log(this.state.data);
         this.deleteCostume();
         return (
-            <div>
+            <div className="main">
                 <DisplayMenu activeItem = 'costume'></DisplayMenu>
                 <NotificationContainer></NotificationContainer>
                 <Typography component="div">

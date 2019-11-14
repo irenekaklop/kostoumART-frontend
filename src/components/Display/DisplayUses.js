@@ -105,8 +105,8 @@ class DisplayUses extends Component{
 
     
     getUses = _ => {
-        axios.get("http://88.197.53.80/kostoumart-api/uses")
-        //axios.get("http://localhost:8108/uses")
+        //axios.get("http://88.197.53.80/kostoumart-api/uses")
+        axios.get("http://localhost:8108/uses")
         .then(res => {
             const data = res.data.response;
             this.setState({ data });
@@ -177,7 +177,7 @@ class DisplayUses extends Component{
         const { column, direction} = this.state;
         this.deleteUse();
         return (
-            <div className="container__table">
+            <div className="container_table">
                 <DisplayMenu activeItem = 'use'></DisplayMenu>
                 <NotificationContainer></NotificationContainer>
                 <Typography component="div">

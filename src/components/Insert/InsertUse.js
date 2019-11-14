@@ -176,7 +176,7 @@ class InsertUse extends Component{
         const {selectedCategoryOption}= this.state;
         const {name, description, customs} =this.state;
         return(
-            <div className="main"> 
+            <div className="main-area"> 
             <InsertMenu activeItem='use'></InsertMenu>
             <NotificationContainer></NotificationContainer>
             <Paper className="form">

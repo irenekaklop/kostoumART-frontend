@@ -7,7 +7,10 @@ class Welcome extends Component{
     
     render(){
         return(
-           <MenuContainer/>
+          <div className="main-page">
+            <MenuContainer/>
+          </div>
+          
         );
     }
 }
@@ -24,8 +27,8 @@ class MenuContainer extends React.Component {
       activeItemPosition: 0,
       activeItemColor: '',
       menuItems: [
-        { text: 'Εισαγωγή δεδομένων', link: 'insert'},
-        { text: 'Προβολή δεδομένων', link: 'display' },
+        { text: 'ΕΙΣΑΓΩΓΗ ΔΕΔΟΜΕΝΩΝ', link: 'insert'},
+        { text: 'ΠΡΟΒΟΛΗ ΔΕΔΟΜΕΝΩΝ', link: 'display' },
       ],
     }
     

@@ -20,11 +20,11 @@ class App extends Component{
       <div className="off-canvas-wrapper">
       <div className="off-canvas-wrapper-inner" data-off-canvas-wrapper>
       <div className="off-canvas-content" data-off-canvas-content>
-      <Header name={this.state.appName}/>
-      <hr/>
-      <Routes name={this.state.appName}/>
-      <hr/>
-      <Footer/>
+        <Header name={this.state.appName}/>
+    
+        <Routes name={this.state.appName}/>
+      
+        <Footer/>
       </div>
       </div>
       </div>

@@ -148,7 +148,7 @@ class InsertTP extends Component{
             }
 
         return(
-            <div className="main"> 
+            <div className="main-area"> 
             <InsertMenu activeItem='tp'></InsertMenu>
             <NotificationContainer></NotificationContainer>
             <Paper className="form">

@@ -428,124 +428,124 @@ class InsertCostume extends Component {
         console.log(u_options, sexs);
        
         return ( 
-                <div className="main"> 
-                <InsertMenu activeItem ='costume'></InsertMenu>
-                <NotificationContainer></NotificationContainer>
-                <Form onSubmit={this.handleSubmit}>
-                    <Form.Field required>
-                        <label>Τίτλος</label>
-                        <Input type="text" name="name" value={name} onChange={this.onChange}/>
-                    </Form.Field>
-                    <Form.Field required>
-                        <label>Περιγραφή</label> 
-                        <TextArea className="textarea" type="text" name="descr"  value={descr} onChange={this.onChange} /*maxLength={this.state.description_MAXlegnth}*/></TextArea>
-                        <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
-                    </Form.Field>                    
-                    <hr></hr>
-                    <Form.Group widths="equal">
+                <div className="main-area"> 
+                    <InsertMenu activeItem ='costume'></InsertMenu>
+                    <NotificationContainer></NotificationContainer>
+                    <Form onSubmit={this.handleSubmit}>
                         <Form.Field required>
-                            <label>Χρήση</label>
-                            <Select
-                                value = {selectedUseOption}
-                                options = {u_options}
-                                maxMenuHeight={200}
-                                onChange = {this.handleUseSelect}
-                                closeMenuOnSelect={true}  
-                                isSearchable/>
-                            <a href='/insert-use'> Προσθήκη νέας χρήσης</a>
+                            <label>Τίτλος</label>
+                            <Input type="text" name="name" value={name} onChange={this.onChange}/>
                         </Form.Field>
                         <Form.Field required>
-                        <label>Φύλο</label>
-                            <Select 
-                                value = {selectedSexOption} 
-                                isMulti                                
-                                maxMenuHeight={150}
-                                closeMenuOnSelect={true}
-                                onChange = {this.handleSexSelect}
-                                options = {sexs}
-                                ignoreAccents      
-                        />
-                        </Form.Field>
-                        <Form.Field required>
-                        <label>Υλικό</label>
-                        <CreatableSelect
-                            isClearable
-                            onChange={this.handleMaterialSelect}
-                            value = {selectedMaterialOption}
-                            options = {materials}
-                            maxMenuHeight={200}
-                            closeMenuOnSelect={true}  
-                            isSearchable                                   
-                            ignoreAccents                
-                        />
-                        </Form.Field>
-                        <Form.Field required>
-                        <label>Τεχνική</label>
+                            <label>Περιγραφή</label> 
+                            <TextArea className="textarea" type="text" name="descr"  value={descr} onChange={this.onChange} /*maxLength={this.state.description_MAXlegnth}*/></TextArea>
+                            <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
+                        </Form.Field>                    
+                        <hr></hr>
+                        <Form.Group widths="equal">
+                            <Form.Field required>
+                                <label>Χρήση</label>
+                                <Select
+                                    value = {selectedUseOption}
+                                    options = {u_options}
+                                    maxMenuHeight={200}
+                                    onChange = {this.handleUseSelect}
+                                    closeMenuOnSelect={true}  
+                                    isSearchable/>
+                                <a href='/insert-use'> Προσθήκη νέας χρήσης</a>
+                            </Form.Field>
+                            <Form.Field required>
+                            <label>Φύλο</label>
+                                <Select 
+                                    value = {selectedSexOption} 
+                                    isMulti                                
+                                    maxMenuHeight={150}
+                                    closeMenuOnSelect={true}
+                                    onChange = {this.handleSexSelect}
+                                    options = {sexs}
+                                    ignoreAccents      
+                            />
+                            </Form.Field>
+                            <Form.Field required>
+                            <label>Υλικό</label>
                             <CreatableSelect
                                 isClearable
-                                onChange={this.handleTechniqueSelect}
-                                value = {selectedTechniqueOption}
-                                options = {techniques}
+                                onChange={this.handleMaterialSelect}
+                                value = {selectedMaterialOption}
+                                options = {materials}
                                 maxMenuHeight={200}
                                 closeMenuOnSelect={true}  
-                                isSearchable        
-                                ignoreAccents                 
+                                isSearchable                                   
+                                ignoreAccents                
                             />
-                        </Form.Field>
-                    </Form.Group>
-                    <Form.Field>
-                    <label>Σχεδιαστής</label> 
-                        <Input type="text" name="designer" value={designer} onChange={this.onChange}/>
-                    </Form.Field>
-                    <hr></hr>
-                    <Form.Group widths="equal">
-                        <Form.Field required>
-                            <label>Περιοχή Αναφοράς</label>
-                            <Geosuggest
-                                ref={el=>this._geoSuggest=el}
-                                onChange={this.handleLocationChange}
-                                onSuggestSelect={this.handleLocationSelect}
-                            />
-                            {this.handleLocation()}
-                        </Form.Field>
+                            </Form.Field>
+                            <Form.Field required>
+                            <label>Τεχνική</label>
+                                <CreatableSelect
+                                    isClearable
+                                    onChange={this.handleTechniqueSelect}
+                                    value = {selectedTechniqueOption}
+                                    options = {techniques}
+                                    maxMenuHeight={200}
+                                    closeMenuOnSelect={true}  
+                                    isSearchable        
+                                    ignoreAccents                 
+                                />
+                            </Form.Field>
+                        </Form.Group>
                         <Form.Field>
-                        <label>Χώρα/Περιοχή Επιρροής</label>
-                            <Geosuggest
-                                onChange={this.handleLocationInfluenceChange}
-                                onSuggestSelect={this.handleLocationInfluenceSelect}
-                            />
-                            {this.handleLocation()}
-                            {this.handleLocationInfluence()}
+                        <label>Σχεδιαστής</label> 
+                            <Input type="text" name="designer" value={designer} onChange={this.onChange}/>
                         </Form.Field>
-                    </Form.Group>
-                    <hr></hr>
-                    <Form.Field>
-                        <label>Θεατρικές Παραστάσεις</label>
-                        <Select className='select-container-link'
-                            value = {selectedTPOption}
-                            options = {p_options}
-                            maxMenuHeight={200}
-                            onChange = {this.handleTPSelect}
-                            closeMenuOnSelect={true}  
-                            isSearchable            
-                        /> 
-                        <a href='/insert-tp'> Προσθήκη νέας παράστασης</a>
-                        </Form.Field>
-                    <Form.Group widths="equal">
+                        <hr></hr>
+                        <Form.Group widths="equal">
+                            <Form.Field required>
+                                <label>Περιοχή Αναφοράς</label>
+                                <Geosuggest
+                                    ref={el=>this._geoSuggest=el}
+                                    onChange={this.handleLocationChange}
+                                    onSuggestSelect={this.handleLocationSelect}
+                                />
+                                {this.handleLocation()}
+                            </Form.Field>
+                            <Form.Field>
+                            <label>Χώρα/Περιοχή Επιρροής</label>
+                                <Geosuggest
+                                    onChange={this.handleLocationInfluenceChange}
+                                    onSuggestSelect={this.handleLocationInfluenceSelect}
+                                />
+                                {this.handleLocation()}
+                                {this.handleLocationInfluence()}
+                            </Form.Field>
+                        </Form.Group>
+                        <hr></hr>
                         <Form.Field>
-                        <label>Ηθοποιοί</label>
-                        <Input type="text" name="actors" value={actors} onChange={this.onChange}/>  
-                        </Form.Field>
-                        <Form.Field>
-                        <label>Ρόλος</label>
-                        <Input type="text" name="parts" value={parts} onChange={this.onChange}/>
-                        </Form.Field>
-                    </Form.Group>
-                    <br/><br/><br/>
-                    <div className="button-submit">
-                    <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
-                    </div>
-                </Form>
+                            <label>Θεατρικές Παραστάσεις</label>
+                            <Select className='select-container-link'
+                                value = {selectedTPOption}
+                                options = {p_options}
+                                maxMenuHeight={200}
+                                onChange = {this.handleTPSelect}
+                                closeMenuOnSelect={true}  
+                                isSearchable            
+                            /> 
+                            <a href='/insert-tp'> Προσθήκη νέας παράστασης</a>
+                            </Form.Field>
+                        <Form.Group widths="equal">
+                            <Form.Field>
+                            <label>Ηθοποιοί</label>
+                            <Input type="text" name="actors" value={actors} onChange={this.onChange}/>  
+                            </Form.Field>
+                            <Form.Field>
+                            <label>Ρόλος</label>
+                            <Input type="text" name="parts" value={parts} onChange={this.onChange}/>
+                            </Form.Field>
+                        </Form.Group>
+                        <br/><br/><br/>
+                        <div className="button-submit">
+                        <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
+                        </div>
+                    </Form>
                 </div>
                 
         );
