@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import './Welcome.css';
-import {Router, Route, browserHistory, IndexRoute} from 'react-router-dom';
+import '../../styles/custom.css';
 
 class Welcome extends Component{
     
     render(){
         return(
-          <div className="main-page">
+          <div className="main">
             <MenuContainer/>
           </div>
           

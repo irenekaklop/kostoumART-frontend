@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import './styles/custom.css';
-import './styles/react-confirm-alert.css';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
+import './App.css'
+import Header from './components/Shared/Header';
+import Footer from './components/Shared/Footer';
 import Routes from './routes';
+import {Router, Route, browserHistory, IndexRoute} from 'react-router-dom';
 
 
 class App extends Component{
@@ -17,16 +17,10 @@ class App extends Component{
 
   render(){
     return(
-      <div className="off-canvas-wrapper">
-      <div className="off-canvas-wrapper-inner" data-off-canvas-wrapper>
-      <div className="off-canvas-content" data-off-canvas-content>
+      <div className="App">
         <Header name={this.state.appName}/>
-    
         <Routes name={this.state.appName}/>
-      
         <Footer/>
-      </div>
-      </div>
       </div>
     );
   }

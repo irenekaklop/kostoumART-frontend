@@ -1,3 +1,8 @@
+.root{
+  flex-flow: 1;
+  background-color: white ;
+}
+
 .tabs-container{
     margin: 2%;
 }

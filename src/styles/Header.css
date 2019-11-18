@@ -1,0 +1,30 @@
+.menu {
+  background-color: white;
+  display: inline-flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 40px;
+  position: relative;
+  border-bottom: 1px solid #E7E7E7;
+}
+
+.headerBottomLink{
+    margin:0px;
+    text-decoration:none;
+}
+
+.headerBottomDiv{
+    vertical-align:text-top;
+    width:100px;
+}
+
+.headerBottomLink:hover{
+    vertical-align:text-top;
+}
+
+
+.header_link {
+  text-decoration:none;
+  color: black;
+ 
+}

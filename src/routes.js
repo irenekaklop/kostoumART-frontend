@@ -11,10 +11,12 @@ import InsertUse from './components/Insert/InsertUse';
 import InsertTP from './components/Insert/InsertTP';
 import DisplayUses from './components/Display/DisplayUses';
 import DisplayTPs from './components/Display/DisplayTP';
+import Insert from './components/Insert/Insert';
 
 const Routes = () => (
     <BrowserRouter >
     <Switch>
+        <Route exact path='/insert' component={Insert}/>
     <Route exact path="/kostoumart-dashboard" component={Welcome}/>
     <Route exact path='/insert' component={InsertCostume}/>
     <Route exact path='/geo' component = {Geosuggest}/>
