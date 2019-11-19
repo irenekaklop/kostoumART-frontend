@@ -25,9 +25,10 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import axios from 'axios';
-import InsertCostumeForm from './InsertCostumeForm.js';
+import CostumeForm from '../Forms/CostumeForm.js';
+import UseForm from '../Forms/UseForm.js';
 
-class Insert extends Component{
+class Dashboard extends Component{
 
     constructor(props) {
         super(props);
@@ -40,7 +41,8 @@ class Insert extends Component{
             //TPs
             tp_data:[],
             //For Insert Form
-            isDialogOpen: false,
+            isCostumeDialogOpen: false,
+            isUseDialogOpen: false,
 
         }
     }
@@ -55,7 +57,13 @@ class Insert extends Component{
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
 
     handleCloseDialog = () => {
-        this.setState({isDialogOpen: false});
+        if(this.state.isCostumeDialogOpen){
+            this.getCostumes();
+            this.setState({isCostumeDialogOpen: false});}
+        else if(this.state.isUseDialogOpen){
+            this.get_uses();
+            this.setState({isUseDialogOpen: false});
+        }
     }
 
     createNotification(type){
@@ -119,9 +127,15 @@ class Insert extends Component{
 
     handleAddCostume= () => {
         this.setState({
-          isDialogOpen: true,
+          isCostumeDialogOpen: true,
         });
     };
+
+    handleAddUse = () => {
+        this.setState({
+            isUseDialogOpen: true,
+        })
+    }
 
     handleCostumeDelete(index){
         //axios.delete("http://88.197.53.80/kostoumart-api/costumes", {params: { name: index }})
@@ -241,6 +255,7 @@ class Insert extends Component{
     }
 
     render() {
+        console.log(this.state);
         return (
             <React.Fragment>
                 <NotificationContainer></NotificationContainer>
@@ -279,12 +294,12 @@ class Insert extends Component{
                                 </TableBody>
                             </Table>
                             <IconButton><AddIcon onClick={() => this.handleAddCostume()}></AddIcon></IconButton>
-                            <InsertCostumeForm 
-                                isOpen={this.state.isDialogOpen}
+                            <CostumeForm 
+                                isOpen={this.state.isCostumeDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
                                 costumes={this.state.costume_data}
                                 uses={this.state.use_data}
-                                theatrical_plays={this.state.tp_data}></InsertCostumeForm>
+                                theatrical_plays={this.state.tp_data}></CostumeForm>
                         </Paper>
                     }
                     {this.state.current_tab===1 &&
@@ -302,6 +317,13 @@ class Insert extends Component{
                             </TableHead>
                             <TableBody>{this.renderTableUsesData()}</TableBody>
                         </Table>
+                        <IconButton><AddIcon onClick={() => this.handleAddUse()}></AddIcon></IconButton>
+                        <UseForm 
+                                isOpen={this.state.isUseDialogOpen}
+                                handleClose={this.handleCloseDialog.bind(this)}
+                                costumes={this.state.costume_data}
+                                uses={this.state.use_data}
+                                theatrical_plays={this.state.tp_data}></UseForm>
                         </Paper>
                     }
                     {this.state.current_tab===2 &&
@@ -330,4 +352,4 @@ class Insert extends Component{
     }
 }
 
-export default Insert;
+export default Dashboard;

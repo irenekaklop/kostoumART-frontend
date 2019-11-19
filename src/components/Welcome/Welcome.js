@@ -26,8 +26,7 @@ class MenuContainer extends React.Component {
       activeItemPosition: 0,
       activeItemColor: '',
       menuItems: [
-        { text: 'ΕΙΣΑΓΩΓΗ ΔΕΔΟΜΕΝΩΝ', link: 'insert'},
-        { text: 'ΠΡΟΒΟΛΗ ΔΕΔΟΜΕΝΩΝ', link: 'display' },
+        { text: 'EIΣΟΔΟΣ', link: 'kostoumart-dashboard'},
       ],
     }
     

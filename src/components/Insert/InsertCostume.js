@@ -367,15 +367,9 @@ class InsertCostume extends Component {
     }
 
     insert() {
-        this.state.u_value = this.state.selectedUseOption.value;
-        this.state.t_value = this.state.selectedTechniqueOption.value;
-        this.state.m_value = this.state.selectedMaterialOption.value;
-        if(this.state.selectedTPOption){
-            this.state.tp_value = this.state.selectedTPOption.value;
-        }
         for(var key in this.state.selectedSexOption){
-                this.state.s_value = this.state.selectedSexOption[key].value;
-                console.log("insert",key, this.state);
+                this.state.s_value = this.state.selectedSexOption[key];
+                console.log("insert", this.state);
                 let data = this.state;
                 //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
                 axios.post('http://localhost:8108/costumes', data)
