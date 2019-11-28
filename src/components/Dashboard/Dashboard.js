@@ -17,7 +17,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 
@@ -27,6 +26,7 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 import axios from 'axios';
 import CostumeForm from '../Forms/CostumeForm.js';
 import UseForm from '../Forms/UseForm.js';
+import TpForm from '../Forms/TpForm.js';
 
 class Dashboard extends Component{
 
@@ -43,7 +43,12 @@ class Dashboard extends Component{
             //For Insert Form
             isCostumeDialogOpen: false,
             isUseDialogOpen: false,
-
+            isTPDialogOpen: false,
+            //For Editing
+            editing: false,
+            costume: null,
+            use: null,
+            tp: null,
         }
     }
 
@@ -57,12 +62,19 @@ class Dashboard extends Component{
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
 
     handleCloseDialog = () => {
+        if(this.state.editing){
+            this.setState({ editing: false });
+        }
         if(this.state.isCostumeDialogOpen){
             this.getCostumes();
             this.setState({isCostumeDialogOpen: false});}
         else if(this.state.isUseDialogOpen){
             this.get_uses();
             this.setState({isUseDialogOpen: false});
+        }
+        else if(this.state.isTPDialogOpen){
+            this.get_theatrical_plays();
+            this.setState({isTPDialogOpen: false});
         }
     }
 
@@ -137,6 +149,24 @@ class Dashboard extends Component{
         })
     }
 
+    handleAddTP = () => {
+        this.setState({
+            isTPDialogOpen: true,
+        })
+    }
+
+    handleUseEditing (index) {
+        this.setState({
+            editing: true,
+            isUseDialogOpen: true,
+        });
+        for(var i=0; i<this.state.use_data.length; i++){
+            if(this.state.use_data[i].useID === index){
+                this.state.use = this.state.use_data[i];
+            }
+        }
+    }
+
     handleCostumeDelete(index){
         //axios.delete("http://88.197.53.80/kostoumart-api/costumes", {params: { name: index }})
         axios.delete("http://localhost:8108/costumes", {params: { name: index }})
@@ -178,7 +208,6 @@ class Dashboard extends Component{
             const { costume_id, use_name, costume_name, description, sex, material, technique, location, location_influence, designer, tp_title, actors, roles } = costume //destructuring
             return (
                 <TableRow key={costume_id}>
-                <TableCell></TableCell>
                 <TableCell>{costume_name}</TableCell>
                 <TableCell>{description}</TableCell>
                 <TableCell>{sex}</TableCell>
@@ -191,7 +220,9 @@ class Dashboard extends Component{
                 <TableCell>{tp_title}</TableCell>
                 <TableCell>{actors}</TableCell>
                 <TableCell>{roles}</TableCell>
-                <TableCell><IconButton><DeleteIcon onClick={()=>{this.handleCostumeDelete(costume_name);}}></DeleteIcon> </IconButton></TableCell>
+                <TableCell>
+                    <IconButton><DeleteIcon onClick={()=>{this.handleCostumeDelete(costume_name);}}></DeleteIcon> </IconButton>
+                    <IconButton><EditIcon onClick={() => this.handleCostumeEditing()}/></IconButton></TableCell>
                 </TableRow>
             )
         })
@@ -202,33 +233,22 @@ class Dashboard extends Component{
             const { useID, name, use_category,description, customs } = use //destructuring
             return (
                 <TableRow key={useID}>
-                    <TableCell></TableCell>
                     <TableCell>
-                    {this.state.editing && this.state.editing === useID ? (
-                            <TextField onChange={e=>this.onChange}></TextField>) : (
-                            name
-                        )}
-                        </TableCell>
-                    <TableCell>{this.state.editing && this.state.editing === useID ? (
-                            <TextField value = {use_category} name = {this.state.use_category} onChange={e=>this.onChange}></TextField>) : (
-                            use_category
-                        )}</TableCell>
-                    <TableCell>{this.state.editing && this.state.editing === useID ? (
-                            <TextField value = {description} name = {this.state.description} onChange={e=>this.onChange}></TextField>) : (
-                            description
-                        )}</TableCell>
-                    <TableCell>{this.state.editing && this.state.editing === useID ? (
-                            <TextField value = {customs} name = {this.state.customs} onChange={e=>this.onChange}></TextField>) : (
-                            customs
-                        )}</TableCell>
+                        {name}
+                   </TableCell>
+                    <TableCell>
+                        {use_category}
+                    </TableCell>
+                    <TableCell>
+                        {description}
+                    </TableCell>
+                    <TableCell>
+                        {customs}
+                    </TableCell>
                     <TableCell>
                         <IconButton><DeleteIcon onClick={()=>{this.handleUseDelete(useID);}}></DeleteIcon></IconButton>
-                        {this.state.editing && this.state.editing === useID? (
-                            <IconButton><CheckIcon onClick={() => this.stopEditing()}/></IconButton>
-                            ) : (
-                            <IconButton><EditIcon onClick={() => this.startEditing(useID)}/></IconButton>
-                        )}
-                       </TableCell>
+                    <IconButton><EditIcon onClick={() => {this.handleUseEditing(useID);}}/></IconButton>
+                    </TableCell>
                 </TableRow>
             )
         })
@@ -239,7 +259,6 @@ class Dashboard extends Component{
             const { theatrical_play_id, title, date, actors, director, theater } = tp //destructuring
             return (
                 <TableRow key={theatrical_play_id}>
-                <TableCell></TableCell>
                 <TableCell>{title}</TableCell>
                 <TableCell>{date}</TableCell>
                 <TableCell >{actors}</TableCell>
@@ -247,8 +266,8 @@ class Dashboard extends Component{
                 <TableCell>{theater}</TableCell>
                 <TableCell>
                     <IconButton><DeleteIcon onClick={()=>{this.handleTPDelete(theatrical_play_id);}}></DeleteIcon></IconButton>
-                    <IconButton><EditIcon onClick={() => this.startEditing(theatrical_play_id)}/></IconButton>
-                    </TableCell>
+                    <IconButton><EditIcon onClick={() => this.handleTPEditing()}/></IconButton>
+                </TableCell>
                 </TableRow>
             )
         })
@@ -271,9 +290,6 @@ class Dashboard extends Component{
                             <Table className="table">
                                 <TableHead>
                                     <TableRow>
-                                    <TableCell padding="checkbox">
-                                        <Checkbox
-                                        /></TableCell>
                                     <TableCell><strong>Τίτλος</strong></TableCell>
                                     <TableCell><strong>Περιγραφή</strong></TableCell>
                                     <TableCell><strong>Φύλο</strong></TableCell>
@@ -307,10 +323,9 @@ class Dashboard extends Component{
                             <Table className="table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell padding="checkbox"><Checkbox/></TableCell>
                                     <TableCell><strong>Όνομα Δραστηριότητας</strong></TableCell>
-                                    <TableCell><strong>Περιγραφή</strong></TableCell>
                                     <TableCell><strong>Κατηγορία Χρήσης</strong></TableCell>
+                                    <TableCell><strong>Περιγραφή</strong></TableCell>
                                     <TableCell><strong>Έθιμα</strong></TableCell>
                                     <TableCell></TableCell>
                                 </TableRow>
@@ -323,7 +338,9 @@ class Dashboard extends Component{
                                 handleClose={this.handleCloseDialog.bind(this)}
                                 costumes={this.state.costume_data}
                                 uses={this.state.use_data}
-                                theatrical_plays={this.state.tp_data}></UseForm>
+                                theatrical_plays={this.state.tp_data}
+                                editing={this.state.editing}
+                                use={this.state.use}></UseForm>
                         </Paper>
                     }
                     {this.state.current_tab===2 &&
@@ -331,7 +348,6 @@ class Dashboard extends Component{
                             <Table className="table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell padding="checkbox"><Checkbox/></TableCell>
                                     <TableCell><strong>Όνομα Παράστασης</strong></TableCell>
                                     <TableCell><strong>Χρονολογία</strong></TableCell>
                                     <TableCell><strong>Ηθοποιοί</strong></TableCell>
@@ -342,6 +358,12 @@ class Dashboard extends Component{
                             </TableHead>
                             <TableBody>{this.renderTableTPsData()} </TableBody>
                             </Table>
+                            <IconButton><AddIcon onClick={() => this.handleAddTP()}></AddIcon></IconButton>
+                            <TpForm
+                                isOpen={this.state.isTPDialogOpen}
+                                handleClose={this.handleCloseDialog.bind(this)}
+                                theatrical_plays={this.state.tp_data}
+                                />
                         </Paper>
                     }
             </div>

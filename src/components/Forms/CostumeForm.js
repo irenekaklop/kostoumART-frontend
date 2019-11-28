@@ -245,7 +245,6 @@ class  CostumeForm extends Component{
                               this.setState({ insert: false });
                             }, 3000);
                           });
-                        this.resetForm();
                     }
                 })    
        }

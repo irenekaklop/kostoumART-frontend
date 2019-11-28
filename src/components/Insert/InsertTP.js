@@ -20,9 +20,6 @@ class InsertTP extends Component{
             director: '',
             submit: false,
             redirectToReferrer: false,
-            //Select
-            selectedCategoryOption: '',
-            /////////////////////////
             cond1: false,
             cond2: false
         };
@@ -126,8 +123,6 @@ class InsertTP extends Component{
             director: '',
             submit: false,
             redirectToReferrer: false,
-            //Select
-            selectedCategoryOption: '',
             /////////////////////////
             cond1: false,
             cond2: false
