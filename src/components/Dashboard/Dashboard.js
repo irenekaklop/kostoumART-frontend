@@ -27,6 +27,7 @@ import axios from 'axios';
 import CostumeForm from '../Forms/CostumeForm.js';
 import UseForm from '../Forms/UseForm.js';
 import TpForm from '../Forms/TpForm.js';
+import ConfirmationDialog from '../Dashboard/ConfirmationDialog.js';
 
 class Dashboard extends Component{
 
@@ -44,11 +45,14 @@ class Dashboard extends Component{
             isCostumeDialogOpen: false,
             isUseDialogOpen: false,
             isTPDialogOpen: false,
+            isConfirmationDialogOpen: false,
             //For Editing
             editing: false,
             costume: null,
             use: null,
             tp: null,
+            //Confirmation Dialog answer
+            index: null,
         }
     }
 
@@ -60,23 +64,6 @@ class Dashboard extends Component{
     }
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
-
-    handleCloseDialog = () => {
-        if(this.state.editing){
-            this.setState({ editing: false });
-        }
-        if(this.state.isCostumeDialogOpen){
-            this.getCostumes();
-            this.setState({isCostumeDialogOpen: false});}
-        else if(this.state.isUseDialogOpen){
-            this.get_uses();
-            this.setState({isUseDialogOpen: false});
-        }
-        else if(this.state.isTPDialogOpen){
-            this.get_theatrical_plays();
-            this.setState({isTPDialogOpen: false});
-        }
-    }
 
     createNotification(type){
         switch (type) {
@@ -100,7 +87,6 @@ class Dashboard extends Component{
         .then(res => {
             const costume_data = res.data.response;
             this.setState({ costume_data });
-            console.log(this.state);
         }
         )
     }
@@ -128,6 +114,51 @@ class Dashboard extends Component{
             console.log(this.state);
         }
         )
+    }
+    
+    handleCloseDialog = () => {
+        if(this.state.editing){
+            this.setState({ editing: false });
+        }
+        if(this.state.isCostumeDialogOpen){
+            this.getCostumes();
+            this.setState({isCostumeDialogOpen: false});}
+        else if(this.state.isUseDialogOpen){
+            this.get_uses();
+            this.setState({isUseDialogOpen: false});
+        }
+        else if(this.state.isTPDialogOpen){
+            this.get_theatrical_plays();
+            this.setState({isTPDialogOpen: false});
+        }
+    }
+
+    handleCloseConfirmationDialog = () => {
+        this.setState({
+            isConfirmationDialogOpen:false,
+        });
+    }
+    
+    handleOpenConfirmationDialog = (index) => {
+        this.setState({
+            isConfirmationDialogOpen: true,
+            index: index,
+        });
+    }
+
+    handleOk = (index) => {
+        this.setState({
+            isConfirmationDialogOpen:false,
+        });
+        if(this.state.current_tab===0){
+            this.handleCostumeDelete(index);
+        }
+        else if(this.state.current_tab===1){
+            this.handleUseDelete(index);
+        }
+        else if(this.state.current_tab===2){
+            this.handleTPDelete(index);
+        }
     }
 
     handleTabChange = (event, value) => {
@@ -185,6 +216,7 @@ class Dashboard extends Component{
             .then(res=> {
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");
+                    this.getCostumes();
                     this.get_theatrical_plays();
                     return ret;
                 }
@@ -194,13 +226,44 @@ class Dashboard extends Component{
     handleUseDelete(index){
         //axios.delete("http://88.197.53.80/kostoumart-api/uses",{params: { id: index }})
         axios.delete("http://localhost:8108/uses",{params: { id: index }} )
-            .then(res=> {
-                if(res.statusText ==="OK"){
-                    let ret=this.createNotification("delete-success");
-                    this.get_uses();
-                    return ret;
+        .then(res=> {
+            if(res.statusText ==="OK"){
+                let ret=this.createNotification("delete-success");
+                this.getCostumes();
+                this.get_uses();
+                return ret;
+            }
+        })
+    }
+
+    handleConfirmationForDelete(index){
+        console.log("Index", index);
+        //Check if this index is a foreign key in costumes' list before delete
+        if(this.state.current_tab===1){
+            for(var i=0; i<this.state.costume_data.length; i++){
+                if(this.state.costume_data[i].useID){
+                    if(this.state.costume_data[i].useID===index){
+                    this.handleOpenConfirmationDialog(index);
+                    return;
+                    }
                 }
-            })
+            }
+            this.handleUseDelete(index);
+        }
+        else if(this.state.current_tab===2){
+            for(var i=0; i<this.state.costume_data.length; i++){
+                if(this.state.costume_data[i].useID){
+                    if(this.state.costume_data[i].useID===index){
+                    this.handleOpenConfirmationDialog(index);
+                    return;
+                    }
+                }
+            }
+            this.handleTPDelete(index);
+        }
+
+        
+        
     }
 
     renderTableCostumesData() {
@@ -246,8 +309,8 @@ class Dashboard extends Component{
                         {customs}
                     </TableCell>
                     <TableCell>
-                        <IconButton><DeleteIcon onClick={()=>{this.handleUseDelete(useID);}}></DeleteIcon></IconButton>
-                    <IconButton><EditIcon onClick={() => {this.handleUseEditing(useID);}}/></IconButton>
+                        <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(useID);}}></DeleteIcon></IconButton>
+                    <IconButton><EditIcon onClick={() => {this.handleUseEditing();}}/></IconButton>
                     </TableCell>
                 </TableRow>
             )
@@ -366,6 +429,11 @@ class Dashboard extends Component{
                                 />
                         </Paper>
                     }
+                    <ConfirmationDialog 
+                    isOpen={this.state.isConfirmationDialogOpen}
+                    index = {this.state.index}
+                    handleClose={this.handleCloseConfirmationDialog.bind(this)}
+                    handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
             </div>
             </React.Fragment>
             

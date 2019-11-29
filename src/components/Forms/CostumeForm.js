@@ -292,7 +292,7 @@ class  CostumeForm extends Component{
         const c_list = this.props.costumes;
         //check if new name already exist
         for(var i=0; i < c_list.length; i++){
-            if(c_list[i].name === this.state.name){
+            if(c_list[i].costume_name === this.state.name){
                 return true;
             }
         }

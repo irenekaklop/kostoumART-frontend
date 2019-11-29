@@ -162,6 +162,7 @@ class UseForm extends Component{
             }
             
             if(this.use_exists()){
+                console.log("dublicate");
                 this.setState({ error_dublicate: true }, () => {
                     setTimeout(() => {
                        this.setState({ error_dublicate: false });
@@ -205,7 +206,7 @@ class UseForm extends Component{
         const uses_list = this.props.uses;
         //check this name and use category already exist
         for(var i=0; i < uses_list.length; i++){
-            if(uses_list[i].use_category=== this.state.use_category && uses_list[i].name === this.state.name){
+            if(uses_list[i].name === this.state.name && uses_list[i].use_category === this.state.selectedCategoryOption){
                 return true;
             }
         }
