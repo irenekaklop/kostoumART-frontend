@@ -115,6 +115,16 @@ class Dashboard extends Component{
         }
         )
     }
+
+    get_costume(index){
+        //axios.get('http://88.197.53.80/kostoumart-api/costumes')
+        axios.get("http://localhost:8108/costumes/"+index)
+        .then(res => {
+            const costume = res.data.response;
+            this.setState({ costume });
+        }
+        )
+    }
     
     handleCloseDialog = () => {
         if(this.state.editing){
@@ -162,6 +172,16 @@ class Dashboard extends Component{
     }
 
     handleTabChange = (event, value) => {
+        //Refresh Tables
+        if(value===0){
+            this.getCostumes();
+        }
+        else if(value===1){
+            this.get_uses();
+        }
+        else if(value===2){
+            this.get_theatrical_plays();
+        }
         this.setState({
           current_tab: value
         });
@@ -186,6 +206,21 @@ class Dashboard extends Component{
         })
     }
 
+    handleCostumeEditing(index){
+        for(var i=0; i < this.state.costume_data.length; i++){
+            if(this.state.costume_data[i].costume_id === index){
+               //axios.get('http://88.197.53.80/kostoumart-api/costumes'+index)
+                axios.get("http://localhost:8108/costumes/"+index)
+                .then(res => {
+                    const costume = res.data.response;
+                    this.setState({ costume: costume, editing: true,
+                        isCostumeDialogOpen: true,});
+                }
+                )
+            }
+        }
+    }
+
     handleUseEditing (index) {
         this.setState({
             editing: true,
@@ -194,6 +229,18 @@ class Dashboard extends Component{
         for(var i=0; i<this.state.use_data.length; i++){
             if(this.state.use_data[i].useID === index){
                 this.state.use = this.state.use_data[i];
+            }
+        }
+    }
+
+    handleTPEditing (index) {
+        this.setState({
+            editing: true,
+            isTPDialogOpen: true,
+        });
+        for(var i=0; i<this.state.tp_data.length; i++){
+            if(this.state.tp_data[i].theatrical_play_id === index){
+                this.state.tp = this.state.tp_data[i];
             }
         }
     }
@@ -285,7 +332,7 @@ class Dashboard extends Component{
                 <TableCell>{roles}</TableCell>
                 <TableCell>
                     <IconButton><DeleteIcon onClick={()=>{this.handleCostumeDelete(costume_name);}}></DeleteIcon> </IconButton>
-                    <IconButton><EditIcon onClick={() => this.handleCostumeEditing()}/></IconButton></TableCell>
+                    <IconButton><EditIcon onClick={() => this.handleCostumeEditing(costume_id)}/></IconButton></TableCell>
                 </TableRow>
             )
         })
@@ -310,7 +357,7 @@ class Dashboard extends Component{
                     </TableCell>
                     <TableCell>
                         <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(useID);}}></DeleteIcon></IconButton>
-                    <IconButton><EditIcon onClick={() => {this.handleUseEditing();}}/></IconButton>
+                    <IconButton><EditIcon onClick={() => {this.handleUseEditing(useID);}}/></IconButton>
                     </TableCell>
                 </TableRow>
             )
@@ -329,7 +376,7 @@ class Dashboard extends Component{
                 <TableCell>{theater}</TableCell>
                 <TableCell>
                     <IconButton><DeleteIcon onClick={()=>{this.handleTPDelete(theatrical_play_id);}}></DeleteIcon></IconButton>
-                    <IconButton><EditIcon onClick={() => this.handleTPEditing()}/></IconButton>
+                    <IconButton><EditIcon onClick={() => this.handleTPEditing(theatrical_play_id)}/></IconButton>
                 </TableCell>
                 </TableRow>
             )
@@ -378,7 +425,9 @@ class Dashboard extends Component{
                                 handleClose={this.handleCloseDialog.bind(this)}
                                 costumes={this.state.costume_data}
                                 uses={this.state.use_data}
-                                theatrical_plays={this.state.tp_data}></CostumeForm>
+                                theatrical_plays={this.state.tp_data}
+                                costume={this.state.costume}
+                                editing={this.state.editing}></CostumeForm>
                         </Paper>
                     }
                     {this.state.current_tab===1 &&
@@ -426,6 +475,8 @@ class Dashboard extends Component{
                                 isOpen={this.state.isTPDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
                                 theatrical_plays={this.state.tp_data}
+                                editing={this.state.editing}
+                                tp={this.state.tp}
                                 />
                         </Paper>
                     }

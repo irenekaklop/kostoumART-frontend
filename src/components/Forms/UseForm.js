@@ -100,6 +100,7 @@ class UseForm extends Component{
     }
 
     handleClose(){
+        this.resetForm();
         this.setState(() => {this.props.handleClose()});
     }
 
@@ -190,6 +191,8 @@ class UseForm extends Component{
        
     resetForm() {
         this.setState({
+            use: null,
+            id: null,
             use_category: null,
             name: null,
             description: null,
@@ -198,7 +201,14 @@ class UseForm extends Component{
             exists: null,
             description_status: false,
             submit: false,
+            redirectToReferrer: false,
+            //Select var
             selectedCategoryOption: null,
+            ////////////////////////
+            error_description: false,
+            error_dublicate: false,
+            error_missing_value: false,
+            insert: false,
         })
     }
 

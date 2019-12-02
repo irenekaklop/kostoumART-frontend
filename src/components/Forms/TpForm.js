@@ -36,6 +36,7 @@ class TpForm extends Component{
         super(props);
         this.state = { 
             tp_data: null,
+            theatrical_play_id: null,
             name: null,
             theater: null,
             date: null,
@@ -52,8 +53,17 @@ class TpForm extends Component{
         this.onChange = this.onChange.bind(this);
     }
 
-    componentDidUpdate(){
-        this.state.tp_data= this.props.theatrical_plays;
+    componentDidUpdate(prevProps, prevState){
+        if(this.props.editing && !prevProps.editing){
+            this.setState({
+                name: this.props.tp.title,
+                theater: this.props.tp.theater,
+                date: this.props.tp.date,
+                actors: this.props.tp.actors,
+                director: this.props.tp.director,
+                theatrical_play_id: this.props.tp.theatrical_play_id,
+                })
+        }
     }
 
     onChange = ( evt ) => { 
@@ -67,11 +77,31 @@ class TpForm extends Component{
     }
 
     handleClose(){
+        this.resetForm();
         this.setState(() => {this.props.handleClose()});
     }
 
     handleSubmit = () => {
-        this.handleValidate();
+        if(this.props.editing){
+            this.handleUpdate();
+        }
+        else{
+            this.handleValidate();
+        }
+    }
+
+    handleUpdate(){
+        const data = { theatrical_play_id: this.state.theatrical_play_id, title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater};
+        axios.post('http://localhost:8108/edit_tp', data)
+        .then(res => {
+            if(res.statusText ==="OK"){
+                this.setState({ insert: true }, () => {
+                    setTimeout(() => {
+                      this.setState({ insert: false });
+                    }, 3000);
+                  });
+            }
+       })    
     }
 
     handleInsert(){
@@ -115,12 +145,19 @@ class TpForm extends Component{
        
     resetForm() {
         this.setState( { 
+            theatrical_play_id: null,
             name: null,
             theater: null,
             date: null,
             actors: null,
             director: null,
             submit: false,
+            redirectToReferrer: false,
+            ////////////////////////
+            error_description: false,
+            error_dublicate: false,
+            error_missing_value: false,
+            insert: false
         });
     }
 
@@ -164,6 +201,7 @@ class TpForm extends Component{
        }
     }
 
+
     render(){
         const {name, theater, director, date} = this.state;
 
@@ -186,11 +224,18 @@ class TpForm extends Component{
                                 <div className="FormSubtitle">Kουστούμι</div>
                                 <br/>
                                 <FormControl className="FormControl">
-                                <TextField  required label="Όνομα Παράστασης" name="name" value={name} onChange={this.onChange}></TextField>
+                                <TextField required 
+                                label="Όνομα Παράστασης" 
+                                name="name" 
+                                value={name} 
+                                onChange={this.onChange}></TextField>
                             </FormControl>
                             <br/>
                             <FormControl required>
-                                <TextField  required label="Ημερομηνία" name="date" value={date} onChange={this.onChange}></TextField>
+                                <TextField 
+                                required label="Ημερομηνία" name="date" 
+                                value={date} 
+                                onChange={this.onChange}></TextField>
                             </FormControl>
                             <br/>
                             <FormControl className="FormControl">

@@ -28,6 +28,7 @@ import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import "./Forms.css";
 
 import axios from 'axios';
+import { ninvoke } from 'q';
 
 
 const ITEM_HEIGHT = 48;
@@ -53,6 +54,7 @@ class  CostumeForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            costume: null, 
             name: null,
             descr: null,
             //Uses' data
@@ -102,14 +104,40 @@ class  CostumeForm extends Component{
         this.onChange = this.onChange.bind(this);
     }
 
-    componentDidUpdate(){
-        console.log(this.props);
-        this.state.tps_data=this.props.theatrical_plays;
-        this.state.uses_data=this.props.uses;
-        console.log(this.state)
+    componentDidUpdate(prevProps, prevState){
+        console.log("props", this.props);
+        if(this.props.editing && !prevProps.editing){
+            let sex;
+            if(this.props.costume[0].sex.includes(",")){
+                sex = this.props.costume[0].sex.split(",");
+            }
+            else{
+                sex = [this.props.costume[0].sex];
+            }
+            this.setState({
+                costume: this.props.costume[0],
+                costume_id: this.props.costume[0].costume_id,
+                name: this.props.costume[0].costume_name,
+                descr: this.props.costume[0].description,
+                actors: this.props.costume[0].actors,
+                designer: this.props.costume[0].designer,
+                parts: this.props.costume[0].parts,
+                selectedSexOption: sex,
+                selectedUseOption: this.props.costume[0].name,
+                selectedMaterialOption: this.props.costume[0].material,
+                selectedTechniqueOption: this.props.costume[0].technique,
+                selectedTPOption: this.props.costume[0].title,
+                location: this.props.costume[0].location,
+                location_select: this.props.costume[0].location,
+                location_influence_select: this.props.costume[0].location_influence,
+                uses_data:this.props.uses,
+            })
+        }
+        console.log('state', this.state);
     }
 
     handleClose(){
+        this.resetForm();
         this.setState(() => {this.props.handleClose()});
     }
 
@@ -179,7 +207,12 @@ class  CostumeForm extends Component{
     }
 
     handleSubmit = () => {
-        this.handleValidate();
+        if(this.props.editing){
+            this.handleUpdate();
+        }
+        else{
+            this.handleValidate();
+        }
     }
 
     handleValidate = () => {
@@ -230,33 +263,45 @@ class  CostumeForm extends Component{
         }
     }
 
+    handleUpdate = () => {
+        let data = this.state;
+        axios.post('http://localhost:8108/edit_costume', data)
+        .then(res => {
+            if(res.statusText ==="OK"){
+                this.setState({ insert: true }, () => {
+                    setTimeout(() => {
+                      this.setState({ insert: false });
+                    }, 3000);
+                  });
+            }
+       })    
+    }
+
     handleInsert() {
-        for(var key in this.state.selectedSexOption){
-                this.state.s_value = this.state.selectedSexOption[key];
-                console.log("insert", key, this.state);
-                let data = this.state;
-                //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
-                axios.post('http://localhost:8108/costumes', data)
-                .then(res => {
-                    console.log("result", res);
-                    if(res.statusText ==="OK"){
-                        this.setState({ insert: true }, () => {
-                            setTimeout(() => {
-                              this.setState({ insert: false });
-                            }, 3000);
-                          });
-                    }
-                })    
-       }
+        console.log("inserting", this.state);
+        let data = this.state;
+        //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
+        axios.post('http://localhost:8108/costumes', data)
+        .then(res => {
+        console.log("result", res);
+        if(res.statusText ==="OK"){
+        this.setState({ insert: true }, () => {
+            setTimeout(() => {
+                this.setState({ insert: false });
+            }, 3000);
+        });}    
+        })    
     }
 
     resetForm () {
         this.setState({
+            costume: null, 
             name: null,
             descr: null,
             actors: null,
             designer: null,
             parts: null,
+            //Select
             selectedSexOption: [],
             selectedUseOption: null,
             selectedMaterialOption: null,
@@ -267,11 +312,10 @@ class  CostumeForm extends Component{
             location_select: null,
             location_influence: null,
             location_influence_select: null,
-            //For validation reasons
-            description_MAXlegnth: 300,
             description_status: false,
             submit: false,
             redirectToReferrer: false,
+
             /////////////////////////
             cond1: false,
             cond2: false,
@@ -280,6 +324,7 @@ class  CostumeForm extends Component{
             error_description: false,
             error_dublicate: false,
             error_missing_value: false,
+            insert: false
         })
     }
 
@@ -392,9 +437,7 @@ class  CostumeForm extends Component{
                                             name="name"
                                             value={name}
                                             onChange={this.onChange}
-                                            margin="none"
                                             required={true}
-                                            inputProps={{style: { fontSize: 14 }}}
                                             />
                                     </FormControl>
                                     <br/>
