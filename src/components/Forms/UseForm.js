@@ -65,6 +65,7 @@ class UseForm extends Component{
         console.log("Use Form:", this.state);
         if(this.props.editing && !prevProps.editing){
             this.setState({
+                use: this.props.use,
                 name: this.props.use.name,
                 description: this.props.use.description,
                 customs: this.props.use.customs,
@@ -105,11 +106,13 @@ class UseForm extends Component{
     }
 
     handleSubmit = () => {
-        if(this.props.editing){
-            this.handleUpdate();
-        }
-        else{
-            this.handleValidate();
+        if(this.handleValidate()){
+            if(this.props.editing){
+                this.handleUpdate();
+            }
+            else{
+                this.handleInsert();
+            }
         }
     }
 
@@ -175,7 +178,7 @@ class UseForm extends Component{
                 cond2=true;
             }
             if(cond2 && cond1){
-                this.handleInsert();
+                return true;
             }
         }
         else if(!this.state.name || !this.state.description || !this.state.selectedCategoryOption){
@@ -191,14 +194,14 @@ class UseForm extends Component{
        
     resetForm() {
         this.setState({
-            use: null,
-            id: null,
-            use_category: null,
-            name: null,
-            description: null,
-            customs: null,
-            other_use: null,
-            exists: null,
+            use: '',
+            id: '',
+            use_category: '',
+            name: '',
+            description: '',
+            customs: '',
+            other_use: '',
+            exists: '',
             description_status: false,
             submit: false,
             redirectToReferrer: false,
@@ -217,6 +220,14 @@ class UseForm extends Component{
         //check this name and use category already exist
         for(var i=0; i < uses_list.length; i++){
             if(uses_list[i].name === this.state.name && uses_list[i].use_category === this.state.selectedCategoryOption){
+                if(this.props.editing){
+                    if(this.state.name===this.props.use.name){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
+                }
                 return true;
             }
         }
@@ -247,7 +258,7 @@ class UseForm extends Component{
         }
         else if (this.state.insert){
             return(
-                <NotificationContainer>{ NotificationManager.success('Entry is successfully inserted to DB','Success!',2000) }</NotificationContainer>
+                <NotificationContainer>{ NotificationManager.success('Η εγγραφή καταχωρήθηκε επιτυχώς','Success!',2000) }</NotificationContainer>
             )
         }
     }

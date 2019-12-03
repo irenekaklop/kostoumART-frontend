@@ -9,6 +9,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import Chip from '@material-ui/core/Chip';
 import Select from '@material-ui/core/Select';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 import { Autocomplete } from '@material-ui/lab';
 
@@ -29,6 +30,7 @@ import "./Forms.css";
 
 import axios from 'axios';
 import { ninvoke } from 'q';
+import { thisExpression } from '@babel/types';
 
 
 const ITEM_HEIGHT = 48;
@@ -54,36 +56,29 @@ class  CostumeForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            costume: null, 
-            name: null,
-            descr: null,
+            costume: null,
+            name: '',
+            descr: '',
             //Uses' data
-            uses_data: null,
-            u_value: null,
+            uses_data: '',
             //Theatrical Plays data
             tps_data: null,
-            tp_value: null,
             //For backend insert
-            actors: null,
-            designer: null,
-            parts: null,
-            //Material data on insert
-            m_value: null,
-            //Technique data on insert
-            t_value: null,
-            //Sex data on insert
-            s_value: null,
+            actors: '',
+            designer: '',
+            parts: '',
             //Select
             selectedSexOption: [],
-            selectedUseOption: null,
-            selectedMaterialOption: null,
-            selectedTechniqueOption: null,
-            selectedTPOption: null,
+            selectedUseOption: '',
+            selectedUseCategoryOption: '',
+            selectedMaterialOption: '',
+            selectedTechniqueOption: '',
+            selectedTPOption: '',
             //Geosuggest
-            location: null,
-            location_select: null,
-            location_influence: null,
-            location_influence_select: null,
+            location: '',
+            location_select: '',
+            location_influence: '',
+            location_influence_select: '',
 
             //For validation reasons
             description_MAXlegnth: 300,
@@ -124,13 +119,12 @@ class  CostumeForm extends Component{
                 parts: this.props.costume[0].parts,
                 selectedSexOption: sex,
                 selectedUseOption: this.props.costume[0].name,
+                selectedUseCategoryOption: this.props.costume[0].use_category,
                 selectedMaterialOption: this.props.costume[0].material,
                 selectedTechniqueOption: this.props.costume[0].technique,
                 selectedTPOption: this.props.costume[0].title,
                 location: this.props.costume[0].location,
-                location_select: this.props.costume[0].location,
-                location_influence_select: this.props.costume[0].location_influence,
-                uses_data:this.props.uses,
+                location_influence: this.props.costume[0].location_influence,
             })
         }
         console.log('state', this.state);
@@ -143,10 +137,14 @@ class  CostumeForm extends Component{
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
 
+    onChangeCategory = (category) => {
+        this.setState({selectedUseCategoryOption: category})
+    }
+
     /*For selection of use categories*/
     handleUseSelect = (evt) => {
-        this.setState({ selectedUseOption: evt.target.value });
-        console.log(`Option selected:`, this.state.selectedUseOption);
+        this.setState({ selectedUseOption: evt.target.value});
+        console.log(`Option selected:`, evt.target);
     }
 
      /*For selection of theatrical plays*/
@@ -207,11 +205,13 @@ class  CostumeForm extends Component{
     }
 
     handleSubmit = () => {
-        if(this.props.editing){
-            this.handleUpdate();
-        }
-        else{
-            this.handleValidate();
+        if(this.handleValidate()){
+            if(this.props.editing){
+                this.handleUpdate();
+            }
+            else{
+                this.handleInsert();
+            }
         }
     }
 
@@ -259,7 +259,7 @@ class  CostumeForm extends Component{
         }
 
         if(cond1 && cond2 && cond3){
-            this.handleInsert();
+            return true;
         }
     }
 
@@ -295,23 +295,26 @@ class  CostumeForm extends Component{
 
     resetForm () {
         this.setState({
-            costume: null, 
-            name: null,
-            descr: null,
-            actors: null,
-            designer: null,
-            parts: null,
+            costume: null,
+            name: '',
+            descr: '',
+            //For backend insert
+            actors: '',
+            designer: '',
+            parts: '',
             //Select
             selectedSexOption: [],
-            selectedUseOption: null,
-            selectedMaterialOption: null,
-            selectedTechniqueOption: null,
-            selectedTPOption: null,
+            selectedUseOption: '',
+            selectedUseCategoryOption: '',
+            selectedMaterialOption: '',
+            selectedTechniqueOption: '',
+            selectedTPOption: '',
             //Geosuggest
-            location: null,
-            location_select: null,
-            location_influence: null,
-            location_influence_select: null,
+            location: '',
+            location_select: '',
+            location_influence: '',
+            location_influence_select: '',
+
             description_status: false,
             submit: false,
             redirectToReferrer: false,
@@ -338,6 +341,14 @@ class  CostumeForm extends Component{
         //check if new name already exist
         for(var i=0; i < c_list.length; i++){
             if(c_list[i].costume_name === this.state.name){
+                if(this.props.editing){
+                    if(this.props.costume[0].costume_name === this.state.name){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
+                }
                 return true;
             }
         }
@@ -368,7 +379,7 @@ class  CostumeForm extends Component{
         }
         else if (this.state.insert){
             return(
-                <NotificationContainer>{ NotificationManager.success('Entry is successfully inserted to DB','Success!',2000) }</NotificationContainer>
+                <NotificationContainer>{ NotificationManager.success('Η εγγραφή καταχωρήθηκε επιτυχώς','Success!',2000) }</NotificationContainer>
             )
         }
     }
@@ -378,7 +389,7 @@ class  CostumeForm extends Component{
         //For selection of Sex: 
         const {selectedSexOption} = this.state;
         //For selection of Use:
-        const {selectedUseOption} = this.state;
+        const {selectedUseOption, selectedUseCategoryOption} = this.state;
         //For selection of Material
         const {selectedMaterialOption} = this.state;
         //For selection of Technique
@@ -396,13 +407,14 @@ class  CostumeForm extends Component{
             u_options.push( {label: use_categories[key].label, options: []});
         }
 
-        for (var key in this.state.uses_data){
+        if(this.props.uses){ 
+            for (var key in this.props.uses){
             u_options.forEach(element => {
-                if(element.label === this.state.uses_data[key].use_category){
-                    element.options.push({label: this.state.uses_data[key].name, value: this.state.uses_data[key].name});
+                if(element.label === this.props.uses[key].use_category){
+                    element.options.push({label: this.props.uses[key].name, value: this.props.uses[key].name});
                 }
             });
-        }
+        }}
     
         /*For theatrical Plays*/
         for (var key in this.state.tps_data){
@@ -429,7 +441,7 @@ class  CostumeForm extends Component{
                             
                             <form onSubmit={this.submit}>
                                 <div className="FormContent">
-                                    <div className="FormSubtitle">Kουστούμι</div>
+                                    <div className="FormTitle">Kουστούμι</div>
                                     <br/>
                                     <FormControl className="FormControl">
                                         <TextField
@@ -454,22 +466,29 @@ class  CostumeForm extends Component{
                                             inputProps={{style: { fontSize: 14 }}}
                                             />
                                     </FormControl>
-                                    <br/><br/><br/>
-                                    <FormControl required>
-                                        <Autocomplete
-                                            id="grouped-demo"
-                                            options={this.state.uses_data}
-                                            groupBy={option=>option.use_category}
-                                            getOptionLabel={option => option.name}
-                                            onSelect={this.handleUseSelect.bind(this)}
-                                            style={{ width: 300 }}
-                                            renderInput={params => (
-                                                <TextField {...params} label="Χρήση * " variant="outlined" fullWidth />
-                                            )}
-                                        />
+                                    <br/>
+                                    <FormControl required className="FormControl">
+                                        <InputLabel id="demo-simple-select-required-label">Χρήση</InputLabel>
+                                        <Select
+                                        required={true}
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        onChange={this.handleUseSelect}
+                                        value={selectedUseOption}
+                                        >
+                                            {u_options.map( category => (
+                                                category.options.map(use => (
+                                                    <MenuItem key={use.label} value={use.label}>
+                                                
+                                                    {use.label}
+                                                    <i><br/>{category.label}</i>
+                                                    </MenuItem>
+                                                ))
+                                            ))} 
+                                        </Select>
                                     </FormControl>
                                     <br/>
-                                    <FormControl required>
+                                    <FormControl required className="FormControl">
                                         <InputLabel id="demo-simple-select-required-label">Φύλο</InputLabel>
                                         <Select
                                         required={true}
@@ -496,7 +515,7 @@ class  CostumeForm extends Component{
                                         </Select>
                                     </FormControl>
                                     <br/>
-                                    <FormControl required>
+                                    <FormControl required className="FormControl">
                                         <InputLabel id="demo-simple-select-label">Υλικό</InputLabel>
                                         <Select
                                         required={true}
@@ -513,7 +532,7 @@ class  CostumeForm extends Component{
                                         </Select>
                                     </FormControl>
                                     <br/>
-                                    <FormControl required>
+                                    <FormControl required className="FormControl">
                                     <InputLabel id="demo-simple-select-label">Τεχνική</InputLabel>
                                         <Select
                                         required={true}
@@ -530,7 +549,7 @@ class  CostumeForm extends Component{
                                         </Select>
                                     </FormControl>
                                     <br/>
-                                    <FormControl>
+                                    <FormControl className="FormControl">
                                         <TextField
                                             label="Σχεδιαστής"
                                             name="designer"
@@ -540,32 +559,33 @@ class  CostumeForm extends Component{
                                             />
                                     </FormControl>
                                     <br/>
-                                    <FormControl required>
+                                    <FormControl required className="FormControl">
                                         <InputLabel>Περιοχή Αναφοράς</InputLabel>
                                         
                                         <Geosuggest
                                             className="geosuggest"
+                                            placeholder="Αναζήτηση"
+                                            initialValue={this.state.location}
                                             required={true}
                                             ref={el=>this._geoSuggest=el}
-                                            onChange={this.handleLocationChange}
                                             onSuggestSelect={this.handleLocationSelect}
                                         />
                                         {this.handleLocation()}
                                     </FormControl>
                                     <br/>
-                                    <FormControl>
+                                    <FormControl className="FormControl">
                                         <InputLabel>Χώρα/Περιοχή Επιρροής</InputLabel>
-                                        
                                         <Geosuggest
                                             className="geosuggest"
+                                            placeholder="Αναζήτηση"
+                                            initialValue={this.state.location_influence}
                                             ref={el=>this._geoSuggest=el}
-                                            onChange={this.handleLocationInfluenceChange}
                                             onSuggestSelect={this.handleLocationInfluenceSelect}
                                         />
                                         {this.handleLocationInfluence()}
                                     </FormControl>
                                     <br/>
-                                    <FormControl>
+                                    <FormControl className="FormControl">
                                     <InputLabel id="demo-simple-select-label">Θεατρικές Παραστάσεις</InputLabel>
                                         <Select
                                         labelId="demo-simple-select-label"
@@ -574,7 +594,7 @@ class  CostumeForm extends Component{
                                         onChange={this.handleTPSelect}
                                         inputProps={{style: { fontSize: 14 }}}
                                         >
-                                            {this.state.tps_data ? (this.state.tps_data.map(tp => (
+                                            {this.props.theatrical_plays ? (this.props.theatrical_plays.map(tp => (
                                                 <MenuItem key={tp.theatrical_play_id} value={tp.title}>
                                                     {tp.title}
                                                 </MenuItem>
@@ -582,7 +602,7 @@ class  CostumeForm extends Component{
                                         </Select>
                                     </FormControl>
                                     <br/>
-                                    <FormControl>
+                                    <FormControl className="FormControl">
                                         <TextField
                                             label="Hθοποιόι"
                                             name="actors"

@@ -1,22 +1,22 @@
 export const sexs = [{
     label: 'Γυναίκα',
-    value: 'female_adult'
+    value: 'Γυναίκα'
   },
   {
     label: 'Άντρας',
-    value: 'male_adult'
+    value: 'Άντρας'
     },
     {
       label: 'Κορίτσι',
-      value: 'female_young'
+      value: 'Κορίτσι'
     },
     {
       label: 'Αγόρι',
-      value: 'male_young'
+      value: 'Αγόρι'
     },
     {
       label: 'Βρέφος',
-      value: 'Toodler'
+      value: 'Βρέφος'
 }];
 
 export const materials = [{

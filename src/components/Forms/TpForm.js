@@ -36,12 +36,12 @@ class TpForm extends Component{
         super(props);
         this.state = { 
             tp_data: null,
-            theatrical_play_id: null,
-            name: null,
-            theater: null,
-            date: null,
-            actors: null,
-            director: null,
+            theatrical_play_id: '',
+            name: '',
+            theater: '',
+            date: '',
+            actors: '',
+            director: '',
             submit: false,
             redirectToReferrer: false,
             ////////////////////////
@@ -56,6 +56,7 @@ class TpForm extends Component{
     componentDidUpdate(prevProps, prevState){
         if(this.props.editing && !prevProps.editing){
             this.setState({
+                tp: this.props.tp,
                 name: this.props.tp.title,
                 theater: this.props.tp.theater,
                 date: this.props.tp.date,
@@ -82,11 +83,13 @@ class TpForm extends Component{
     }
 
     handleSubmit = () => {
-        if(this.props.editing){
-            this.handleUpdate();
-        }
-        else{
-            this.handleValidate();
+        if(this.handleValidate()){
+            if(this.props.editing){
+                this.handleUpdate();
+            }
+            else{
+                this.handleInsert();
+            }
         }
     }
 
@@ -129,7 +132,7 @@ class TpForm extends Component{
                 return;
             }
             else{
-                this.handleInsert();
+                return true;
             }
         }
         else if(!this.state.name || !this.state.theater){
@@ -145,12 +148,12 @@ class TpForm extends Component{
        
     resetForm() {
         this.setState( { 
-            theatrical_play_id: null,
-            name: null,
-            theater: null,
-            date: null,
-            actors: null,
-            director: null,
+            theatrical_play_id: '',
+            name: '',
+            theater: '',
+            date: '',
+            actors: '',
+            director: '',
             submit: false,
             redirectToReferrer: false,
             ////////////////////////
@@ -166,6 +169,14 @@ class TpForm extends Component{
         //check this name and use category already exist
         for(var i=0; i < tp_list.length; i++){
             if(tp_list[i].title === this.state.name){
+                if(this.props.editing){
+                    if(this.props.tp.title === this.state.name){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
+                }
                 return true;
             }
         }
@@ -196,7 +207,7 @@ class TpForm extends Component{
         }
         else if (this.state.insert){
             return(
-                <NotificationContainer>{ NotificationManager.success('Entry is successfully inserted to DB','Success!',2000) }</NotificationContainer>
+                <NotificationContainer>{ NotificationManager.success('Η εγγραφή καταχωρήθηκε επιτυχώς','Success!',2000) }</NotificationContainer>
             )
        }
     }

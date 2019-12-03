@@ -7,3 +7,18 @@
 .select-container-link{
     width: 50%;
 }
+
+.FormControl {
+  width: 100%;
+  margin-bottom: 3% !important;
+}
+
+.FormContent {
+  margin: 6% 4%;
+}
+
+.FormTitle {
+  margin-bottom: 5%;
+  text-align: center;
+  font-weight: 500;
+}
