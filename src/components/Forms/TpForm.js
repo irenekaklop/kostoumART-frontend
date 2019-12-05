@@ -46,7 +46,7 @@ class TpForm extends Component{
             redirectToReferrer: false,
             ////////////////////////
             error_description: false,
-            error_dublicate: false,
+            error_duplicate: false,
             error_missing_value: false,
             insert: false
         };
@@ -54,6 +54,11 @@ class TpForm extends Component{
     }
 
     componentDidUpdate(prevProps, prevState){
+        if(prevState.insert){
+            this.resetForm();
+            this.handleClose(false);
+            
+        }
         if(this.props.editing && !prevProps.editing){
             this.setState({
                 tp: this.props.tp,
@@ -63,8 +68,10 @@ class TpForm extends Component{
                 actors: this.props.tp.actors,
                 director: this.props.tp.director,
                 theatrical_play_id: this.props.tp.theatrical_play_id,
+                tp_data: this.props.theatrical_plays
                 })
         }
+        console.log("Props", this.props)
     }
 
     onChange = ( evt ) => { 
@@ -83,7 +90,7 @@ class TpForm extends Component{
     }
 
     handleSubmit = () => {
-        if(this.handleValidate()){
+        if(this.formValidate()){
             if(this.props.editing){
                 this.handleUpdate();
             }
@@ -98,11 +105,7 @@ class TpForm extends Component{
         axios.post('http://localhost:8108/edit_tp', data)
         .then(res => {
             if(res.statusText ==="OK"){
-                this.setState({ insert: true }, () => {
-                    setTimeout(() => {
-                      this.setState({ insert: false });
-                    }, 3000);
-                  });
+                this.createNotification('update')
             }
        })    
     }
@@ -112,38 +115,41 @@ class TpForm extends Component{
         //axios.post("http://88.197.53.80/kostoumart-api/tps", data)
         axios.post('http://localhost:8108/tps', data)
         .then(res => {
-            this.setState({ insert: true }, () => {
-                setTimeout(() => {
-                  this.setState({ insert: false });
-                }, 3000);
-              });
+            if(res.statusText == 'OK'){
+                this.createNotification('insert')
+            }
           })
     }
 
-    handleValidate(){
-        if(this.state.name && this.state.theater){
-            //Check if exists
-            if(this.tp_exists()){
-                this.setState({ error_dublicate: true }, () => {
-                    setTimeout(() => {
-                      this.setState({ error_dublicate: false });
-                    }, 3000);
-                  });
-                return;
-            }
-            else{
+    formValidate(){
+        if(!this.state.name || !this.state.theater || !this.state.director){
+            console.log("something is missing");
+            this.createNotification('error-missing-value')
+            return false;
+        }
+        if(this.handleDuplicate()){
+            return false;
+        }
+        return true;
+    }
+
+    handleDuplicate (){
+        const tp_list = this.props.theatrical_plays;
+        //check this name and use category already exist
+        for(var i=0; i < tp_list.length; i++){
+            console.log(tp_list[i].title, this.state.name )
+            if(tp_list[i].title === this.state.name){
+                if(this.props.editing){
+                    if(this.props.tp.title === this.state.name){
+                        return false;
+                    }
+                }
+                console.log("already exists this name")
+                this.createNotification('error-duplicate')
                 return true;
             }
         }
-        else if(!this.state.name || !this.state.theater){
-            console.log("something is missing");
-            this.setState({ error_missing_value: true }, () => {
-                setTimeout(() => {
-                  this.setState({ error_missing_value: false });
-                }, 3000);
-              });   
-              return;
-        }
+        return false;
     }
        
     resetForm() {
@@ -158,58 +164,44 @@ class TpForm extends Component{
             redirectToReferrer: false,
             ////////////////////////
             error_description: false,
-            error_dublicate: false,
+            error_duplicate: false,
             error_missing_value: false,
             insert: false
         });
     }
 
-    tp_exists(){
-        const tp_list = this.props.theatrical_plays;
-        //check this name and use category already exist
-        for(var i=0; i < tp_list.length; i++){
-            if(tp_list[i].title === this.state.name){
-                if(this.props.editing){
-                    if(this.props.tp.title === this.state.name){
-                        return false;
-                    }
-                    else{
-                        return true;
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
     createNotification(type){
-        if(this.state.error_description){
+        if(type === "error-description"){
             return(
                 <div>
-                    <NotificationContainer>{ NotificationManager.warning("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
+                    <NotificationContainer>{ NotificationManager.error("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
                 </div>
             )
         }
-        else if (this.state.error_dublicate){
+        else if (type === "error-duplicate"){
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error('Η εγγραφή υπάρχει ήδη.') }</NotificationContainer>
                 </div>
             )
         }
-        else if (this.state.error_missing_value){
+        else if (type === "error-missing-value"){
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error("Παρακαλώ συμπληρώστε όλα τα απαραίτητα πεδία",'Σφάλμα', 2000) }</NotificationContainer>
                 </div>
             )
         }
-        else if (this.state.insert){
+        else if (type === "insert"){
             return(
                 <NotificationContainer>{ NotificationManager.success('Η εγγραφή καταχωρήθηκε επιτυχώς','Success!',2000) }</NotificationContainer>
             )
-       }
+        }
+        else if (type === "update"){
+            return(
+                <NotificationContainer>{ NotificationManager.success('Η εγγραφή ανανεώθηκε επιτυχώς','Success!',2000) }</NotificationContainer>
+            )
+        }
     }
 
 
@@ -232,7 +224,7 @@ class TpForm extends Component{
                         onClick={() => this.handleClose(false)}/>
                         <form onSubmit={this.handleSubmit}>
                             <div className="FormContent">
-                                <div className="FormSubtitle">Kουστούμι</div>
+                                <div className="FormTitle">Θεατρική παράσταση</div>
                                 <br/>
                                 <FormControl className="FormControl">
                                 <TextField required 
@@ -242,9 +234,9 @@ class TpForm extends Component{
                                 onChange={this.onChange}></TextField>
                             </FormControl>
                             <br/>
-                            <FormControl required>
+                            <FormControl>
                                 <TextField 
-                                required label="Ημερομηνία" name="date" 
+                                label="Ημερομηνία" name="date" 
                                 value={date} 
                                 onChange={this.onChange}></TextField>
                             </FormControl>

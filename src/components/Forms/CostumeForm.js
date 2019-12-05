@@ -92,15 +92,20 @@ class  CostumeForm extends Component{
             cond3: false,
             ////////////////////////
             error_description: false,
-            error_dublicate: false,
+            error_duplicate: false,
             error_missing_value: false,
-            insert: false
+            insert: false,
+            isNotificationOpen: false,
         }
         this.onChange = this.onChange.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState){
         console.log("props", this.props);
+        if(prevState.insert){
+            this.resetForm();
+            
+        }
         if(this.props.editing && !prevProps.editing){
             let sex;
             if(this.props.costume[0].sex.includes(",")){
@@ -205,7 +210,7 @@ class  CostumeForm extends Component{
     }
 
     handleSubmit = () => {
-        if(this.handleValidate()){
+        if(this.formValidation()){
             if(this.props.editing){
                 this.handleUpdate();
             }
@@ -214,53 +219,22 @@ class  CostumeForm extends Component{
             }
         }
     }
-
-    handleValidate = () => {
-        var cond1, cond2, cond3 = false;
-        console.log("Validation", this.state);
-        if(this.state.name && this.state.descr && this.state.location && this.state.selectedMaterialOption && this.state.selectedSexOption && this.state.selectedTechniqueOption && this.state.selectedUseOption){
-            console.log("Description lenght", this.state.descr.length);
-            if(this.decription_legnth() >= 300){
-                console.log("too big or too small description", this.state.descr.length);
-                // Snackbar error for too big description
-                this.setState({ error_description: true }, () => {
-                    setTimeout(() => {
-                      this.setState({ error_description: false });
-                    }, 3000);
-                });
-                return;
-            }
-            else{
-                cond1=true;
-            }
-        
-            if(this.costume_exists()){ //costume already exists
-                this.setState({ error_dublicate: true }, () => {
-                    setTimeout(() => {
-                      this.setState({ error_dublicate: false });
-                    }, 3000);
-                  });
-                return;
-            }
-            else{
-                console.log(cond1, cond3);
-                cond2=true;
-            }
-            cond3=true;
+    
+    formValidation () {
+        console.log("formValidation", this.state)
+        if(!this.validateInputLength()){
+            return false;
         }
-        else if(!this.state.location || !this.state.name || !this.state.descr|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
+        if(this.handleDuplicate()){
+            return false;
+        }
+        if(!this.state.location || !this.state.name || !this.state.descr|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
             console.log("something is missing");
-            this.setState({ error_missing_value: true }, () => {
-                setTimeout(() => {
-                  this.setState({ error_missing_value: false });
-                }, 3000);
-              });
-              return;
+            this.createNotification("error-missing-value")
+            return false;
         }
-
-        if(cond1 && cond2 && cond3){
-            return true;
-        }
+        console.log("everything is ok")
+        return true;
     }
 
     handleUpdate = () => {
@@ -268,29 +242,22 @@ class  CostumeForm extends Component{
         axios.post('http://localhost:8108/edit_costume', data)
         .then(res => {
             if(res.statusText ==="OK"){
-                this.setState({ insert: true }, () => {
-                    setTimeout(() => {
-                      this.setState({ insert: false });
-                    }, 3000);
-                  });
+                this.createNotification("update")
             }
        })    
     }
 
-    handleInsert() {
+    handleInsert = () => {
         console.log("inserting", this.state);
         let data = this.state;
         //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
         axios.post('http://localhost:8108/costumes', data)
         .then(res => {
         console.log("result", res);
-        if(res.statusText ==="OK"){
-        this.setState({ insert: true }, () => {
-            setTimeout(() => {
-                this.setState({ insert: false });
-            }, 3000);
-        });}    
-        })    
+            if(res.statusText ==="OK"){
+                this.createNotification("insert")
+            }
+        })
     }
 
     resetForm () {
@@ -325,7 +292,7 @@ class  CostumeForm extends Component{
             cond3: false,
             ////////////////////////
             error_description: false,
-            error_dublicate: false,
+            error_duplicate: false,
             error_missing_value: false,
             insert: false
         })
@@ -336,50 +303,65 @@ class  CostumeForm extends Component{
         return this.state.descr.length;
     }
 
-    costume_exists(){
+    handleDuplicate() {
         const c_list = this.props.costumes;
         //check if new name already exist
         for(var i=0; i < c_list.length; i++){
+            if(this.state.name){
             if(c_list[i].costume_name === this.state.name){
                 if(this.props.editing){
                     if(this.props.costume[0].costume_name === this.state.name){
                         return false;
                     }
-                    else{
-                        return true;
-                    }
                 }
+                this.createNotification('error-duplicate');
                 return true;
             }
-        }
+        }}
         return false;
+        
+    }
+
+    validateInputLength(){
+        if(this.state.descr && this.state.descr.length>300){
+            console.log("too big or too small description");
+            // Snackbar error for too big description
+            this.createNotification("error-description")
+            return false;
+        }
+        else return true;
     }
 
     createNotification(type){
-        if(this.state.error_description){
+        if(type === "error-description"){
             return(
                 <div>
-                    <NotificationContainer>{ NotificationManager.warning("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
+                    <NotificationContainer>{ NotificationManager.error("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
                 </div>
             )
         }
-        else if (this.state.error_dublicate){
+        else if (type === "error-duplicate"){
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error('Η εγγραφή υπάρχει ήδη.') }</NotificationContainer>
                 </div>
             )
         }
-        else if (this.state.error_missing_value){
+        else if (type === "error-missing-value"){
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error("Παρακαλώ συμπληρώστε όλα τα απαραίτητα πεδία",'Σφάλμα', 2000) }</NotificationContainer>
                 </div>
             )
         }
-        else if (this.state.insert){
+        else if (type === "insert"){
             return(
                 <NotificationContainer>{ NotificationManager.success('Η εγγραφή καταχωρήθηκε επιτυχώς','Success!',2000) }</NotificationContainer>
+            )
+        }
+        else if (type === "update"){
+            return(
+                <NotificationContainer>{ NotificationManager.success('Η εγγραφή ανανεώθηκε επιτυχώς','Success!',2000) }</NotificationContainer>
             )
         }
     }
@@ -465,11 +447,13 @@ class  CostumeForm extends Component{
                                             required={true}
                                             inputProps={{style: { fontSize: 14 }}}
                                             />
+                                            <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
                                     </FormControl>
                                     <br/>
                                     <FormControl required className="FormControl">
                                         <InputLabel id="demo-simple-select-required-label">Χρήση</InputLabel>
                                         <Select
+                                        className="SelectContainer"
                                         required={true}
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
@@ -491,6 +475,7 @@ class  CostumeForm extends Component{
                                     <FormControl required className="FormControl">
                                         <InputLabel id="demo-simple-select-required-label">Φύλο</InputLabel>
                                         <Select
+                                        className="SelectContainer"
                                         required={true}
                                         labelId="demo-mutiple-chip-label"
                                         id="demo-mutiple-chip"
@@ -518,6 +503,7 @@ class  CostumeForm extends Component{
                                     <FormControl required className="FormControl">
                                         <InputLabel id="demo-simple-select-label">Υλικό</InputLabel>
                                         <Select
+                                        className="SelectContainer"
                                         required={true}
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
@@ -535,6 +521,7 @@ class  CostumeForm extends Component{
                                     <FormControl required className="FormControl">
                                     <InputLabel id="demo-simple-select-label">Τεχνική</InputLabel>
                                         <Select
+                                        className="SelectContainer"
                                         required={true}
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
@@ -588,6 +575,7 @@ class  CostumeForm extends Component{
                                     <FormControl className="FormControl">
                                     <InputLabel id="demo-simple-select-label">Θεατρικές Παραστάσεις</InputLabel>
                                         <Select
+                                        className="SelectContainer"
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         value={selectedTPOption}

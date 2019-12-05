@@ -36,22 +36,22 @@ class UseForm extends Component{
         this.state = { 
             u_data: null,
             use: null,
-            id: null,
-            use_category: null,
-            name: null,
-            description: null,
-            customs: null,
-            other_use: null,
-            exists: null,
+            id: '',
+            use_category: '',
+            name: '',
+            description: '',
+            customs: '',
+            other_use: '',
+            exists: '',
             description_MAXlegnth: 300,
             description_status: false,
             submit: false,
             redirectToReferrer: false,
             //Select var
-            selectedCategoryOption: null,
+            selectedCategoryOption: '',
             ////////////////////////
             error_description: false,
-            error_dublicate: false,
+            error_duplicate: false,
             error_missing_value: false,
             insert: false,
             ////////////////////////
@@ -63,6 +63,10 @@ class UseForm extends Component{
     componentDidUpdate(prevProps, prevState){
         console.log("Props", this.props);
         console.log("Use Form:", this.state);
+        if(prevState.insert){
+            this.resetForm();
+            this.handleClose(false);
+        }
         if(this.props.editing && !prevProps.editing){
             this.setState({
                 use: this.props.use,
@@ -106,7 +110,7 @@ class UseForm extends Component{
     }
 
     handleSubmit = () => {
-        if(this.handleValidate()){
+        if(this.formValidation()){
             if(this.props.editing){
                 this.handleUpdate();
             }
@@ -122,11 +126,7 @@ class UseForm extends Component{
         axios.post('http://localhost:8108/edit_use', data)
         .then(res => {
             if(res.statusText ==="OK"){
-                this.setState({ insert: true }, () => {
-                    setTimeout(() => {
-                      this.setState({ insert: false });
-                    }, 3000);
-                  });
+                this.createNotification('update')
             }
        })    
     }
@@ -137,61 +137,57 @@ class UseForm extends Component{
         axios.post('http://localhost:8108/uses', data)
         .then(res => {
             if(res.statusText ==="OK"){
-                this.setState({ insert: true }, () => {
-                    setTimeout(() => {
-                      this.setState({ insert: false });
-                    }, 3000);
-                  });
+                this.createNotification('insert')
             }
        })    
     }
 
-    handleValidate(){
-        var ret = null;
-        //All mandatory fields should be completed
-        var cond1, cond2 = false;
-        if(this.state.name && this.state.description && this.state.selectedCategoryOption){
-            if(this.decription_legnth() >= 300){
-                console.log("too big or too small description", this.state.descr.length);
-                // Snackbar error for too big description
-                this.setState({ error_description: true }, () => {
-                    setTimeout(() => {
-                      this.setState({ error_description: false });
-                    }, 3000);
-                });
-                return;
-            }
-            else{
-                cond1=true;
-            }
-            
-            if(this.use_exists()){
-                console.log("dublicate");
-                this.setState({ error_dublicate: true }, () => {
-                    setTimeout(() => {
-                       this.setState({ error_dublicate: false });
-                    }, 3000);
-                  });
-                return;
-            }
-            else{
-                cond2=true;
-            }
-            if(cond2 && cond1){
+    formValidation(){
+        console.log("formValidation", this.state)
+        if(!this.validateInputLength()){
+            return false;
+        }
+        if(this.handleDuplicate()){
+            return false;
+        }
+        if(!this.state.name || !this.state.description || !this.state.selectedCategoryOption){
+            console.log("something is missing");
+            this.createNotification('error-missing-value');
+              return false;
+        }
+        console.log("something is missing");
+        return true;
+    }
+
+    validateInputLength(){
+        if(this.state.description && this.state.description.length>300){
+            console.log("too big or too small description");
+            // Snackbar error for too big description
+            this.createNotification('error-description')
+            return false;
+        }
+        else return true;
+    }
+    
+    //true: Has duplicate, false: Doesn't have
+    handleDuplicate(){
+        const uses_list = this.props.uses;
+        //check this name and use category already exist
+        for(var i=0; i < uses_list.length; i++){
+            if(uses_list[i].name === this.state.name && uses_list[i].use_category === this.state.selectedCategoryOption){
+                if(this.props.editing){
+                    if(this.state.name===this.props.use.name){
+                        return false;
+                    }
+                }
+                console.log("already exists this name")
+                this.createNotification('error-duplicate')
                 return true;
             }
         }
-        else if(!this.state.name || !this.state.description || !this.state.selectedCategoryOption){
-            console.log("something is missing");
-            this.setState({ error_missing_value: true }, () => {
-                setTimeout(() => {
-                  this.setState({ error_missing_value: false });
-                }, 3000);
-              });
-              return;
-        }
+        return false;
     }
-       
+
     resetForm() {
         this.setState({
             use: '',
@@ -206,66 +202,47 @@ class UseForm extends Component{
             submit: false,
             redirectToReferrer: false,
             //Select var
-            selectedCategoryOption: null,
+            selectedCategoryOption: '',
             ////////////////////////
             error_description: false,
-            error_dublicate: false,
+            error_duplicate: false,
             error_missing_value: false,
             insert: false,
         })
     }
 
-    use_exists(){
-        const uses_list = this.props.uses;
-        //check this name and use category already exist
-        for(var i=0; i < uses_list.length; i++){
-            if(uses_list[i].name === this.state.name && uses_list[i].use_category === this.state.selectedCategoryOption){
-                if(this.props.editing){
-                    if(this.state.name===this.props.use.name){
-                        return false;
-                    }
-                    else{
-                        return true;
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
     createNotification(type){
-        if(this.state.error_description){
+        if(type === "error-description"){
             return(
                 <div>
-                    <NotificationContainer>{ NotificationManager.warning("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
+                    <NotificationContainer>{ NotificationManager.error("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
                 </div>
             )
         }
-        else if (this.state.error_dublicate){
+        else if (type === "error-duplicate"){
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error('Η εγγραφή υπάρχει ήδη.') }</NotificationContainer>
                 </div>
             )
         }
-        else if (this.state.error_missing_value){
+        else if (type === "error-missing-value"){
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error("Παρακαλώ συμπληρώστε όλα τα απαραίτητα πεδία",'Σφάλμα', 2000) }</NotificationContainer>
                 </div>
             )
         }
-        else if (this.state.insert){
+        else if (type === "insert"){
             return(
                 <NotificationContainer>{ NotificationManager.success('Η εγγραφή καταχωρήθηκε επιτυχώς','Success!',2000) }</NotificationContainer>
             )
         }
-    }
-
-    loadForm(){
-        this.state.name = this.props.use.name;
-        console.log("load", this.state);
+        else if (type === "update"){
+            return(
+                <NotificationContainer>{ NotificationManager.success('Η εγγραφή ανανεώθηκε επιτυχώς','Success!',2000) }</NotificationContainer>
+            )
+        }
     }
 
     render(){
@@ -287,7 +264,7 @@ class UseForm extends Component{
                             onClick={() => this.handleClose(false)}/>
                             <form onSubmit={this.handleSubmit}>
                                 <div className="FormContent">
-                                    <div className="FormSubtitle">Kουστούμι</div>
+                                    <div className="FormTitle">Χρήση</div>
                                     <br/>
                                 <FormControl className="FormControl">
                                     <TextField
@@ -304,6 +281,7 @@ class UseForm extends Component{
                                 <FormControl required>
                                     <InputLabel id="demo-simple-select-required-label">Κατηγορία Χρήσης</InputLabel>
                                     <Select
+                                    className="SelectContainer"
                                     required={true}
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
@@ -329,7 +307,7 @@ class UseForm extends Component{
                                         rowsMax="4"
                                         required={true}
                                         inputProps={{style: { fontSize: 14 }}}
-                                        />
+                                        ></TextField>
                                         <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
                                 </FormControl>
                                 <br/>
