@@ -88,9 +88,11 @@ class  CostumeForm extends Component{
 
             /////////////////////////
             cond1: false,
-            cond2: false,
+            cond2: true,
             cond3: false,
             ////////////////////////
+            enableSelectUse: true,
+            ///////////////////////
             error_description: false,
             error_duplicate: false,
             error_missing_value: false,
@@ -142,8 +144,9 @@ class  CostumeForm extends Component{
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
 
-    onChangeCategory = (category) => {
-        this.setState({selectedUseCategoryOption: category})
+    onChangeCategory = (evt) => {
+        this.setState({selectedUseCategoryOption: evt.target.value,
+        enableSelectUse: false})
     }
 
     /*For selection of use categories*/
@@ -451,26 +454,40 @@ class  CostumeForm extends Component{
                                     </FormControl>
                                     <br/>
                                     <FormControl required className="FormControl">
-                                        <InputLabel id="demo-simple-select-required-label">Χρήση</InputLabel>
+                                        <InputLabel id="demo-simple-select-required-label">Κατηγορία χρήσης</InputLabel>
                                         <Select
                                         className="SelectContainer"
                                         required={true}
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        onChange={this.handleUseSelect}
-                                        value={selectedUseOption}
+                                        onChange={this.onChangeCategory}
+                                        value={selectedUseCategoryOption}
                                         >
                                             {u_options.map( category => (
-                                                category.options.map(use => (
-                                                    <MenuItem key={use.label} value={use.label}>
-                                                
-                                                    {use.label}
-                                                    <i><br/>{category.label}</i>
-                                                    </MenuItem>
-                                                ))
+                                                <MenuItem key={category.label} value={category.label}>
+                                                    {category.label}
+                                                </MenuItem>
                                             ))} 
                                         </Select>
-                                    </FormControl>
+                                        </FormControl>
+
+                                        <FormControl required className="FormControl">
+                                        <InputLabel>Όνομα Χρήσης</InputLabel>
+                                            <Select
+                                            disabled={this.state.enableSelectUse}
+                                            className="SelectContainer"
+                                            required={true}
+                                            onChange={this.handleUseSelect}
+                                            value={selectedUseOption}
+                                            >
+                                                {u_options.map( category => (
+                                                    category.options.map(use => (
+                                                        <MenuItem key={use.label} value={use.label}>
+                                                            {use.label}
+                                                        </MenuItem>
+                                                    ))
+                                                ))} 
+                                            </Select>
+                                        </FormControl>
+                                       
                                     <br/>
                                     <FormControl required className="FormControl">
                                         <InputLabel id="demo-simple-select-required-label">Φύλο</InputLabel>
