@@ -29,8 +29,8 @@ class Login extends Component{
     };
 
     get_users = _ => {
-        //axios.get('http://88.197.53.80/kostoumart-api/users')
-        axios.get("http://localhost:8108/users")
+        axios.get('http://88.197.53.80/kostoumart-api/users')
+        //axios.get("http://localhost:8108/users")
         .then(res => {
             const users = res.data.response;
             this.setState({ users });
@@ -73,7 +73,7 @@ class Login extends Component{
                 )
             case "login":
                 return(
-                    <NotificationContainer>{ NotificationManager.success('Η εγγραφή διαγράφηκε','Success!',2000) }</NotificationContainer>
+                    <NotificationContainer>{ NotificationManager.success('Login','Success!',2000) }</NotificationContainer>
                 )
         };
     }
