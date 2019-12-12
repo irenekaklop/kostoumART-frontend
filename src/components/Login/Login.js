@@ -15,8 +15,11 @@ class Login extends Component{
             name: '',
             password: '',
             role: '',
+            redirectToReferrer: false            
+
         }
         this.onChange = this.onChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount(){
@@ -73,7 +76,7 @@ class Login extends Component{
                 )
             case "login":
                 return(
-                    <NotificationContainer>{ NotificationManager.success('Login','Success!',2000) }</NotificationContainer>
+                    <NotificationContainer>{ NotificationManager.success('Η εγγραφή διαγράφηκε','Success!',2000) }</NotificationContainer>
                 )
         };
     }
@@ -81,11 +84,23 @@ class Login extends Component{
     handleSubmit = () => {
         if(this.validateLogin()){
             this.createNotification("login");
+            this.setState({
+                redirectToReferrer: true
+            })
+            
+        }
+        else{
+            this.createNotification('error-login');
+            this.resetForm();
+            
         }
     }
 
     render(){
-        const {name, password} = this.state;
+        const {name, password, redirectToReferrer} = this.state;
+        if (redirectToReferrer === true) {
+            return <Redirect to="/kostoumart-dashboard" />
+        }
         return(
             <div className='LogInForm'>
                 <NotificationContainer></NotificationContainer>
