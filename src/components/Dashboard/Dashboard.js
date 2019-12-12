@@ -82,8 +82,8 @@ class Dashboard extends Component{
 
     /*Get costumes from db*/
     getCostumes = _ => {
-        //axios.get('http://88.197.53.80/kostoumart-api/costumes')
-        axios.get("http://localhost:8108/costumes")
+        axios.get('http://88.197.53.80/kostoumart-api/costumes')
+        //axios.get("http://localhost:8108/costumes")
         .then(res => {
             const costume_data = res.data.response;
             this.setState({ costume_data });
@@ -94,8 +94,8 @@ class Dashboard extends Component{
     /* Get uses from database*/ 
     get_uses = _ => {
         let self = this;
-        //axios.get("http://88.197.53.80/kostoumart-api/uses")
-        axios.get("http://localhost:8108/uses")
+        axios.get("http://88.197.53.80/kostoumart-api/uses")
+        //axios.get("http://localhost:8108/uses")
         .then(res => {
             const use_data = res.data.response;
             this.setState({ use_data });
@@ -106,8 +106,8 @@ class Dashboard extends Component{
 
     /*Get Theatrical Plays from database*/
     get_theatrical_plays = _ => {
-        //axios.get("ttp://88.197.53.80/kostoumart-api/tps")
-        axios.get("http://localhost:8108/tps")
+        axios.get("ttp://88.197.53.80/kostoumart-api/tps")
+        //axios.get("http://localhost:8108/tps")
         .then(res => {
             const tp_data = res.data.response;
             this.setState({ tp_data });
@@ -117,8 +117,8 @@ class Dashboard extends Component{
     }
 
     get_costume(index){
-        //axios.get('http://88.197.53.80/kostoumart-api/costumes')
-        axios.get("http://localhost:8108/costumes/"+index)
+        axios.get('http://88.197.53.80/kostoumart-api/costumes')
+        //axios.get("http://localhost:8108/costumes/"+index)
         .then(res => {
             const costume = res.data.response;
             this.setState({ costume });
@@ -209,8 +209,8 @@ class Dashboard extends Component{
     handleCostumeEditing(index){
         for(var i=0; i < this.state.costume_data.length; i++){
             if(this.state.costume_data[i].costume_id === index){
-               //axios.get('http://88.197.53.80/kostoumart-api/costumes'+index)
-                axios.get("http://localhost:8108/costumes/"+index)
+                axios.get('http://88.197.53.80/kostoumart-api/costumes'+index)
+                //axios.get("http://localhost:8108/costumes/"+index)
                 .then(res => {
                     const costume = res.data.response;
                     this.setState({ costume: costume, editing: true,
@@ -246,8 +246,8 @@ class Dashboard extends Component{
     }
 
     handleCostumeDelete(index){
-        //axios.delete("http://88.197.53.80/kostoumart-api/costumes", {params: { name: index }})
-        axios.delete("http://localhost:8108/costumes", {params: { name: index }})
+        axios.delete("http://88.197.53.80/kostoumart-api/costumes", {params: { name: index }})
+        //axios.delete("http://localhost:8108/costumes", {params: { name: index }})
         .then(res=> {
             if(res.statusText ==="OK"){
                 let ret=this.createNotification("delete-success");
@@ -258,8 +258,8 @@ class Dashboard extends Component{
     }
 
     handleTPDelete(index){
-        //axios.delete("http://88.197.53.80/kostoumart-api/tps", {params: { id: index }})
-        axios.delete("http://localhost:8108/tps", {params: { id: index }})
+        axios.delete("http://88.197.53.80/kostoumart-api/tps", {params: { id: index }})
+        //axios.delete("http://localhost:8108/tps", {params: { id: index }})
             .then(res=> {
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");
@@ -271,8 +271,8 @@ class Dashboard extends Component{
     }
 
     handleUseDelete(index){
-        //axios.delete("http://88.197.53.80/kostoumart-api/uses",{params: { id: index }})
-        axios.delete("http://localhost:8108/uses",{params: { id: index }} )
+        axios.delete("http://88.197.53.80/kostoumart-api/uses",{params: { id: index }})
+        //axios.delete("http://localhost:8108/uses",{params: { id: index }} )
         .then(res=> {
             if(res.statusText ==="OK"){
                 let ret=this.createNotification("delete-success");

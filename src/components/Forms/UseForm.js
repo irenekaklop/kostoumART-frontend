@@ -123,7 +123,8 @@ class UseForm extends Component{
     handleUpdate(){
         console.log("update", this.state)
         const data = { id: this.state.id, name: this.state.name, category: this.state.selectedCategoryOption, description: this.state.description, customs: this.state.customs }
-        axios.post('http://localhost:8108/edit_use', data)
+        axios.post('http://88.197.53.80/kostoumart-api/edit_use', data)
+        //axios.post('http://localhost:8108/edit_use', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -133,8 +134,8 @@ class UseForm extends Component{
 
     handleInsert(){
         const data = { name: this.state.name, category: this.state.selectedCategoryOption, description: this.state.description, customs: this.state.customs }
-        //axios.post("http://88.197.53.80/kostoumart-api/uses", data)
-        axios.post('http://localhost:8108/uses', data)
+        axios.post("http://88.197.53.80/kostoumart-api/uses", data)
+        //axios.post('http://localhost:8108/uses', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('insert')

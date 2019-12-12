@@ -102,7 +102,8 @@ class TpForm extends Component{
 
     handleUpdate(){
         const data = { theatrical_play_id: this.state.theatrical_play_id, title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater};
-        axios.post('http://localhost:8108/edit_tp', data)
+        axios.post('http://88.197.53.80/kostoumart-api//edit_tp', data)
+        //axios.post('http://localhost:8108/edit_tp', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -112,8 +113,8 @@ class TpForm extends Component{
 
     handleInsert(){
         let data ={title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater};
-        //axios.post("http://88.197.53.80/kostoumart-api/tps", data)
-        axios.post('http://localhost:8108/tps', data)
+        axios.post("http://88.197.53.80/kostoumart-api/tps", data)
+        //axios.post('http://localhost:8108/tps', data)
         .then(res => {
             if(res.statusText == 'OK'){
                 this.createNotification('insert')
