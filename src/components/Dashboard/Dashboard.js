@@ -106,7 +106,7 @@ class Dashboard extends Component{
 
     /*Get Theatrical Plays from database*/
     get_theatrical_plays = _ => {
-        axios.get("ttp://88.197.53.80/kostoumart-api/tps")
+        axios.get("http://88.197.53.80/kostoumart-api/tps")
         //axios.get("http://localhost:8108/tps")
         .then(res => {
             const tp_data = res.data.response;
