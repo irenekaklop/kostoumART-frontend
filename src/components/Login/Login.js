@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
 
 import {TextField, Button, FormControl, Input} from '@material-ui/core';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
@@ -32,8 +33,8 @@ class Login extends Component{
     };
 
     get_users = _ => {
-        axios.get('http://88.197.53.80/kostoumart-api/users')
-        //axios.get("http://localhost:8108/users")
+        //axios.get('http://88.197.53.80/kostoumart-api/users')
+        axios.get("http://localhost:8108/users")
         .then(res => {
             const users = res.data.response;
             this.setState({ users });

@@ -7,12 +7,12 @@ import LogIn from './components/Login/Login'
 import Auth from './components/Auth/Auth';
 
 const Routes = () => (
-    <BrowserRouter >
+    <BrowserRouter basename="/kostoumart">
     <Switch>
-        <Route exact path='/kostoumart-dashboard' component={Dashboard}/>
-        <Route exact path="/welcome" component={Welcome}/>
-        <Route exact path="/login" component={LogIn}/>
-        <Route exact path="/auth" component={Auth}/>
+        <Route path='/kostoumart-dashboard' component={Dashboard}/>
+        <Route path="/welcome" component={Welcome}/>
+        <Route path="/login" component={LogIn}/>
+        <Route path="/auth" component={Auth}/>
         <Route path="*" component={NotFound}/>
     </Switch>
     </BrowserRouter>

@@ -242,8 +242,8 @@ class  CostumeForm extends Component{
 
     handleUpdate = () => {
         let data = this.state;
-        axios.post('http://88.197.53.80/kostoumart-api/edit_costume', data)
-        //axios.post('http://localhost:8108/edit_costume', data)
+        //axios.post('http://88.197.53.80/kostoumart-api/edit_costume', data)
+        axios.post('http://localhost:8108/edit_costume', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")
@@ -254,8 +254,8 @@ class  CostumeForm extends Component{
     handleInsert = () => {
         console.log("inserting", this.state);
         let data = this.state;
-        axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
-        //axios.post('http://localhost:8108/costumes', data)
+        //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
+        axios.post('http://localhost:8108/costumes', data)
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){
@@ -468,9 +468,9 @@ class  CostumeForm extends Component{
                                                 </MenuItem>
                                             ))} 
                                         </Select>
-                                        </FormControl>
+                                    </FormControl>
 
-                                        <FormControl required className="FormControl">
+                                    <FormControl required className="FormControl">
                                         <InputLabel>Όνομα Χρήσης</InputLabel>
                                             <Select
                                             disabled={this.state.enableSelectUse}
@@ -480,14 +480,16 @@ class  CostumeForm extends Component{
                                             value={selectedUseOption}
                                             >
                                                 {u_options.map( category => (
-                                                    category.options.map(use => (
-                                                        <MenuItem key={use.label} value={use.label}>
-                                                            {use.label}
-                                                        </MenuItem>
-                                                    ))
+                                                    category.label === selectedUseCategoryOption ?
+                                                    (category.options.map(use => (
+                                                            <MenuItem key={use.label} value={use.label}>
+                                                                {use.label}
+                                                            </MenuItem>
+                                                        ))):
+                                                   (console.log("None"))
                                                 ))} 
                                             </Select>
-                                        </FormControl>
+                                    </FormControl>
                                        
                                     <br/>
                                     <FormControl required className="FormControl">
