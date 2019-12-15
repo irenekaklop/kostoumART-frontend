@@ -373,7 +373,7 @@ class Dashboard extends Component{
                 <TableCell>{director}</TableCell>
                 <TableCell>{theater}</TableCell>
                 <TableCell>
-                    <IconButton><DeleteIcon onClick={()=>{this.handleTPDelete(theatrical_play_id);}}></DeleteIcon></IconButton>
+                    <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(theatrical_play_id);}}></DeleteIcon></IconButton>
                     <IconButton><EditIcon onClick={() => this.handleTPEditing(theatrical_play_id)}/></IconButton>
                 </TableCell>
                 </TableRow>
