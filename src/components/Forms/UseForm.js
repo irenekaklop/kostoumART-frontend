@@ -279,7 +279,7 @@ class UseForm extends Component{
                                     />
                                 </FormControl>
                                 <br/>
-                                <FormControl required>
+                                <FormControl className="FormControl" required>
                                     <InputLabel id="demo-simple-select-required-label">Κατηγορία Χρήσης</InputLabel>
                                     <Select
                                     className="SelectContainer"
