@@ -299,8 +299,8 @@ class Dashboard extends Component{
         }
         else if(this.state.current_tab===2){
             for(var i=0; i<this.state.costume_data.length; i++){
-                if(this.state.costume_data[i].useID){
-                    if(this.state.costume_data[i].useID===index){
+                if(this.state.costume_data[i].theatrical_play_id){
+                    if(this.state.costume_data[i].theatrical_play_id===index){
                     this.handleOpenConfirmationDialog(index);
                     return;
                     }
@@ -308,8 +308,6 @@ class Dashboard extends Component{
             }
             this.handleTPDelete(index);
         }
-
-        
         
     }
 
