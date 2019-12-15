@@ -125,11 +125,11 @@ class  CostumeForm extends Component{
                 designer: this.props.costume[0].designer,
                 parts: this.props.costume[0].parts,
                 selectedSexOption: sex,
-                selectedUseOption: this.props.costume[0].name,
+                selectedUseOption: this.props.costume[0].use_name,
                 selectedUseCategoryOption: this.props.costume[0].use_category,
                 selectedMaterialOption: this.props.costume[0].material,
                 selectedTechniqueOption: this.props.costume[0].technique,
-                selectedTPOption: this.props.costume[0].title,
+                selectedTPOption: this.props.costume[0].tp_title,
                 location: this.props.costume[0].location,
                 location_influence: this.props.costume[0].location_influence,
             })
