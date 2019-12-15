@@ -84,7 +84,7 @@ class Login extends Component{
 
     handleSubmit = () => {
         if(this.validateLogin()){
-            this.createNotification("login");
+            //this.createNotification("login");
             this.setState({
                 redirectToReferrer: true
             })
