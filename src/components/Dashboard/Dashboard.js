@@ -315,7 +315,7 @@ class Dashboard extends Component{
 
     renderTableCostumesData() {
         return this.state.costume_data.map((costume, index) => {
-            const { costume_id, use_name, costume_name, description, sex, material, technique, location, location_influence, designer, tp_title, actors, roles } = costume //destructuring
+            const { costume_id, use_name, costume_name, description, sex, material, technique, location, location_influence, designer, tp_title, actors, parts } = costume //destructuring
             return (
                 <TableRow key={costume_id}>
                 <TableCell>{costume_name}</TableCell>
@@ -329,7 +329,7 @@ class Dashboard extends Component{
                 <TableCell>{designer}</TableCell>
                 <TableCell>{tp_title}</TableCell>
                 <TableCell>{actors}</TableCell>
-                <TableCell>{roles}</TableCell>
+                <TableCell>{parts}</TableCell>
                 <TableCell>
                     <IconButton><DeleteIcon onClick={()=>{this.handleCostumeDelete(costume_name);}}></DeleteIcon> </IconButton>
                     <IconButton><EditIcon onClick={() => this.handleCostumeEditing(costume_id)}/></IconButton></TableCell>
