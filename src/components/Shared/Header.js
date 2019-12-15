@@ -7,7 +7,7 @@ class Header extends React.Component {
   render() {
   return (
       <div className="menu">
-          <a href='/welcome' className= "header_link">
+          <a href='/kostoumart/login' className= "header_link">
               <img src={logo}/></a>
       </div>
   );

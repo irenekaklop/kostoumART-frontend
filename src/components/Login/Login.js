@@ -91,7 +91,6 @@ class Login extends Component{
             
         }
         else{
-            this.createNotification('error-login');
             this.resetForm();
             
         }
