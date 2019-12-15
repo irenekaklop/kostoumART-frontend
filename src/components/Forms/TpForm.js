@@ -233,8 +233,8 @@ class TpForm extends Component{
                                 name="name" 
                                 value={name} 
                                 onChange={this.onChange}></TextField>
-                            </FormControl>
-                            <br/>
+                                </FormControl>
+                                <br/>
                             <FormControl>
                                 <TextField 
                                 label="Ημερομηνία" name="date" 

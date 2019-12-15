@@ -617,6 +617,14 @@ class  CostumeForm extends Component{
                                             value={actors}
                                             onChange={this.onChange}
                                             inputProps={{style: { fontSize: 14 }}}/>
+                                    </FormControl> 
+                                    <FormControl className="FormControl">
+                                        <TextField
+                                            label="Ρόλοι"
+                                            name="parts"
+                                            value={parts}
+                                            onChange={this.onChange}
+                                            inputProps={{style: { fontSize: 14 }}}/>
                                     </FormControl>       
                                     <br/><br/><br/>
                                     <div className="button-submit">
