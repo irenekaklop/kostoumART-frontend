@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.502f6f75.chunk.css",
-    "main.js": "/static/js/main.901b5e8f.chunk.js",
-    "main.js.map": "/static/js/main.901b5e8f.chunk.js.map",
-    "runtime~main.js": "/static/js/runtime~main.4939275b.js",
-    "runtime~main.js.map": "/static/js/runtime~main.4939275b.js.map",
-    "static/css/2.98a4e2e2.chunk.css": "/static/css/2.98a4e2e2.chunk.css",
-    "static/js/2.6c6ff501.chunk.js": "/static/js/2.6c6ff501.chunk.js",
-    "static/js/2.6c6ff501.chunk.js.map": "/static/js/2.6c6ff501.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.fd3c322bad70abaff68f53fecde1ea71.js": "/precache-manifest.fd3c322bad70abaff68f53fecde1ea71.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.98a4e2e2.chunk.css.map": "/static/css/2.98a4e2e2.chunk.css.map",
-    "static/css/main.502f6f75.chunk.css.map": "/static/css/main.502f6f75.chunk.css.map",
-    "static/media/semantic.min.css": "/static/media/outline-icons.ef60a4f6.woff",
-    "static/media/notifications.css": "/static/media/notification.c0d3c94c.eot"
+    "main.css": "/kostoumart/static/css/main.6bcd1fec.chunk.css",
+    "main.js": "/kostoumart/static/js/main.68e3e825.chunk.js",
+    "main.js.map": "/kostoumart/static/js/main.68e3e825.chunk.js.map",
+    "runtime~main.js": "/kostoumart/static/js/runtime~main.a1bacb42.js",
+    "runtime~main.js.map": "/kostoumart/static/js/runtime~main.a1bacb42.js.map",
+    "static/css/2.42cc50f1.chunk.css": "/kostoumart/static/css/2.42cc50f1.chunk.css",
+    "static/js/2.35992449.chunk.js": "/kostoumart/static/js/2.35992449.chunk.js",
+    "static/js/2.35992449.chunk.js.map": "/kostoumart/static/js/2.35992449.chunk.js.map",
+    "index.html": "/kostoumart/index.html",
+    "precache-manifest.8d07ffd2fcbdc018ca1628d05e9de6ae.js": "/kostoumart/precache-manifest.8d07ffd2fcbdc018ca1628d05e9de6ae.js",
+    "service-worker.js": "/kostoumart/service-worker.js",
+    "static/css/2.42cc50f1.chunk.css.map": "/kostoumart/static/css/2.42cc50f1.chunk.css.map",
+    "static/css/main.6bcd1fec.chunk.css.map": "/kostoumart/static/css/main.6bcd1fec.chunk.css.map",
+    "static/media/logo.png": "/kostoumart/static/media/logo.ac7db77e.png",
+    "static/media/notifications.css": "/kostoumart/static/media/notification.c0d3c94c.eot"
   }
 }
