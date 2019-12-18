@@ -6,6 +6,7 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import './Login.css'
 import axios from 'axios';
+import {login} from '../UserFunctions';
 
 class Login extends Component{
 
@@ -16,7 +17,8 @@ class Login extends Component{
             name: '',
             password: '',
             role: '',
-            redirectToReferrer: false            
+            redirectToReferrer: false,
+            errors: {}          
 
         }
         this.onChange = this.onChange.bind(this);
@@ -82,18 +84,22 @@ class Login extends Component{
         };
     }
 
-    handleSubmit = () => {
-        if(this.validateLogin()){
-            //this.createNotification("login");
-            this.setState({
-                redirectToReferrer: true
-            })
-            
-        }
-        else{
-            this.resetForm();
-            
-        }
+    handleSubmit (e) {
+        e.preventDefault()
+        const user = {
+            email: this.state.name,
+            password: this.state.password
+            }
+
+        login(user).then(res => {
+            console.log("res", res)
+            if (res) {
+                this.setState({
+                    redirectToReferrer: true
+                    })
+                    console.log("logged in")
+                }
+        })
     }
 
     render(){
