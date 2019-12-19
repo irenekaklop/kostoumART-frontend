@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
-import { Paper, TextField } from '@material-ui/core';
+import { Paper, Button } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -29,6 +29,10 @@ import UseForm from '../Forms/UseForm.js';
 import TpForm from '../Forms/TpForm.js';
 import ConfirmationDialog from '../Dashboard/ConfirmationDialog.js';
 
+import "../../styles/Dashboard.css"
+
+import jwt_decode from 'jwt-decode';
+
 class Dashboard extends Component{
 
     constructor(props) {
@@ -53,6 +57,8 @@ class Dashboard extends Component{
             tp: null,
             //Confirmation Dialog answer
             index: null,
+            //email
+            email: '',
         }
     }
 
@@ -61,9 +67,19 @@ class Dashboard extends Component{
         this.get_uses();
         this.get_theatrical_plays();
         this.getCostumes();
+        const token = localStorage.usertoken
+        const decoded = jwt_decode(token)
+        this.setState({
+            email: decoded.email
+        })
     }
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
+
+    logOut(e) {
+        localStorage.removeItem('usertoken')
+        this.props.history.push(`/auth`)
+    }
 
     createNotification(type){
         switch (type) {
@@ -385,6 +401,13 @@ class Dashboard extends Component{
         console.log(this.state);
         return (
             <React.Fragment>
+                <div className="LogoutContainer">
+                    <p className="LogoutButton"
+                    onClick={() => this.logOut()}              
+                    >
+                    Αποσύνδεση
+                    </p>
+                </div>
                 <NotificationContainer></NotificationContainer>
                 <div className="root">
                     <Tabs value={this.state.current_tab}
@@ -393,6 +416,7 @@ class Dashboard extends Component{
                     <Tab label="ΧΡΗΣΗ"/>
                     <Tab label="ΘΕΑΤΡΙΚΗ ΠΑΡΑΣΤΑΣΗ"/>
                     </Tabs>
+                   
                     {this.state.current_tab===0 &&
                         <Paper>
                             <Table className="table">

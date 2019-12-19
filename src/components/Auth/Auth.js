@@ -1,32 +1,38 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
 
 import {TextField, Button, FormControl, Input} from '@material-ui/core';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
-import './Auth.css';
+import { login } from './UserFunctions.js'
+import './Auth.css'
 import axios from 'axios';
 
-class Auth extends Component {
+class Auth extends Component{
 
     constructor(props){
         super(props);
         this.state = {
-            email: {
-                value: '',
-                valid: false,
-                touched: false
-            },
-            password: {
-                value: '',
-                valid: false,
-                touched: false
-            }
+            users: [],
+            email: '',
+            password: '',
+            role: '',
+            errors: {},
+            redirectToReferrer: false            
+
         }
+        this.onChange = this.onChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount(){
         this.get_users();
     }
+
+    onChange = ( evt ) => { 
+        this.setState({ [evt.target.name]: evt.target.value }); 
+        console.log(this.state)
+    };
 
     get_users = _ => {
         //axios.get('http://88.197.53.80/kostoumart-api/users')
@@ -37,77 +43,14 @@ class Auth extends Component {
         }
         )
     }
-
-    handleChange = (element) => event => {
-        let updatedState = {...this.state};
-        updatedState[element].touched = true;
-        updatedState[element].value = event.target.value;
-        updatedState[element].valid = event.target.value.length > 0;
-        //updatedState[element].valid = this.checkValidity(event.target.value)
-        this.setState(updatedState);
-    }
-
-    checkValidity(value, rules) {
-        let isValid = true;
-        if (!rules) {
-            return true;
-        }
-        
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        return isValid;
-    }
-
-    submitHandler = (event) => {
-        event.preventDefault();
-        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value);
-    }
-
+    
     resetForm(){
         this.setState({
-            name: '',
+            email: '',
             password: '',
             role: '',
         });
-    }
-
-    logInUser = (event) => {
-        event.preventDefault();
-
-        let user_data = {
-            email: this.state.email.value,
-            password: this.state.password.value
-        }
-
-        axios.post('http://localhost:8108/login', user_data)
-        .then((response) => {
-            console.log("Response", response)
-            this.createNotification('login');
-        },
-        (error) => {
-            this.createNotification('error-login');
-            console.log(error.response);
-        });
+        this.get_users();
     }
 
     createNotification(type){
@@ -118,6 +61,12 @@ class Auth extends Component {
                         <NotificationContainer>{ NotificationManager.error('Ο κωδικός ή το όνομα χρήστη είναι λανθασμένα') }</NotificationContainer>
                     </div>
                 )
+            case "error-password":
+                return(
+                    <div>
+                        <NotificationContainer>{ NotificationManager.error('Ο κωδικός είναι λανθασμένα') }</NotificationContainer>
+                    </div>
+                )    
             case "login":
                 return(
                     <NotificationContainer>{ NotificationManager.success('Η εγγραφή διαγράφηκε','Success!',2000) }</NotificationContainer>
@@ -125,19 +74,51 @@ class Auth extends Component {
         };
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault()
 
-    render () {
-        const {email, password} = this.state;
+        const user = {
+            email: this.state.email,
+            password: this.state.password
+        }
+
+        login(user).then(res => {
+        if (res) {
+            console.log(res);
+            switch(res.status){
+                case 401: 
+                    this.createNotification("error-login");
+                    this.resetForm();
+                    return;
+                case 400:
+                    this.createNotification("error-password");
+                    this.resetForm();
+                    return;
+                case 200:
+                    this.props.history.push(`/kostoumart-dashboard`)
+                    return;
+                default:
+                    return;
+            }
+        }
+        })
+    }
+
+    render(){
+        const {email, password, redirectToReferrer} = this.state;
+        if (redirectToReferrer === true) {
+            return <Redirect to="/kostoumart-dashboard" />
+        }
         return(
             <div className='LogInForm'>
                 <NotificationContainer></NotificationContainer>
                 <div className="FormTitle">Σύνδεση</div>
                 <FormControl className="FormControl">
                     <TextField
-                    label="Όνομα"
-                    value={email.value}
+                    label="Email"
+                    value={email}
                     name="email"
-                    onChange={this.handleChange('email')}
+                    onChange={this.onChange}
                     margin="none"
                     required={true}
                     inputProps={{style: { fontSize: 14 }}}
@@ -149,12 +130,12 @@ class Auth extends Component {
                     label="Κωδικός"
                     name="password"
                     type='password'
-                    value={password.value}
-                    onChange={this.handleChange('password')}
+                    value={password}
+                    onChange={this.onChange}
                     required={true}/>
                 </FormControl>
                 <br/>
-                <Button color="primary" onClick={this.logInUser}>Login</Button>
+                <Button color="primary" onClick={this.handleSubmit}>Login</Button>
             </div>
         )
     }

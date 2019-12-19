@@ -1,0 +1,16 @@
+.LogoutContainer {
+    width: 100%;
+    height: 25px;
+    padding-top: 15px;
+    position: relative;
+  }
+  
+  .LogoutButton {
+    font-size: 80%;
+    text-decoration: underline;
+    display: inline-block;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
+  
