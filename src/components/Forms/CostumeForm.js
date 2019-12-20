@@ -56,6 +56,7 @@ class  CostumeForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            user_id: '',
             costume: null,
             name: '',
             descr: '',
@@ -142,6 +143,9 @@ class  CostumeForm extends Component{
                 }
             }
            
+        }
+        if(this.props.user && !prevProps.user){
+            this.setState({user_id: this.props.user})
         }
         console.log('state', this.state);
     }

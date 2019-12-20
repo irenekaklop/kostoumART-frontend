@@ -6,7 +6,6 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import { login } from './UserFunctions.js'
 import './Auth.css'
-import axios from 'axios';
 
 class Auth extends Component{
 
@@ -25,32 +24,17 @@ class Auth extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentDidMount(){
-        this.get_users();
-    }
-
     onChange = ( evt ) => { 
         this.setState({ [evt.target.name]: evt.target.value }); 
         console.log(this.state)
     };
 
-    get_users = _ => {
-        //axios.get('http://88.197.53.80/kostoumart-api/users')
-        axios.get("http://localhost:8108/users")
-        .then(res => {
-            const users = res.data.response;
-            this.setState({ users });
-        }
-        )
-    }
-    
     resetForm(){
         this.setState({
             email: '',
             password: '',
             role: '',
         });
-        this.get_users();
     }
 
     createNotification(type){

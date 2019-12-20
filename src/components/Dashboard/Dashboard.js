@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -57,21 +58,31 @@ class Dashboard extends Component{
             tp: null,
             //Confirmation Dialog answer
             index: null,
-            //email
-            email: '',
+            user: {
+                user_id: null,
+                email: '',
+            },
+            redirectToReferrer: false      
         }
     }
 
     /*Secure way to getData*/
     componentDidMount(){
-        this.get_uses();
-        this.get_theatrical_plays();
-        this.getCostumes();
         const token = localStorage.usertoken
-        const decoded = jwt_decode(token)
-        this.setState({
-            email: decoded.email
-        })
+        if(token){
+            this.get_uses();
+            this.get_theatrical_plays();
+            this.getCostumes();
+            const decoded = jwt_decode(token);
+            this.setState({ user: {
+                user_id: decoded.user_id,
+                email: decoded.email
+            } });
+            console.log(decoded);
+        }
+        else{
+            this.setState({redirectToReferrer: true})
+        }
     }
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
@@ -98,8 +109,8 @@ class Dashboard extends Component{
 
     /*Get costumes from db*/
     getCostumes = _ => {
-        axios.get('http://88.197.53.80/kostoumart-api/costumes/')
-        //axios.get("http://localhost:8108/costumes")
+        //axios.get('http://88.197.53.80/kostoumart-api/costumes/')
+        axios.get("http://localhost:8108/costumes")
         .then(res => {
             const costume_data = res.data.response;
             this.setState({ costume_data });
@@ -110,8 +121,8 @@ class Dashboard extends Component{
     /* Get uses from database*/ 
     get_uses = _ => {
         let self = this;
-        axios.get("http://88.197.53.80/kostoumart-api/uses/")
-        //axios.get("http://localhost:8108/uses")
+        //axios.get("http://88.197.53.80/kostoumart-api/uses/")
+        axios.get("http://localhost:8108/uses")
         .then(res => {
             const use_data = res.data.response;
             this.setState({ use_data });
@@ -122,8 +133,8 @@ class Dashboard extends Component{
 
     /*Get Theatrical Plays from database*/
     get_theatrical_plays = _ => {
-        axios.get("http://88.197.53.80/kostoumart-api/tps/")
-        //axios.get("http://localhost:8108/tps")
+        //axios.get("http://88.197.53.80/kostoumart-api/tps/")
+        axios.get("http://localhost:8108/tps")
         .then(res => {
             const tp_data = res.data.response;
             this.setState({ tp_data });
@@ -133,8 +144,8 @@ class Dashboard extends Component{
     }
 
     get_costume(index){
-        axios.get('http://88.197.53.80/kostoumart-api/costumes/')
-        //axios.get("http://localhost:8108/costumes/"+index)
+        //axios.get('http://88.197.53.80/kostoumart-api/costumes/')
+        axios.get("http://localhost:8108/costumes/"+index)
         .then(res => {
             const costume = res.data.response;
             this.setState({ costume });
@@ -398,7 +409,10 @@ class Dashboard extends Component{
     }
 
     render() {
-        console.log(this.state);
+        console.log("State", this.state)
+        if (this.state.redirectToReferrer) {
+            return <Redirect to="/auth" />
+        }
         return (
             <React.Fragment>
                 <div className="LogoutContainer">
@@ -445,6 +459,7 @@ class Dashboard extends Component{
                             <CostumeForm 
                                 isOpen={this.state.isCostumeDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
+                                user={this.state.user.user_id}
                                 costumes={this.state.costume_data}
                                 uses={this.state.use_data}
                                 theatrical_plays={this.state.tp_data}
