@@ -4,7 +4,8 @@ import {Redirect} from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
-import { Paper, Button } from '@material-ui/core';
+import { Paper, Button, TextField, Drawer, Divider, MenuItem, InputLabel, Select} from '@material-ui/core';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -16,6 +17,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import FilterListIcon from '@material-ui/icons/FilterList';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -33,6 +38,13 @@ import ConfirmationDialog from '../Dashboard/ConfirmationDialog.js';
 import "../../styles/Dashboard.css"
 
 import jwt_decode from 'jwt-decode';
+import { use_categories, techniques, sexs } from '../../utils/options.js';
+
+const filterOptions = createFilterOptions({
+    matchFrom: 'start',
+    stringify: option => option.costume_name,
+  });
+  
 
 class Dashboard extends Component{
 
@@ -56,11 +68,18 @@ class Dashboard extends Component{
             costume: null,
             use: null,
             tp: null,
+            //Filters
+            current_costumes: [],
+            filterDrawerOpen: false,
+            useCategoryOption: '',
+            techniqueOption: '',
+            sexOption: '',
             //Confirmation Dialog answer
             index: null,
             user: {
                 user_id: null,
                 email: '',
+                role: null,
             },
             redirectToReferrer: false      
         }
@@ -70,15 +89,16 @@ class Dashboard extends Component{
     componentDidMount(){
         const token = localStorage.usertoken
         if(token){
-            this.get_uses();
-            this.get_theatrical_plays();
-            this.getCostumes();
             const decoded = jwt_decode(token);
             this.setState({ user: {
                 user_id: decoded.user_id,
-                email: decoded.email
+                email: decoded.email,
+                role: decoded.role,
             } });
-            console.log(decoded);
+            console.log("decoded", decoded);
+            this.get_uses();
+            this.get_theatrical_plays();
+            this.getCostumes(decoded);
         }
         else{
             this.setState({redirectToReferrer: true})
@@ -86,6 +106,21 @@ class Dashboard extends Component{
     }
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
+
+    handleCategoryUseSelect = (evt) => {
+        this.setState({ useCategoryOption: evt.target.value});
+        console.log(`Option selected:`, evt.target);
+    }
+
+    handleTechniqueSelect = (evt) => {
+        this.setState({ techniqueOption: evt.target.value});
+        console.log(`Option selected:`, evt.target);
+    }
+
+    handleSexSelect = (evt) => {
+        this.setState({ sexOption: evt.target.value});
+        console.log(`Option selected:`, evt.target);
+    }
 
     logOut(e) {
         localStorage.removeItem('usertoken')
@@ -108,14 +143,31 @@ class Dashboard extends Component{
     }
 
     /*Get costumes from db*/
-    getCostumes = _ => {
+    getCostumes = (decoded) => {
         //axios.get('http://88.197.53.80/kostoumart-api/costumes/')
-        axios.get("http://localhost:8108/costumes")
-        .then(res => {
-            const costume_data = res.data.response;
-            this.setState({ costume_data });
+        if(decoded){
+            axios.get("http://localhost:8108/costumes",{params: {user: decoded.role}})
+            .then(res => {
+                const costume_data = res.data.response;
+                this.setState({ costume_data });
+                this.setState({
+                    current_costumes: costume_data
+                })
+            }
+            )
         }
-        )
+        else{
+            axios.get("http://localhost:8108/costumes",{params: {user: this.state.user.role}})
+            .then(res => {
+                const costume_data = res.data.response;
+                this.setState({ costume_data });
+                this.setState({
+                    current_costumes: costume_data
+                })
+            }
+            )
+        }
+       
     }
 
     /* Get uses from database*/ 
@@ -152,6 +204,19 @@ class Dashboard extends Component{
         }
         )
     }
+
+    handleDrawerOpen = () => {
+        this.setState({
+            filterDrawerOpen: true
+        })
+    };
+    
+    handleDrawerClose = () => {
+        this.setState({
+            filterDrawerOpen: false
+        })
+    };
+    
     
     handleCloseDialog = () => {
         if(this.state.editing){
@@ -236,8 +301,8 @@ class Dashboard extends Component{
     handleCostumeEditing(index){
         for(var i=0; i < this.state.costume_data.length; i++){
             if(this.state.costume_data[i].costume_id === index){
-                axios.get('http://88.197.53.80/kostoumart-api/costumes/'+index)
-                //axios.get("http://localhost:8108/costumes/"+index)
+                //axios.get('http://88.197.53.80/kostoumart-api/costumes/'+index)
+                axios.get("http://localhost:8108/costumes/"+index)
                 .then(res => {
                     const costume = res.data.response;
                     this.setState({ costume: costume, editing: true,
@@ -339,7 +404,7 @@ class Dashboard extends Component{
     }
 
     renderTableCostumesData() {
-        return this.state.costume_data.map((costume, index) => {
+        return this.state.current_costumes.map((costume, index) => {
             const { costume_id, use_name, costume_name, description, sex, material, technique, location, location_influence, designer, tp_title, actors, parts } = costume //destructuring
             return (
                 <TableRow key={costume_id}>
@@ -408,11 +473,47 @@ class Dashboard extends Component{
         })
     }
 
+    applyCostumeFilters = () => {
+        if(!this.state.current_costumes){
+            this.setState({
+                current_costumes: this.state.costume_data
+            })
+        }
+        var currentCostumeArray;
+        if(this.state.techniqueOption){
+            currentCostumeArray = this.state.costume_data.filter((costume)=>{
+                return costume.technique === this.state.techniqueOption;
+            })
+        }
+        if(this.state.sexOption){
+            currentCostumeArray = this.state.costume_data.filter((costume)=>{
+                return costume.sex.includes(this.state.sexOption);
+                
+            })
+        }
+        console.log(currentCostumeArray);
+        if(currentCostumeArray){
+            this.setState({
+                current_costumes: currentCostumeArray
+            })
+        }
+    }
+
+    resetCostumeFilters = () => {
+        this.setState({
+            current_costumes: this.state.costume_data,
+            useCategoryOption: '',
+            techniqueOption: '',
+            sexOption: '',
+        })
+    }
+
     render() {
         console.log("State", this.state)
         if (this.state.redirectToReferrer) {
             return <Redirect to="/auth" />
         }
+        const {filterDrawerOpen, useCategoryOption, techniqueOption, sexOption} = this.state;
         return (
             <React.Fragment>
                 <div className="LogoutContainer">
@@ -431,8 +532,67 @@ class Dashboard extends Component{
                     <Tab label="ΘΕΑΤΡΙΚΗ ΠΑΡΑΣΤΑΣΗ"/>
                     </Tabs>
                    
+                    
                     {this.state.current_tab===0 &&
-                        <Paper>
+                        <div>
+                            <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={this.handleDrawerOpen}
+                            edge="start">
+                                <FilterListIcon></FilterListIcon>
+                            </IconButton>
+                            <Drawer
+                            variant="persistent"
+                            anchor="left"
+                            open={filterDrawerOpen}
+                            className="Drawer"
+                            >
+                            <div>
+                            <IconButton onClick={this.handleDrawerClose}>
+                                {this.state.filterDrawerOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                            </IconButton>
+                            </div>
+                            <Divider/>
+                            <p>Filters</p>
+                            <Divider/>
+                            <br/>
+                            
+                            <InputLabel>Τεχνική</InputLabel>
+                            <Select
+                                className="SelectContainer"
+                                required={true}
+                                onChange={this.handleTechniqueSelect}
+                                value={techniqueOption}
+                                >
+                                    {techniques.map( technique => (
+                                        <MenuItem key={technique.label} value={technique.label}>
+                                            {technique.label}
+                                        </MenuItem>
+                                    ))} 
+                            </Select>
+                            <br/>
+                            <Divider/>
+                            <br/>
+                            <InputLabel>Φύλο</InputLabel>
+                            <Select
+                                className="SelectContainer"
+                                required={true}
+                                onChange={this.handleSexSelect}
+                                value={sexOption}
+                                >
+                                    {sexs.map( sex => (
+                                        <MenuItem key={sex.label} value={sex.label}>
+                                            {sex.label}
+                                        </MenuItem>
+                                    ))} 
+                            </Select>
+                            <br/><br/>
+                            <Divider/>
+                            <Button onClick={this.applyCostumeFilters}>Eφαρμογή</Button>
+                            <Button onClick={this.resetCostumeFilters}>Επαναφορα</Button>
+                            </Drawer>
+                            <Paper>
                             <Table className="table">
                                 <TableHead>
                                     <TableRow>
@@ -465,7 +625,8 @@ class Dashboard extends Component{
                                 theatrical_plays={this.state.tp_data}
                                 costume={this.state.costume}
                                 editing={this.state.editing}></CostumeForm>
-                        </Paper>
+                            </Paper>
+                        </div>
                     }
                     {this.state.current_tab===1 &&
                         <Paper>
@@ -517,6 +678,8 @@ class Dashboard extends Component{
                                 />
                         </Paper>
                     }
+
+                    
                     <ConfirmationDialog 
                     isOpen={this.state.isConfirmationDialogOpen}
                     index = {this.state.index}
@@ -524,7 +687,6 @@ class Dashboard extends Component{
                     handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
             </div>
             </React.Fragment>
-            
           );
     
     }
