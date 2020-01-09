@@ -144,8 +144,8 @@ class Dashboard extends Component{
 
     /*Get costumes from db*/
     getCostumes = (decoded) => {
-        //axios.get('http://88.197.53.80/kostoumart-api/costumes/')
         if(decoded){
+            //axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: decoded.role}})
             axios.get("http://localhost:8108/costumes",{params: {user: decoded.role}})
             .then(res => {
                 const costume_data = res.data.response;
@@ -157,6 +157,7 @@ class Dashboard extends Component{
             )
         }
         else{
+            //axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: decoded.role}})
             axios.get("http://localhost:8108/costumes",{params: {user: this.state.user.role}})
             .then(res => {
                 const costume_data = res.data.response;
@@ -338,8 +339,8 @@ class Dashboard extends Component{
     }
 
     handleCostumeDelete(index){
-        axios.delete("http://88.197.53.80/kostoumart-api/costumes/", {params: { name: index }})
-        //axios.delete("http://localhost:8108/costumes/", {params: { name: index }})
+        //axios.delete("http://88.197.53.80/kostoumart-api/costumes/", {params: { name: index }})
+        axios.delete("http://localhost:8108/costumes/", {params: { name: index }})
         .then(res=> {
             if(res.statusText ==="OK"){
                 let ret=this.createNotification("delete-success");
@@ -350,8 +351,8 @@ class Dashboard extends Component{
     }
 
     handleTPDelete(index){
-        axios.delete("http://88.197.53.80/kostoumart-api/tps/", {params: { id: index }})
-        //axios.delete("http://localhost:8108/tps/", {params: { id: index }})
+        //axios.delete("http://88.197.53.80/kostoumart-api/tps/", {params: { id: index }})
+        axios.delete("http://localhost:8108/tps/", {params: { id: index }})
             .then(res=> {
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");
@@ -363,8 +364,8 @@ class Dashboard extends Component{
     }
 
     handleUseDelete(index){
-        axios.delete("http://88.197.53.80/kostoumart-api/uses/",{params: { id: index }})
-        //axios.delete("http://localhost:8108/uses/",{params: { id: index }} )
+        //axios.delete("http://88.197.53.80/kostoumart-api/uses/",{params: { id: index }})
+        axios.delete("http://localhost:8108/uses/",{params: { id: index }} )
         .then(res=> {
             if(res.statusText ==="OK"){
                 let ret=this.createNotification("delete-success");
@@ -525,40 +526,30 @@ class Dashboard extends Component{
                 </div>
                 <NotificationContainer></NotificationContainer>
                 <div className="root">
-                    <Tabs value={this.state.current_tab}
-                        onChange={this.handleTabChange}>
-                    <Tab label="ΚΟΣΤΟΥΜΙ"/>
-                    <Tab label="ΧΡΗΣΗ"/>
-                    <Tab label="ΘΕΑΤΡΙΚΗ ΠΑΡΑΣΤΑΣΗ"/>
-                    </Tabs>
-                   
-                    
-                    {this.state.current_tab===0 &&
-                        <div>
-                            <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={this.handleDrawerOpen}
-                            edge="start">
-                                <FilterListIcon></FilterListIcon>
-                            </IconButton>
-                            <Drawer
+                    <div className="FilterButton">
+                        <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={this.handleDrawerOpen}
+                        edge="start">
+                        <FilterListIcon></FilterListIcon>
+                        </IconButton>
+                        <Drawer
+                            className="Drawer"
                             variant="persistent"
                             anchor="left"
                             open={filterDrawerOpen}
-                            className="Drawer"
-                            >
-                            <div>
+                        >
+                        <div>
                             <IconButton onClick={this.handleDrawerClose}>
                                 {this.state.filterDrawerOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                             </IconButton>
-                            </div>
-                            <Divider/>
-                            <p>Filters</p>
-                            <Divider/>
-                            <br/>
-                            
-                            <InputLabel>Τεχνική</InputLabel>
+                        </div>
+                        <Divider/>
+                        <p>Filters</p>
+                        <Divider/>
+                        <br/>
+                        <InputLabel>Τεχνική</InputLabel>
                             <Select
                                 className="SelectContainer"
                                 required={true}
@@ -571,10 +562,10 @@ class Dashboard extends Component{
                                         </MenuItem>
                                     ))} 
                             </Select>
-                            <br/>
-                            <Divider/>
-                            <br/>
-                            <InputLabel>Φύλο</InputLabel>
+                        <br/>
+                        <Divider/>
+                        <br/>
+                        <InputLabel>Φύλο</InputLabel>
                             <Select
                                 className="SelectContainer"
                                 required={true}
@@ -587,11 +578,22 @@ class Dashboard extends Component{
                                         </MenuItem>
                                     ))} 
                             </Select>
-                            <br/><br/>
-                            <Divider/>
-                            <Button onClick={this.applyCostumeFilters}>Eφαρμογή</Button>
-                            <Button onClick={this.resetCostumeFilters}>Επαναφορα</Button>
-                            </Drawer>
+                        <br/><br/>
+                        <Divider/>
+                        <Button onClick={this.applyCostumeFilters}>Eφαρμογή</Button>                            
+                        <Button onClick={this.resetCostumeFilters}>Επαναφορα</Button>
+                        </Drawer>
+                        </div>
+                    <Tabs value={this.state.current_tab}
+                        onChange={this.handleTabChange}>
+                    <Tab label="ΚΟΣΤΟΥΜΙ"/>
+                    <Tab label="ΧΡΗΣΗ"/>
+                    <Tab label="ΘΕΑΤΡΙΚΗ ΠΑΡΑΣΤΑΣΗ"/>
+                    </Tabs>
+                   
+                    
+                    {this.state.current_tab===0 &&
+                    <div>
                             <Paper>
                             <Table className="table">
                                 <TableHead>
@@ -646,6 +648,7 @@ class Dashboard extends Component{
                         <UseForm 
                                 isOpen={this.state.isUseDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
+                                user={this.state.user.user_id}
                                 costumes={this.state.costume_data}
                                 uses={this.state.use_data}
                                 theatrical_plays={this.state.tp_data}
@@ -672,6 +675,7 @@ class Dashboard extends Component{
                             <TpForm
                                 isOpen={this.state.isTPDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
+                                user={this.state.user.user_id}
                                 theatrical_plays={this.state.tp_data}
                                 editing={this.state.editing}
                                 tp={this.state.tp}

@@ -78,8 +78,6 @@ class  CostumeForm extends Component{
             //Geosuggest
             location: '',
             location_select: '',
-            location_influence: '',
-            location_influence_select: '',
 
             //For validation reasons
             description_MAXlegnth: 300,
@@ -131,7 +129,6 @@ class  CostumeForm extends Component{
                 selectedTechniqueOption: this.props.costume[0].technique,
                 selectedTPOption: this.props.costume[0].tp_title,
                 location: this.props.costume[0].location,
-                location_influence: this.props.costume[0].location_influence,
             })
             if(this.props.uses){
                 for(var i=0; i<this.props.uses.length; i++){
@@ -200,27 +197,10 @@ class  CostumeForm extends Component{
         this.setState({ location_select });
         console.log(`Option selected:`, location_select);
     }
-    
-    handleLocationInfluenceChange = location_influence_select => {
-       this.setState({ location_influence_select });
-       console.log("HandleLocationChange:", this.state);
-    };
-    
-    handleLocationInfluenceSelect = (location_influence_select) => {
-        this.setState({location_influence_select });
-        console.log(`Option selected:`, location_influence_select);
-    }
         
     handleLocation(){
         if(this.state.location_select){
             this.state.location = this.state.location_select.description;
-            console.log(this.state);
-        }
-    }
-    
-    handleLocationInfluence(){            
-        if(this.state.location_influence_select){
-            this.state.location_influence = this.state.location_influence_select.description;
             console.log(this.state);
         }
     }
@@ -296,8 +276,6 @@ class  CostumeForm extends Component{
             //Geosuggest
             location: '',
             location_select: '',
-            location_influence: '',
-            location_influence_select: '',
 
             description_status: false,
             submit: false,
@@ -506,12 +484,10 @@ class  CostumeForm extends Component{
                                        
                                     <br/>
                                     <FormControl required className="FormControl">
-                                        <InputLabel id="demo-simple-select-required-label">Φύλο</InputLabel>
+                                        <InputLabel>Φύλο</InputLabel>
                                         <Select
                                         className="SelectContainer"
                                         required={true}
-                                        labelId="demo-mutiple-chip-label"
-                                        id="demo-mutiple-chip"
                                         multiple
                                         value={selectedSexOption}
                                         onChange={this.handleSexSelect}
@@ -534,12 +510,10 @@ class  CostumeForm extends Component{
                                     </FormControl>
                                     <br/>
                                     <FormControl required className="FormControl">
-                                        <InputLabel id="demo-simple-select-label">Υλικό</InputLabel>
+                                        <InputLabel>Υλικό</InputLabel>
                                         <Select
                                         className="SelectContainer"
                                         required={true}
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
                                         value={selectedMaterialOption}
                                         onChange={this.handleMaterialSelect}
                                         >
@@ -552,12 +526,10 @@ class  CostumeForm extends Component{
                                     </FormControl>
                                     <br/>
                                     <FormControl required className="FormControl">
-                                    <InputLabel id="demo-simple-select-label">Τεχνική</InputLabel>
+                                    <InputLabel>Τεχνική</InputLabel>
                                         <Select
                                         className="SelectContainer"
                                         required={true}
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
                                         value={selectedTechniqueOption}
                                         onChange={this.handleTechniqueSelect}
                                         >
@@ -594,23 +566,9 @@ class  CostumeForm extends Component{
                                     </FormControl>
                                     <br/>
                                     <FormControl className="FormControl">
-                                        <InputLabel>Χώρα/Περιοχή Επιρροής</InputLabel>
-                                        <Geosuggest
-                                            className="geosuggest"
-                                            placeholder="Αναζήτηση"
-                                            initialValue={this.state.location_influence}
-                                            ref={el=>this._geoSuggest=el}
-                                            onSuggestSelect={this.handleLocationInfluenceSelect}
-                                        />
-                                        {this.handleLocationInfluence()}
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl className="FormControl">
-                                    <InputLabel id="demo-simple-select-label">Θεατρικές Παραστάσεις</InputLabel>
+                                    <InputLabel>Θεατρικές Παραστάσεις</InputLabel>
                                         <Select
                                         className="SelectContainer"
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
                                         value={selectedTPOption}
                                         onChange={this.handleTPSelect}
                                         inputProps={{style: { fontSize: 14 }}}

@@ -1,3 +1,13 @@
+export const years = [{
+  value: '1800',
+},
+{
+  value: '2021',
+},
+{
+  value: '1802',
+}];
+
 export const sexs = [{
     label: 'Γυναίκα',
     value: 'Γυναίκα'
@@ -5,19 +15,15 @@ export const sexs = [{
   {
     label: 'Άντρας',
     value: 'Άντρας'
-    },
-    {
-      label: 'Κορίτσι',
-      value: 'Κορίτσι'
-    },
-    {
-      label: 'Αγόρι',
-      value: 'Αγόρι'
-    },
-    {
-      label: 'Βρέφος',
-      value: 'Βρέφος'
-}];
+  },
+  {
+    label: 'Κορίτσι',
+    value: 'Κορίτσι'
+  },
+  {
+    label: 'Αγόρι',
+    value: 'Αγόρι'
+  }];
 
 export const materials = [{
     label: 'Μετάξι',

@@ -24,11 +24,23 @@ import Geosuggest from 'react-geosuggest';
 import "../Geosuggest/Geosuggest.css";
 
 
-import {sexs, materials, techniques, use_categories} from "../../utils/options";
+import {sexs, materials, techniques, use_categories,years} from "../../utils/options";
 import "./Forms.css";
 
 import axios from 'axios';
 import { ninvoke } from 'q';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
+      width: 100,
+    },
+  },
+};
+
 
 class TpForm extends Component{
 
@@ -39,9 +51,11 @@ class TpForm extends Component{
             theatrical_play_id: '',
             name: '',
             theater: '',
-            date: '',
+            date: [],
             actors: '',
             director: '',
+            years: '',
+            user_id: '',
             submit: false,
             redirectToReferrer: false,
             ////////////////////////
@@ -50,28 +64,42 @@ class TpForm extends Component{
             error_missing_value: false,
             insert: false
         };
+        const year = (new Date('1800')).getFullYear();
+        this.state.years = Array.from(new Array(300),(val, index) => (index + year).toString());
         this.onChange = this.onChange.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState){
         if(prevState.insert){
             this.resetForm();
-            this.handleClose(false);
-            
         }
         if(this.props.editing && !prevProps.editing){
+            let d_arr;
+            if(this.props.tp.date.includes(",")){
+                d_arr = this.props.tp.date.split(",");
+            }
+            else if (this.props.tp.date===''){
+                d_arr = []
+            }
+            else{
+                d_arr = [this.props.tp.date]
+            }
             this.setState({
                 tp: this.props.tp,
                 name: this.props.tp.title,
                 theater: this.props.tp.theater,
-                date: this.props.tp.date,
                 actors: this.props.tp.actors,
                 director: this.props.tp.director,
+                date: d_arr,
                 theatrical_play_id: this.props.tp.theatrical_play_id,
                 tp_data: this.props.theatrical_plays
                 })
         }
-        console.log("Props", this.props)
+        if(this.props.user && !prevState.user_id){
+            this.setState({user_id: this.props.user});
+            
+        }
+        console.log("TP state", this.state)
     }
 
     onChange = ( evt ) => { 
@@ -79,9 +107,8 @@ class TpForm extends Component{
         console.log(this.state)
     };
 
-    handleCategorySelect = (evt) => {
-        this.setState({ selectedCategoryOption: evt.target.value });
-        console.log("Option selected:", this.state.selectedCategoryOption)
+    handleDateSelect = (evt) => {
+        this.setState({ date: evt.target.value });
     }
 
     handleClose(){
@@ -101,9 +128,13 @@ class TpForm extends Component{
     }
 
     handleUpdate(){
-        const data = { theatrical_play_id: this.state.theatrical_play_id, title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater};
-        axios.post('http://88.197.53.80/kostoumart-api//edit_tp', data)
-        //axios.post('http://localhost:8108/edit_tp', data)
+        let data = { theatrical_play_id: this.state.theatrical_play_id, title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater, userId: this.state.user_id};
+        console.log(this.state);
+        if(this.state.date.length===0){
+            data.date='';
+        }
+        //axios.post('http://88.197.53.80/kostoumart-api//edit_tp', data)
+        axios.post('http://localhost:8108/edit_tp', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -112,9 +143,12 @@ class TpForm extends Component{
     }
 
     handleInsert(){
-        let data ={title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater};
-        axios.post("http://88.197.53.80/kostoumart-api/tps", data)
-        //axios.post('http://localhost:8108/tps', data)
+        let data ={title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater, userId: this.state.user_id};
+        if(this.state.date.length===0){
+            data.date='';
+        }
+        //axios.post("http://88.197.53.80/kostoumart-api/tps", data)
+        axios.post('http://localhost:8108/tps', data)
         .then(res => {
             if(res.statusText == 'OK'){
                 this.createNotification('insert')
@@ -158,9 +192,10 @@ class TpForm extends Component{
             theatrical_play_id: '',
             name: '',
             theater: '',
-            date: '',
+            date: [],
             actors: '',
             director: '',
+            user_id:'',
             submit: false,
             redirectToReferrer: false,
             ////////////////////////
@@ -208,7 +243,7 @@ class TpForm extends Component{
 
     render(){
         const {name, theater, director, date} = this.state;
-
+        console.log(this.state)
         return(
             <div>
                 <NotificationContainer>{this.createNotification()}</NotificationContainer>
@@ -236,10 +271,29 @@ class TpForm extends Component{
                                 </FormControl>
                                 <br/>
                                 <FormControl className="FormControl">
-                                    <TextField 
-                                    label="Ημερομηνία" name="date" 
-                                    value={date} 
-                                    onChange={this.onChange}></TextField>
+                                    <InputLabel>Ημερομηνία</InputLabel>
+                                    <Select
+                                        multiple
+                                        label="select"
+                                        value={date}
+                                        onChange={this.handleDateSelect}
+                                        input={<Input id="select-multiple-chip" />}
+                                        renderValue={selected => (
+                                            <div>
+                                            {selected.map(label => (
+                                                <Chip key={label} label={label}/>
+                                            ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {
+                                            this.state.years.map((year, index) => (
+                                                <MenuItem key={`year${index}`} value={year}>
+                                                    {year}
+                                                </MenuItem>
+                                            ))}
+                                    </Select>
                                 </FormControl>
                                 <br/>
                             <FormControl className="FormControl">
