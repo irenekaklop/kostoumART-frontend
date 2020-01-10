@@ -52,18 +52,16 @@ const variantIcon = {
   };
   
 
-class  CostumeForm extends Component{
+class  AccessoryForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
             user_id: '',
-            costume: null,
+            accessory: null,
             name: '',
-            descr: '',
-            //Uses' data
-            uses_data: '',
-            //Theatrical Plays data
-            tps_data: null,
+            description: '',
+            usesData: '',
+            costumesData: '',
             //For backend insert
             actors: '',
             designer: '',
@@ -74,18 +72,16 @@ class  CostumeForm extends Component{
             selectedUseCategoryOption: '',
             selectedMaterialOption: '',
             selectedTechniqueOption: '',
-            selectedTPOption: '',
+            selectedCostumeOption: '',
             selectedDateOption: '',
             //Geosuggest
             location: '',
             location_select: '',
-
             //For validation reasons
             description_MAXlegnth: 300,
             description_status: false,
             submit: false,
             redirectToReferrer: false,
-
             /////////////////////////
             cond1: false,
             cond2: true,
@@ -110,35 +106,34 @@ class  CostumeForm extends Component{
         console.log("props", this.props);
         if(prevState.insert){
             this.resetForm();
-            
         }
         if(this.props.editing && !prevProps.editing){
             let sex;
-            if(this.props.costume[0].sex.includes(",")){
-                sex = this.props.costume[0].sex.split(",");
+            if(this.props.accessory.sex.includes(",")){
+                sex = this.props.accessory.sex.split(",");
             }
             else{
-                sex = [this.props.costume[0].sex];
+                sex = [this.props.accessory.sex];
             }
             this.setState({
-                costume: this.props.costume[0],
-                costume_id: this.props.costume[0].costume_id,
-                name: this.props.costume[0].costume_name,
-                descr: this.props.costume[0].description,
-                actors: this.props.costume[0].actors,
-                designer: this.props.costume[0].designer,
-                parts: this.props.costume[0].parts,
-                selectedDateOption: this.props.costume[0].date,
+                accessory: this.props.accessory,
+                costume_id: this.props.accessory.costume_id,
+                name: this.props.accessory.costume_name,
+                descr: this.props.accessory.description,
+                actors: this.props.accessory.actors,
+                designer: this.props.accessory.designer,
+                parts: this.props.accessory.parts,
+                selectedDateOption: this.props.accessory.date,
                 selectedSexOption: sex,
-                selectedUseOption: this.props.costume[0].use_name,
-                selectedMaterialOption: this.props.costume[0].material,
-                selectedTechniqueOption: this.props.costume[0].technique,
-                selectedTPOption: this.props.costume[0].tp_title,
-                location: this.props.costume[0].location,
+                selectedUseOption: this.props.accessory.use_name,
+                selectedMaterialOption: this.props.accessory.material,
+                selectedTechniqueOption: this.props.accessory.technique,
+                selectedCostumeOption: this.props.accessory.costume_name,
+                location: this.props.accessory.location,
             })
             if(this.props.uses){
                 for(var i=0; i<this.props.uses.length; i++){
-                    if(this.props.uses[i].useID===this.props.costume[0].useID){
+                    if(this.props.uses[i].useID===this.props.accessory.useID){
                         this.setState({
                             selectedUseCategoryOption: this.props.uses[i].use_category
                         })
@@ -178,9 +173,9 @@ class  CostumeForm extends Component{
     }
 
      /*For selection of theatrical plays*/
-     handleTPSelect = (evt) => {
-        this.setState({selectedTPOption: evt.target.value});
-        console.log(`Option selected:`, this.state.selectedTPOption);
+     handleCostumeSelect = (evt) => {
+        this.setState({selectedCostumeOption: evt.target.value});
+        console.log(`Option selected:`, this.state.selectedCostumeOption);
     }
 
     /*For mutli-selection of sex categories*/
@@ -236,7 +231,7 @@ class  CostumeForm extends Component{
         if(this.handleDuplicate()){
             return false;
         }
-        if(!this.state.location || !this.state.name || !this.state.descr|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
+        if(!this.state.location || !this.state.name || !this.state.description|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
             console.log("something is missing");
             this.createNotification("error-missing-value")
             return false;
@@ -271,10 +266,8 @@ class  CostumeForm extends Component{
 
     resetForm () {
         this.setState({
-            costume: null,
             name: '',
-            descr: '',
-            //For backend insert
+            description: '',
             actors: '',
             designer: '',
             parts: '',
@@ -284,16 +277,14 @@ class  CostumeForm extends Component{
             selectedUseCategoryOption: '',
             selectedMaterialOption: '',
             selectedTechniqueOption: '',
-            selectedTPOption: '',
+            selectedCostumeOption: '',
             selectedDateOption: '',
             //Geosuggest
             location: '',
             location_select: '',
-
             description_status: false,
             submit: false,
             redirectToReferrer: false,
-
             /////////////////////////
             cond1: false,
             cond2: false,
@@ -308,7 +299,7 @@ class  CostumeForm extends Component{
 
     /*Functions for description legnth and validation*/
     decription_legnth(){
-        return this.state.descr.length;
+        return this.state.description.length;
     }
 
     handleDuplicate() {
@@ -318,7 +309,7 @@ class  CostumeForm extends Component{
             if(this.state.name){
             if(c_list[i].costume_name === this.state.name){
                 if(this.props.editing){
-                    if(this.props.costume[0].costume_name === this.state.name){
+                    if(this.props.accessory.costume_name === this.state.name){
                         return false;
                     }
                 }
@@ -331,7 +322,7 @@ class  CostumeForm extends Component{
     }
 
     validateInputLength(){
-        if(this.state.descr && this.state.descr.length>300){
+        if(this.state.description && this.state.description.length>300){
             console.log("too big or too small description");
             // Snackbar error for too big description
             this.createNotification("error-description")
@@ -385,10 +376,10 @@ class  CostumeForm extends Component{
         const {selectedMaterialOption} = this.state;
         //For selection of Technique
         const {selectedTechniqueOption} = this.state;
-        //For selection of Theatrical Plays
-        const {selectedTPOption} = this.state;
+        //For selection of Costumes
+        const {selectedCostumeOption} = this.state;
 
-        const {name, descr, designer, actors, parts} = this.state;
+        const {name, description, designer, actors, parts} = this.state;
 
         const u_options = [];
         const p_options = [];
@@ -406,11 +397,6 @@ class  CostumeForm extends Component{
                 }
             });
         }}
-    
-        /*For theatrical Plays*/
-        for (var key in this.state.tps_data){
-            p_options.push({label: this.state.tps_data[key].title, value:  this.state.tps_data[key].title}); 
-        }
 
         console.log(u_options);
 
@@ -432,7 +418,7 @@ class  CostumeForm extends Component{
                             
                             <form onSubmit={this.submit}>
                                 <div className="FormContent">
-                                    <div className="FormTitle">Kουστούμι</div>
+                                    <div className="FormTitle">Συνοδευτικό</div>
                                     <br/>
                                     <FormControl className="FormControl">
                                         <TextField
@@ -447,8 +433,8 @@ class  CostumeForm extends Component{
                                     <FormControl className="FormControl">
                                         <TextField
                                             label="Περιγραφή"
-                                            name="descr"
-                                            value={descr}
+                                            name="description"
+                                            value={description}
                                             onChange={this.onChange}
                                             margin="none"
                                             multiline
@@ -460,7 +446,7 @@ class  CostumeForm extends Component{
                                     </FormControl>
                                     <br/>
                                     <FormControl required className="FormControl">
-                                        <InputLabel id="demo-simple-select-required-label">Κατηγορία χρήσης</InputLabel>
+                                        <InputLabel>Κατηγορία χρήσης</InputLabel>
                                         <Select
                                         className="SelectContainer"
                                         required={true}
@@ -596,16 +582,16 @@ class  CostumeForm extends Component{
                                     </FormControl>
                                     <br/>
                                     <FormControl className="FormControl">
-                                    <InputLabel>Θεατρικές Παραστάσεις</InputLabel>
+                                    <InputLabel>Κοστούμι</InputLabel>
                                         <Select
                                         className="SelectContainer"
-                                        value={selectedTPOption}
-                                        onChange={this.handleTPSelect}
+                                        value={selectedCostumeOption}
+                                        onChange={this.handleCostumeSelect}
                                         inputProps={{style: { fontSize: 14 }}}
                                         >
-                                            {this.props.theatrical_plays ? (this.props.theatrical_plays.map(tp => (
-                                                <MenuItem key={tp.theatrical_play_id} value={tp.title}>
-                                                    {tp.title}
+                                            {this.props.costumes ? (this.props.costumes.map(costume => (
+                                                <MenuItem key={costume.costume_id} value={costume.costume_name}>
+                                                    {costume.costume_name}
                                                 </MenuItem>
                                             ))) : <MenuItem>No options</MenuItem>}   
                                         </Select>
@@ -641,4 +627,4 @@ class  CostumeForm extends Component{
     }
 }
 
-export default CostumeForm;
+export default AccessoryForm;

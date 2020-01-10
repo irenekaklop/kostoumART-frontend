@@ -31,6 +31,7 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import axios from 'axios';
 import CostumeForm from '../Forms/CostumeForm.js';
+import AccessoryForm from '../Forms/AccessoryForm.js';
 import UseForm from '../Forms/UseForm.js';
 import TpForm from '../Forms/TpForm.js';
 import ConfirmationDialog from '../Dashboard/ConfirmationDialog.js';
@@ -38,7 +39,7 @@ import ConfirmationDialog from '../Dashboard/ConfirmationDialog.js';
 import "../../styles/Dashboard.css"
 
 import jwt_decode from 'jwt-decode';
-import { use_categories, techniques, sexs } from '../../utils/options.js';
+import { use_categories, techniques, sexs, materials } from '../../utils/options.js';
 
 const filterOptions = createFilterOptions({
     matchFrom: 'start',
@@ -50,6 +51,14 @@ class Dashboard extends Component{
 
     constructor(props) {
         super(props);
+        this.events = [
+            "load",
+            "mousemove",
+            "mousedown",
+            "click",
+            "scroll",
+            "keypress"
+        ];
         this.state = {
             current_tab: 0,
             //Costumes
@@ -58,16 +67,20 @@ class Dashboard extends Component{
             use_data: [],
             //TPs
             tp_data:[],
+            //Accessories
+            accessories: [],
             //For Insert Form
             isCostumeDialogOpen: false,
             isUseDialogOpen: false,
             isTPDialogOpen: false,
             isConfirmationDialogOpen: false,
+            isAccessoryDialogOpen: false,
             //For Editing
             editing: false,
             costume: null,
             use: null,
             tp: null,
+            accessory: null,
             //Filters
             current_costumes: [],
             filterDrawerOpen: false,
@@ -83,9 +96,18 @@ class Dashboard extends Component{
             },
             redirectToReferrer: false      
         }
+
+        this.logOut = this.logOut.bind(this);
+        this.resetTimeout = this.resetTimeout.bind(this);
+
+        //Set Timeout in case of inactivity 
+        for (var i in this.events) {
+            window.addEventListener(this.events[i], this.resetTimeout);
+          }
+      
+        this.setTimeout();
     }
 
-    /*Secure way to getData*/
     componentDidMount(){
         const token = localStorage.usertoken
         if(token){
@@ -99,10 +121,36 @@ class Dashboard extends Component{
             this.get_uses();
             this.get_theatrical_plays();
             this.getCostumes(decoded);
+            this.getAccessories();
         }
         else{
             this.setState({redirectToReferrer: true})
         }
+    }
+
+    //Functions for auto-logout
+    clearTimeout() {
+        if (this.logoutTimeout) clearTimeout(this.logoutTimeout);
+    }
+    
+    //Set a Timeout after one hour
+    setTimeout() {
+        this.logoutTimeout = setTimeout(this.logOut, 36 * 100000);
+    }
+    
+    resetTimeout() {
+        this.clearTimeout();
+        this.setTimeout();
+    }
+    
+    logOut(e) {
+        localStorage.removeItem('usertoken')
+        this.clearTimeout();
+    
+        for (var i in this.events) {
+          window.removeEventListener(this.events[i], this.resetTimeout);
+        }
+        this.props.history.push({pathname: `/auth`, state: { detail: 'logout' }})
     }
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
@@ -122,11 +170,6 @@ class Dashboard extends Component{
         console.log(`Option selected:`, evt.target);
     }
 
-    logOut(e) {
-        localStorage.removeItem('usertoken')
-        this.props.history.push(`/auth`)
-    }
-
     createNotification(type){
         switch (type) {
             case "error":
@@ -138,6 +181,10 @@ class Dashboard extends Component{
             case "delete-success":
                 return(
                     <NotificationContainer>{ NotificationManager.success('Η εγγραφή διαγράφηκε','Success!',2000) }</NotificationContainer>
+                )
+            case 'logout':
+                return(
+                <NotificationContainer>{NotificationManager.warning("Αποσύνδεση")}</NotificationContainer>
                 )
         };
     }
@@ -196,6 +243,17 @@ class Dashboard extends Component{
         )
     }
 
+    getAccessories = () => {
+         //axios.get("http://88.197.53.80/kostoumart-api/accessories")
+         axios.get("http://localhost:8108/accessories")
+         .then(res => {
+             const accessories = res.data.response;
+             this.setState({ accessories });
+             console.log(this.state);
+         }
+         )
+    }
+
     get_costume(index){
         //axios.get('http://88.197.53.80/kostoumart-api/costumes/')
         axios.get("http://localhost:8108/costumes/"+index)
@@ -234,6 +292,10 @@ class Dashboard extends Component{
             this.get_theatrical_plays();
             this.setState({isTPDialogOpen: false});
         }
+        else if(this.state.isAccessoryDialogOpen){
+            this.getAccessories();
+            this.setState({isAccessoryDialogOpen: false})
+        }
     }
 
     handleCloseConfirmationDialog = () => {
@@ -256,10 +318,10 @@ class Dashboard extends Component{
         if(this.state.current_tab===0){
             this.handleCostumeDelete(index);
         }
-        else if(this.state.current_tab===1){
+        else if(this.state.current_tab===2){
             this.handleUseDelete(index);
         }
-        else if(this.state.current_tab===2){
+        else if(this.state.current_tab===3){
             this.handleTPDelete(index);
         }
     }
@@ -270,9 +332,12 @@ class Dashboard extends Component{
             this.getCostumes();
         }
         else if(value===1){
-            this.get_uses();
+            this.getAccessories();
         }
         else if(value===2){
+            this.get_uses();
+        }
+        else if(value===3){
             this.get_theatrical_plays();
         }
         this.setState({
@@ -296,6 +361,12 @@ class Dashboard extends Component{
     handleAddTP = () => {
         this.setState({
             isTPDialogOpen: true,
+        })
+    }
+
+    handleAddAccessory = () => {
+        this.setState({
+            isAccessoryDialogOpen: true,
         })
     }
 
@@ -338,6 +409,21 @@ class Dashboard extends Component{
         }
     }
 
+    handleAccessoryEditing(index){
+        for(var i=0; i < this.state.accessories.length; i++){
+            if(this.state.accessories[i].accessory_id === index){
+                //axios.get('http://88.197.53.80/kostoumart-api/accessories/'+index)
+                axios.get("http://localhost:8108/accessories/"+index)
+                .then(res => {
+                    const accessory = res.data.response;
+                    this.setState({ accessory: accessory, editing: true,
+                        isAccessoryDialogOpen: true,});
+                }
+                )
+            }
+        }
+    }
+
     handleCostumeDelete(index){
         //axios.delete("http://88.197.53.80/kostoumart-api/costumes/", {params: { name: index }})
         axios.delete("http://localhost:8108/costumes/", {params: { name: index }})
@@ -376,10 +462,22 @@ class Dashboard extends Component{
         })
     }
 
+    handleAccessoryDelete(index){
+        //axios.delete("http://88.197.53.80/kostoumart-api/accessory/",{params: { id: index }})
+        axios.delete("http://localhost:8108/accessory/",{params: { id: index }} )
+        .then(res=> {
+            if(res.statusText ==="OK"){
+                let ret=this.createNotification("delete-success");
+                this.getAccessories();
+                return ret;
+            }
+        })
+    }
+
     handleConfirmationForDelete(index){
         console.log("Index", index);
         //Check if this index is a foreign key in costumes' list before delete
-        if(this.state.current_tab===1){
+        if(this.state.current_tab===2){
             for(var i=0; i<this.state.costume_data.length; i++){
                 if(this.state.costume_data[i].useID){
                     if(this.state.costume_data[i].useID===index){
@@ -390,7 +488,7 @@ class Dashboard extends Component{
             }
             this.handleUseDelete(index);
         }
-        else if(this.state.current_tab===2){
+        else if(this.state.current_tab===3){
             for(var i=0; i<this.state.costume_data.length; i++){
                 if(this.state.costume_data[i].theatrical_play_id){
                     if(this.state.costume_data[i].theatrical_play_id===index){
@@ -406,17 +504,17 @@ class Dashboard extends Component{
 
     renderTableCostumesData() {
         return this.state.current_costumes.map((costume, index) => {
-            const { costume_id, use_name, costume_name, description, sex, material, technique, location, location_influence, designer, tp_title, actors, parts } = costume //destructuring
+            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, parts } = costume //destructuring
             return (
                 <TableRow key={costume_id}>
                 <TableCell>{costume_name}</TableCell>
                 <TableCell>{description}</TableCell>
+                <TableCell>{date}</TableCell>
                 <TableCell>{sex}</TableCell>
                 <TableCell>{use_name}</TableCell>
                 <TableCell>{material}</TableCell>
                 <TableCell>{technique}</TableCell>
                 <TableCell>{location}</TableCell>
-                <TableCell>{location_influence}</TableCell>
                 <TableCell>{designer}</TableCell>
                 <TableCell>{tp_title}</TableCell>
                 <TableCell>{actors}</TableCell>
@@ -468,6 +566,32 @@ class Dashboard extends Component{
                 <TableCell>
                     <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(theatrical_play_id);}}></DeleteIcon></IconButton>
                     <IconButton><EditIcon onClick={() => this.handleTPEditing(theatrical_play_id)}/></IconButton>
+                </TableCell>
+                </TableRow>
+            )
+        })
+    }
+
+    renderTableAccessoriesData() {
+        return this.state.accessories.map((accessory, index) => {
+            const {accessory_id, name, description, date, sex, material, technique, location, designer, parts, actors, costume_name, use_name, user} = accessory;
+            return (
+                <TableRow key={accessory_id}>
+                <TableCell>{name}</TableCell>
+                <TableCell>{description}</TableCell>
+                <TableCell>{costume_name}</TableCell>
+                <TableCell >{date}</TableCell>
+                <TableCell>{use_name}</TableCell>
+                <TableCell>{sex}</TableCell>
+                <TableCell>{material}</TableCell>
+                <TableCell>{technique}</TableCell>
+                <TableCell>{location}</TableCell>
+                <TableCell>{designer}</TableCell>
+                <TableCell>{parts}</TableCell>
+                <TableCell>{actors}</TableCell>
+                <TableCell>
+                    <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}></DeleteIcon></IconButton>
+                    <IconButton><EditIcon onClick={() => this.handleTPEditing(accessory_id)}/></IconButton>
                 </TableCell>
                 </TableRow>
             )
@@ -587,6 +711,7 @@ class Dashboard extends Component{
                     <Tabs value={this.state.current_tab}
                         onChange={this.handleTabChange}>
                     <Tab label="ΚΟΣΤΟΥΜΙ"/>
+                    <Tab label="ΣΥΝΟΔΕΥΤΙΚΟ"/>
                     <Tab label="ΧΡΗΣΗ"/>
                     <Tab label="ΘΕΑΤΡΙΚΗ ΠΑΡΑΣΤΑΣΗ"/>
                     </Tabs>
@@ -600,16 +725,16 @@ class Dashboard extends Component{
                                     <TableRow>
                                     <TableCell><strong>Τίτλος</strong></TableCell>
                                     <TableCell><strong>Περιγραφή</strong></TableCell>
+                                    <TableCell><strong>Εποχή</strong></TableCell>
                                     <TableCell><strong>Φύλο</strong></TableCell>
                                     <TableCell><strong>Χρήση</strong></TableCell>
                                     <TableCell><strong>Υλικό κατασκευής</strong></TableCell>
                                     <TableCell><strong>Τεχνική Κατασκευής</strong></TableCell>
                                     <TableCell><strong>Περιοχή Αναφοράς</strong></TableCell>
-                                    <TableCell><strong>Χώρα Επιρροής</strong></TableCell>
                                     <TableCell><strong>Σχεδιαστής</strong></TableCell>
                                     <TableCell><strong>Θεατρικές Παραστάσεις</strong></TableCell>
                                     <TableCell><strong>Ρόλος</strong></TableCell>
-                                    <TableCell><strong>Ηθοποιός</strong></TableCell>
+                                    <TableCell><strong>Ηθοποιοί</strong></TableCell>
                                     <TableCell></TableCell>
                                     </TableRow> 
                                 </TableHead>
@@ -631,6 +756,41 @@ class Dashboard extends Component{
                         </div>
                     }
                     {this.state.current_tab===1 &&
+                    <Paper>
+                        <Table className="table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell><strong>Όνομα</strong></TableCell>
+                                    <TableCell><strong>Περιγραφή</strong></TableCell>
+                                    <TableCell><strong>Κοστούμι</strong></TableCell>
+                                    <TableCell><strong>Εποχή</strong></TableCell>
+                                    <TableCell><strong>Χρήση</strong></TableCell>
+                                    <TableCell><strong>Φύλο</strong></TableCell>
+                                    <TableCell><strong>Ύλικο</strong></TableCell>
+                                    <TableCell><strong>Τεχνική</strong></TableCell>
+                                    <TableCell><strong>Περιοχή Αναφοράς</strong></TableCell>
+                                    <TableCell><strong>Σχεδιαστής</strong></TableCell>
+                                    <TableCell><strong>Ρόλοι</strong></TableCell>
+                                    <TableCell><strong>Ηθοποιοί</strong></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>{this.renderTableAccessoriesData()} </TableBody>
+                        </Table>
+                        <IconButton><AddIcon onClick={() => this.handleAddAccessory()}></AddIcon></IconButton>
+                        <AccessoryForm
+                            isOpen={this.state.isAccessoryDialogOpen}
+                            handleClose={this.handleCloseDialog.bind(this)}
+                            user={this.state.user.user_id}
+                            accessories={this.state.accessories}
+                            editing={this.state.editing}
+                            accessory={this.state.accessory}
+                            uses={this.state.use_data}
+                            costumes={this.state.costume_data}
+                        />
+                    </Paper>
+                    }
+                    {this.state.current_tab===2 &&
                         <Paper>
                             <Table className="table">
                             <TableHead>
@@ -656,7 +816,7 @@ class Dashboard extends Component{
                                 use={this.state.use}></UseForm>
                         </Paper>
                     }
-                    {this.state.current_tab===2 &&
+                    {this.state.current_tab===3 &&
                         <Paper>
                             <Table className="table">
                             <TableHead>
