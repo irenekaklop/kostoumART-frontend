@@ -25,6 +25,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
@@ -41,11 +43,7 @@ import "../../styles/Dashboard.css"
 import jwt_decode from 'jwt-decode';
 import { use_categories, techniques, sexs, materials } from '../../utils/options.js';
 
-const filterOptions = createFilterOptions({
-    matchFrom: 'start',
-    stringify: option => option.costume_name,
-  });
-  
+import _ from 'lodash'
 
 class Dashboard extends Component{
 
@@ -94,7 +92,12 @@ class Dashboard extends Component{
                 email: '',
                 role: null,
             },
-            redirectToReferrer: false      
+            redirectToReferrer: false,     
+            //Sorting
+            column: null,
+            direction: null,
+            use_data: [],
+
         }
 
         this.logOut = this.logOut.bind(this);
@@ -168,6 +171,65 @@ class Dashboard extends Component{
     handleSexSelect = (evt) => {
         this.setState({ sexOption: evt.target.value});
         console.log(`Option selected:`, evt.target);
+    }
+
+    handleSort = (clickedColumn) => () => {
+        const { column, use_data, current_costumes, tp_data, accessories, direction } = this.state
+    
+        if (column !== clickedColumn) {
+            switch(this.state.current_tab){
+                case 0:
+                    this.setState({
+                        column: clickedColumn,
+                        current_costumes: _.sortBy(current_costumes, [clickedColumn]),
+                        direction: 'ascending',
+                      })
+                case 1:
+                    this.setState({
+                        column: clickedColumn,
+                        accessories: _.sortBy(accessories, [clickedColumn]),
+                        direction: 'ascending',
+                      })
+                case 2:
+                    this.setState({
+                        column: clickedColumn,
+                        use_data: _.sortBy(use_data, [clickedColumn]),
+                        direction: 'ascending',
+                      })
+                case 3:
+                    this.setState({
+                        column: clickedColumn,
+                        tp_data: _.sortBy(tp_data, [clickedColumn]),
+                        direction: 'ascending',
+                      })
+                      
+                }
+            return;
+        }
+        
+        switch(this.state.current_tab){
+            case 0:
+                this.setState({
+                    current_costumes: current_costumes.reverse(),
+                    direction: direction === 'ascending' ? 'descending' : 'ascending',
+                })
+            case 1:
+                this.setState({
+                    accessories: accessories.reverse(),
+                    direction: direction === 'ascending' ? 'descending' : 'ascending',
+                  })
+            case 2:
+                this.setState({
+                    use_data: use_data.reverse(),
+                    direction: direction === 'ascending' ? 'descending' : 'ascending',
+                })
+            case 3:
+                this.setState({
+                    tp_data: tp_data.reverse(),
+                    direction: direction === 'ascending' ? 'descending' : 'ascending',
+                })
+
+        }
     }
 
     createNotification(type){
@@ -517,8 +579,8 @@ class Dashboard extends Component{
                 <TableCell>{location}</TableCell>
                 <TableCell>{designer}</TableCell>
                 <TableCell>{tp_title}</TableCell>
-                <TableCell>{actors}</TableCell>
                 <TableCell>{parts}</TableCell>
+                <TableCell>{actors}</TableCell>
                 <TableCell>
                     <IconButton><DeleteIcon onClick={()=>{this.handleCostumeDelete(costume_name);}}></DeleteIcon> </IconButton>
                     <IconButton><EditIcon onClick={() => this.handleCostumeEditing(costume_id)}/></IconButton></TableCell>
@@ -635,10 +697,15 @@ class Dashboard extends Component{
 
     render() {
         console.log("State", this.state)
+
+        const { column, use_data, direction } = this.state
+
         if (this.state.redirectToReferrer) {
             return <Redirect to="/auth" />
         }
+
         const {filterDrawerOpen, useCategoryOption, techniqueOption, sexOption} = this.state;
+        const {columnToSort, sortDirection} = this.state;
         return (
             <React.Fragment>
                 <div className="LogoutContainer">
@@ -723,18 +790,43 @@ class Dashboard extends Component{
                             <Table className="table">
                                 <TableHead>
                                     <TableRow>
-                                    <TableCell><strong>Τίτλος</strong></TableCell>
-                                    <TableCell><strong>Περιγραφή</strong></TableCell>
-                                    <TableCell><strong>Εποχή</strong></TableCell>
-                                    <TableCell><strong>Φύλο</strong></TableCell>
-                                    <TableCell><strong>Χρήση</strong></TableCell>
-                                    <TableCell><strong>Υλικό κατασκευής</strong></TableCell>
-                                    <TableCell><strong>Τεχνική Κατασκευής</strong></TableCell>
-                                    <TableCell><strong>Περιοχή Αναφοράς</strong></TableCell>
-                                    <TableCell><strong>Σχεδιαστής</strong></TableCell>
-                                    <TableCell><strong>Θεατρικές Παραστάσεις</strong></TableCell>
-                                    <TableCell><strong>Ρόλος</strong></TableCell>
-                                    <TableCell><strong>Ηθοποιοί</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'costume_name' ? direction : null}
+                                    onClick={this.handleSort('costume_name')}>
+                                    <strong>Τίτλος</strong> 
+                                    </TableCell>
+                                    <TableCell
+                                    sorted={column === 'descr' ? direction : null}
+                                    onClick={this.handleSort('descr')}><strong>Περιγραφή</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'date' ? direction : null}
+                                    onClick={this.handleSort('date')}><strong>Εποχή</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'sex' ? direction : null}
+                                    onClick={this.handleSort('sex')}><strong>Φύλο</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'use_name' ? direction : null}
+                                    onClick={this.handleSort('use_name')}><strong>Χρήση</strong></TableCell>
+                                    <TableCell sorted={column === 'material' ? direction : null}
+                                    onClick={this.handleSort('material')}><strong>Υλικό κατασκευής</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'technique' ? direction : null}
+                                    onClick={this.handleSort('technique')}><strong>Τεχνική Κατασκευής</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'location' ? direction : null}
+                                    onClick={this.handleSort('location')}><strong>Περιοχή Αναφοράς</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'designer' ? direction : null}
+                                    onClick={this.handleSort('designer')}><strong>Σχεδιαστής</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'tp_title' ? direction : null}
+                                    onClick={this.handleSort('tp_title')}><strong>Θεατρικές Παραστάσεις</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'parts' ? direction : null}
+                                    onClick={this.handleSort('parts')}><strong>Ρόλος</strong></TableCell>
+                                    <TableCell
+                                    sorted={column === 'actors' ? direction : null}
+                                    onClick={this.handleSort('actors')}><strong>Ηθοποιοί</strong></TableCell>
                                     <TableCell></TableCell>
                                     </TableRow> 
                                 </TableHead>
@@ -795,11 +887,25 @@ class Dashboard extends Component{
                             <Table className="table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell><strong>Όνομα Δραστηριότητας</strong></TableCell>
-                                    <TableCell><strong>Κατηγορία Χρήσης</strong></TableCell>
-                                    <TableCell><strong>Περιγραφή</strong></TableCell>
-                                    <TableCell><strong>Έθιμα</strong></TableCell>
-                                    <TableCell></TableCell>
+                                <TableCell
+                                sorted={column === 'name' ? direction : null}
+                                onClick={this.handleSort('name')}>
+                                <strong>Όνομα</strong> 
+                                </TableCell>
+                                <TableCell
+                                sorted={column === 'use_category' ? direction : null}
+                                onClick={this.handleSort('use_category')}>
+                                <strong>Κατηγορία Χρήσης</strong></TableCell>
+                                <TableCell
+                                sorted={column === 'description' ? direction : null}
+                                onClick={this.handleSort('description')}>
+                                <strong>Περιγραφή</strong></TableCell>
+                                <TableCell
+                                sorted={column === 'customs' ? direction : null}
+                                onClick={this.handleSort('customs')}>
+                                <strong>Έθιμα</strong>
+                                </TableCell>
+                                <TableCell></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>{this.renderTableUsesData()}</TableBody>
@@ -821,7 +927,8 @@ class Dashboard extends Component{
                             <Table className="table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell><strong>Όνομα Παράστασης</strong></TableCell>
+                                    <TableCell sorted={column === 'title' ? direction : null}
+                                    onClick={this.handleSort('title')}><strong>Όνομα Παράστασης</strong></TableCell>
                                     <TableCell><strong>Χρονολογία</strong></TableCell>
                                     <TableCell><strong>Ηθοποιοί</strong></TableCell>
                                     <TableCell><strong>Σκηνοθέτης</strong></TableCell>
