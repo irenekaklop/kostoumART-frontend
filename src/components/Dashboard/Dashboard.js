@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
 import { Paper, Button, TextField, Drawer, Divider, MenuItem, InputLabel, Select} from '@material-ui/core';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
@@ -44,6 +42,9 @@ import jwt_decode from 'jwt-decode';
 import { use_categories, techniques, sexs, materials } from '../../utils/options.js';
 
 import _ from 'lodash'
+
+import Header from '../Shared/Header.js';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 class Dashboard extends Component{
 
@@ -388,7 +389,7 @@ class Dashboard extends Component{
         }
     }
 
-    handleTabChange = (event, value) => {
+    handleTabChange = (value) => {
         //Refresh Tables
         if(value===0){
             this.getCostumes();
@@ -706,85 +707,133 @@ class Dashboard extends Component{
 
         const {filterDrawerOpen, useCategoryOption, techniqueOption, sexOption} = this.state;
         const {columnToSort, sortDirection} = this.state;
+
         return (
             <React.Fragment>
-                <div className="LogoutContainer">
-                    <p className="LogoutButton"
-                    onClick={() => this.logOut()}              
-                    >
-                    Αποσύνδεση
-                    </p>
-                </div>
-                <NotificationContainer></NotificationContainer>
-                <div className="root">
-                    <div className="FilterButton">
-                        <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={this.handleDrawerOpen}
-                        edge="start">
-                        <FilterListIcon></FilterListIcon>
-                        </IconButton>
+                <NotificationContainer/>
+                <Header 
+                    name={this.state.appName}
+                    email={this.state.user.email}
+                    logOut={this.logOut.bind(this)}>
+                </Header>
+               
+                <div>
+                    <svg class="Ellipse_1">
+		               
+                        <ellipse fill="rgba(255,222,23,1)" id="Ellipse_1" rx="29.06102180480957" ry="29.06102180480957" cx="29.06102180480957" cy="29.06102180480957">
+		                </ellipse>
+                        <IconButton onClick={this.handleDrawerOpen}></IconButton>
                         <Drawer
                             className="Drawer"
                             variant="persistent"
                             anchor="left"
                             open={filterDrawerOpen}
                         >
-                        <div>
-                            <IconButton onClick={this.handleDrawerClose}>
-                                {this.state.filterDrawerOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                            </IconButton>
-                        </div>
-                        <Divider/>
-                        <p>Filters</p>
-                        <Divider/>
-                        <br/>
-                        <InputLabel>Τεχνική</InputLabel>
-                            <Select
-                                className="SelectContainer"
-                                required={true}
-                                onChange={this.handleTechniqueSelect}
-                                value={techniqueOption}
-                                >
-                                    {techniques.map( technique => (
-                                        <MenuItem key={technique.label} value={technique.label}>
-                                            {technique.label}
-                                        </MenuItem>
-                                    ))} 
-                            </Select>
-                        <br/>
-                        <Divider/>
-                        <br/>
-                        <InputLabel>Φύλο</InputLabel>
-                            <Select
-                                className="SelectContainer"
-                                required={true}
-                                onChange={this.handleSexSelect}
-                                value={sexOption}
-                                >
-                                    {sexs.map( sex => (
-                                        <MenuItem key={sex.label} value={sex.label}>
-                                            {sex.label}
-                                        </MenuItem>
-                                    ))} 
-                            </Select>
-                        <br/><br/>
-                        <Divider/>
-                        <Button onClick={this.applyCostumeFilters}>Eφαρμογή</Button>                            
-                        <Button onClick={this.resetCostumeFilters}>Επαναφορα</Button>
+                            <div>
+                                <IconButton onClick={this.handleDrawerClose}>
+                                    {this.state.filterDrawerOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                                </IconButton>
+                            </div>
+                            <Divider/>
+                            <p>Filters</p>
+                            <Divider/>
+                            <br/>
+                            <InputLabel>Τεχνική</InputLabel>
+                                <Select
+                                    className="SelectContainer"
+                                    required={true}
+                                    onChange={this.handleTechniqueSelect}
+                                    value={techniqueOption}
+                                    >
+                                        {techniques.map( technique => (
+                                            <MenuItem key={technique.label} value={technique.label}>
+                                                {technique.label}
+                                            </MenuItem>
+                                        ))} 
+                                </Select>
+                            <br/>
+                            <Divider/>
+                            <br/>
+                            <InputLabel>Φύλο</InputLabel>
+                                <Select
+                                    className="SelectContainer"
+                                    required={true}
+                                    onChange={this.handleSexSelect}
+                                    value={sexOption}
+                                    >
+                                        {sexs.map( sex => (
+                                            <MenuItem key={sex.label} value={sex.label}>
+                                                {sex.label}
+                                            </MenuItem>
+                                        ))} 
+                                </Select>
+                            <br/><br/>
+                            <Divider/>
+                            <Button onClick={this.applyCostumeFilters}>Eφαρμογή</Button>                            
+                            <Button onClick={this.resetCostumeFilters}>Επαναφορα</Button>
                         </Drawer>
-                        </div>
-                    <Tabs value={this.state.current_tab}
-                        onChange={this.handleTabChange}>
-                    <Tab label="ΚΟΣΤΟΥΜΙ"/>
-                    <Tab label="ΣΥΝΟΔΕΥΤΙΚΟ"/>
-                    <Tab label="ΧΡΗΣΗ"/>
-                    <Tab label="ΘΕΑΤΡΙΚΗ ΠΑΡΑΣΤΑΣΗ"/>
-                    </Tabs>
-                   
-                    
-                    {this.state.current_tab===0 &&
+	                </svg>
+                    <svg class="Ellipse_2">
+                        <ellipse fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_2" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
+                        </ellipse>
+                    </svg>
+                    <svg class="Ellipse_3">
+                        <ellipse fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_3" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
+                        </ellipse>
+                    </svg>
+                    <svg class="Path_3" viewBox="2136.044 -1141.338 10.654 5.373">
+                        <path fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_3" d="M 2144.010986328125 -1135.964965820312 C 2145.4951171875 -1135.964965820312 2146.697998046875 -1137.16796875 2146.697998046875 -1138.651000976562 C 2146.697998046875 -1140.135009765625 2145.4951171875 -1141.338012695312 2144.010986328125 -1141.338012695312 L 2138.73095703125 -1141.338012695312 C 2137.2470703125 -1141.338012695312 2136.0439453125 -1140.135009765625 2136.0439453125 -1138.651000976562 C 2136.0439453125 -1137.16796875 2137.2470703125 -1135.964965820312 2138.73095703125 -1135.964965820312 L 2144.010986328125 -1135.964965820312 Z">
+                        </path>
+                    </svg>
+                    <svg class="Path_4" viewBox="2117.19 -1157.051 10.654 5.374">
+                        <path fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_4" d="M 2119.876953125 -1151.677001953125 C 2118.39306640625 -1151.677001953125 2117.18994140625 -1152.880004882812 2117.18994140625 -1154.364013671875 C 2117.18994140625 -1155.848022460938 2118.39306640625 -1157.051025390625 2119.876953125 -1157.051025390625 L 2125.156982421875 -1157.051025390625 C 2126.64111328125 -1157.051025390625 2127.843994140625 -1155.848022460938 2127.843994140625 -1154.364013671875 C 2127.843994140625 -1152.880004882812 2126.64111328125 -1151.677001953125 2125.156982421875 -1151.677001953125 L 2119.876953125 -1151.677001953125 Z">
+                        </path>
+                    </svg>
+                    <svg class="Rectangle_8">
+                        <rect fill="rgba(255,222,23,1)" id="Rectangle_8" rx="0" ry="0" x="0" y="0" width="21.327" height="411.419">
+                        </rect>
+                    </svg>
+                    <div id="FILTERS">
+                        <span>FILTERS</span>
+                    </div>
+                    <div id="Tailoring_Times">
+                        <span>Tailoring Times</span>
+                    </div>
+                    <div id="costumART">
+                        <span>costumART</span>
+                    </div>
+                </div>
+                
+                <Tabs 
+                selectedIndex={this.state.current_tab}
+                onSelect={this.handleTabChange}>
+                    <TabList>
+                        <Tab>
+                            <div id="_________">
+                                <span>Κουστούμι</span>
+                            </div>
+                        </Tab>
+                        <Tab>
+                            <div id="_____">
+                                <span>Χρήση</span>
+                            </div>
+                        </Tab>
+                        <Tab>
+                            <div id="__________________">
+                                <span>Θεατρική παράσταση</span>
+                            </div>
+                        </Tab>
+                    </TabList>
+                
+                    <TabPanel className="Tabs">
+                    <h2>Any content {this.state.current_tab}</h2>
+                    </TabPanel>
+                    <TabPanel>
+                    <h2>Any content {this.state.current_tab}</h2>
+                    </TabPanel>
+                </Tabs>
+
+                {this.state.current_tab===0 &&
                     <div>
                             <Paper>
                             <Table className="table">
@@ -847,7 +896,7 @@ class Dashboard extends Component{
                             </Paper>
                         </div>
                     }
-                    {this.state.current_tab===1 &&
+                {this.state.current_tab===1 &&
                     <Paper>
                         <Table className="table">
                             <TableHead>
@@ -882,7 +931,7 @@ class Dashboard extends Component{
                         />
                     </Paper>
                     }
-                    {this.state.current_tab===2 &&
+                {this.state.current_tab===2 &&
                         <Paper>
                             <Table className="table">
                             <TableHead>
@@ -922,7 +971,7 @@ class Dashboard extends Component{
                                 use={this.state.use}></UseForm>
                         </Paper>
                     }
-                    {this.state.current_tab===3 &&
+                {this.state.current_tab===3 &&
                         <Paper>
                             <Table className="table">
                             <TableHead>
@@ -948,7 +997,7 @@ class Dashboard extends Component{
                                 tp={this.state.tp}
                                 />
                         </Paper>
-                    }
+                }
 
                     
                     <ConfirmationDialog 
@@ -956,7 +1005,9 @@ class Dashboard extends Component{
                     index = {this.state.index}
                     handleClose={this.handleCloseConfirmationDialog.bind(this)}
                     handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
-            </div>
+            
+
+               
             </React.Fragment>
           );
     

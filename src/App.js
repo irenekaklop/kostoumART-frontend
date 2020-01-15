@@ -3,8 +3,6 @@ import './App.css'
 import Header from './components/Shared/Header';
 import Footer from './components/Shared/Footer';
 import Routes from './routes';
-import {Router, Route, browserHistory, IndexRoute} from 'react-router-dom';
-
 
 class App extends Component{
   constructor(){
@@ -17,10 +15,9 @@ class App extends Component{
 
   render(){
     return(
-      <div className="App">
-        <Header name={this.state.appName}/>
-        <Routes name={this.state.appName}/>
-        <Footer/>
+      <div id="Web_1920___1" className="App">
+          <Routes name={this.state.appName}/>
+          <Footer/>
       </div>
     );
   }

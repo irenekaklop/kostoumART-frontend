@@ -28,3 +28,211 @@
   text-align: center;
   margin: 0em;
 }
+
+.Rectangle_1 {
+  position: absolute;
+  overflow: visible;
+  width: 1843.697px;
+  height: 1041.044px;
+  left: 74.302px;
+  top: 0.487px;
+}
+
+#Vector_Smart_Object {
+  position: absolute;
+  width: 1839px;
+  height: 113px;
+  left: 76.13px;
+  top: 0px;
+  overflow: visible;
+}
+#Rectangle_2 {
+  opacity: 0.4;
+}
+.Rectangle_2 {
+  width: 1458.365px;
+  height: 112.639px;
+  position: absolute;
+  overflow: visible;
+  transform: matrix(1,0,0,1,76.1299,-0.0001) rotate(180deg);
+  transform-origin: center;
+}
+#Rectangle_3_l {
+  opacity: 0.4;
+}
+
+.Rectangle_3_l {
+  position: absolute;
+  overflow: visible;
+  width: 1843.697px;
+  height: 112.152px;
+  left: 74.302px;
+  top: 0.487px;
+}
+.Rectangle_4_n {
+  position: absolute;
+  overflow: visible;
+  width: 1843.697px;
+  height: 47.774px;
+  left: 74.302px;
+  top: 65.865px;
+}
+.Path_1 {
+  overflow: visible;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  left: 1095.03px;
+  top: 112.639px;
+  transform: matrix(1,0,0,1,0,0);
+}
+.Path_2 {
+  overflow: visible;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  left: 1859.402px;
+  top: 112.639px;
+  transform: matrix(1,0,0,1,0,0);
+}
+.Rectangle_5 {
+  position: absolute;
+  overflow: visible;
+  width: 208.184px;
+  height: 82.721px;
+  left: 73.551px;
+  top: 35.171px;
+}
+
+.Tabs {
+  margin-top: 6%;
+}
+
+#_________ {
+  position: absolute;
+  left: 123.639px;
+  top: 81.255px;
+  overflow: visible;
+  width: 92px;
+  white-space: nowrap;
+  line-height: 18px;
+  margin-top: -1.5px;
+  text-align: left;
+  font-family: InputMono-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: rgba(56,56,56,1);
+  letter-spacing: 0.4px;
+}
+
+#_____ {
+  position: absolute;
+  left: 348.898px;
+  top: 81.255px;
+  overflow: visible;
+  width: 51px;
+  white-space: nowrap;
+  line-height: 18px;
+  margin-top: -1.5px;
+  text-align: left;
+  font-family: InputMono-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: rgba(255,255,255,1);
+  letter-spacing: 0.4px;
+}
+#__________________ {
+  position: absolute;
+  left: 476.722px;
+  top: 81.255px;
+  overflow: visible;
+  width: 183px;
+  white-space: nowrap;
+  line-height: 18px;
+  margin-top: -1.5px;
+  text-align: left;
+  font-family: InputMono-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: rgba(255,255,255,1);
+  letter-spacing: 0.4px;
+}
+
+.Rectangle_6 {
+  position: absolute;
+  overflow: visible;
+  width: 13.68px;
+  height: 157.785px;
+  left: 1904.319px;
+  top: 209.079px;
+}
+
+#FILTERS {
+  transform: matrix(1,0,0,1,11.2625,122.8705) rotate(-90deg);
+  transform-origin: center;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  width: 46px;
+  white-space: nowrap;
+  line-height: 12px;
+  margin-top: -1px;
+  text-align: left;
+  font-family: InputMono-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  color: rgba(56,56,56,1);
+}
+
+#Tailoring_Times {
+  transform: matrix(1,0,0,1,-160.7261,438.9189) rotate(-90deg);
+  transform-origin: center;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  width: 392px;
+  white-space: nowrap;
+  line-height: 58.10982131958008px;
+  margin-top: -9.68497085571289px;
+  text-align: left;
+  font-family: InputMono-Thin;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 38.7398796081543px;
+  color: rgba(56,56,56,1);
+  letter-spacing: 0.4px;
+}
+
+.Rectangle_9 {
+  position: absolute;
+  overflow: visible;
+  width: 378.633px;
+  height: 112.152px;
+  left: 1534.495px;
+  top: 0.487px;
+}
+
+#costumART {
+  transform: matrix(1,0,0,1,-40.7588,940.6748) rotate(-90deg);
+  transform-origin: center;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  width: 141px;
+  white-space: nowrap;
+  line-height: 29.341476440429688px;
+  margin-top: -2.4451236724853516px;
+  text-align: left;
+  font-family: InputMono-Thin;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24.451229095458984px;
+  color: rgba(56,56,56,1);
+}
