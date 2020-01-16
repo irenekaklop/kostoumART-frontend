@@ -1,34 +1,3 @@
-.LogoutContainer {
-  width: 100%;    
-  height: 25px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  position: absolute;
-}
-  
-.LogoutButton {
-  font-size: 80%;
-  text-decoration: underline;
-  display: inline-block;
-  cursor: pointer;
-  position: absolute;
-  right: 0;
-}
-  
-.FilterButton{
-  width: 100%;    
-  height: 25px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  text-align: left;
-  position: inherit;
-}
-
-.Drawer{
-  text-align: center;
-  margin: 0em;
-}
-
 .Rectangle_1 {
   position: absolute;
   overflow: visible;
@@ -95,7 +64,7 @@
   top: 112.639px;
   transform: matrix(1,0,0,1,0,0);
 }
-.Rectangle_5 {
+#Rectangle_5 {
   position: absolute;
   overflow: visible;
   width: 208.184px;
@@ -104,8 +73,38 @@
   top: 35.171px;
 }
 
-.Tabs {
-  margin-top: 6%;
+.Table{
+  position: relative;
+  left: 126.469px;
+  top: 170.123px;
+  overflow: visible;
+  white-space: nowrap;
+  margin-top: -30px;
+  text-align: left;
+  font-family: Roboto-Medium;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  color: rgba(35,31,32,1);
+  letter-spacing: 0.43px;
+}
+
+#_________-selected {
+  position: absolute;
+  left: 123.639px;
+  top: 81.255px;
+  overflow: visible;
+  width: 92px;
+  white-space: nowrap;
+  line-height: 18px;
+  margin-top: -1.5px;
+  text-align: left;
+  font-family: InputMono-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: rgba(56,56,56,1);
+  letter-spacing: 0.4px;
 }
 
 #_________ {
@@ -114,6 +113,24 @@
   top: 81.255px;
   overflow: visible;
   width: 92px;
+  white-space: nowrap;
+  line-height: 18px;
+  margin-top: -1.5px;
+  text-align: left;
+  font-family: InputMono-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: rgba(255,255,255,1);
+  letter-spacing: 0.4px;
+}
+
+#_____-selected {
+  position: absolute;
+  left: 348.898px;
+  top: 81.255px;
+  overflow: visible;
+  width: 51px;
   white-space: nowrap;
   line-height: 18px;
   margin-top: -1.5px;
@@ -143,6 +160,25 @@
   color: rgba(255,255,255,1);
   letter-spacing: 0.4px;
 }
+
+#__________________-selected {
+  position: absolute;
+  left: 476.722px;
+  top: 81.255px;
+  overflow: visible;
+  width: 183px;
+  white-space: nowrap;
+  line-height: 18px;
+  margin-top: -1.5px;
+  text-align: left;
+  font-family: InputMono-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: rgba(56,56,56,1);
+  letter-spacing: 0.4px;
+}
+
 #__________________ {
   position: absolute;
   left: 476.722px;
@@ -168,6 +204,15 @@
   height: 157.785px;
   left: 1904.319px;
   top: 209.079px;
+}
+
+.Rectangle_7 {
+  position: absolute;
+  overflow: visible;
+  width: 87.443px;
+  height: 5.535px;
+  left: 123.639px;
+  top: 108.104px;
 }
 
 #FILTERS {
@@ -235,4 +280,52 @@
   font-weight: normal;
   font-size: 24.451229095458984px;
   color: rgba(56,56,56,1);
+}
+
+#Table {
+  position: absolute;
+  left: 126.469px;
+  top: 170.123px;
+  overflow: visible;
+  width: 39px;
+  white-space: nowrap;
+  line-height: 70px;
+  margin-top: -30px;
+  
+}
+
+._______bt {
+  font-family: Roboto-Medium;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  color: rgb(248, 59, 106);
+  letter-spacing: 0.43px;
+}
+
+#______ {
+  position: absolute;
+  left: 327.286px;
+  top: 170.123px;
+  overflow: visible;
+  width: 36px;
+  white-space: nowrap;
+  line-height: 70px;
+  margin-top: -30px;
+  text-align: left;
+  font-family: Roboto-Medium;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  color: rgba(35,31,32,1);
+  letter-spacing: 0.43px;
+}
+
+.Rectangle_10 {
+  position: absolute;
+  overflow: visible;
+  width: 176.692px;
+  height: 162.045px;
+  left: 123.639px;
+  top: 244.91px;
 }

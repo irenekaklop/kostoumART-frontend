@@ -570,7 +570,13 @@ class Dashboard extends Component{
             const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, parts } = costume //destructuring
             return (
                 <TableRow key={costume_id}>
-                <TableCell>{costume_name}</TableCell>
+                    <TableCell>
+                        <svg id="Rectangle_10">
+                            <rect fill="rgba(0,0,0,0)" stroke="rgba(119,119,119,1)" stroke-width="0.7658530473709106px" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" shape-rendering="auto" id="Rectangle_10" rx="0" ry="0" x="0" y="0" width="175.926" height="161.279">
+                            </rect>
+                        </svg>
+                    </TableCell>
+                <TableCell >{costume_name}</TableCell>
                 <TableCell>{description}</TableCell>
                 <TableCell>{date}</TableCell>
                 <TableCell>{sex}</TableCell>
@@ -718,13 +724,8 @@ class Dashboard extends Component{
                 </Header>
                
                 <div>
-                    <svg class="Ellipse_1">
-		               
-                        <ellipse fill="rgba(255,222,23,1)" id="Ellipse_1" rx="29.06102180480957" ry="29.06102180480957" cx="29.06102180480957" cy="29.06102180480957">
-		                </ellipse>
-                        <IconButton onClick={this.handleDrawerOpen}></IconButton>
+                    <IconButton onClick={this.handleDrawerOpen}></IconButton>
                         <Drawer
-                            className="Drawer"
                             variant="persistent"
                             anchor="left"
                             open={filterDrawerOpen}
@@ -772,6 +773,9 @@ class Dashboard extends Component{
                             <Button onClick={this.applyCostumeFilters}>Eφαρμογή</Button>                            
                             <Button onClick={this.resetCostumeFilters}>Επαναφορα</Button>
                         </Drawer>
+                    <svg class="Ellipse_1">
+                        <ellipse fill="rgba(255,222,23,1)" id="Ellipse_1" rx="29.06102180480957" ry="29.06102180480957" cx="29.06102180480957" cy="29.06102180480957">
+		                </ellipse>
 	                </svg>
                     <svg class="Ellipse_2">
                         <ellipse fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_2" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
@@ -806,40 +810,82 @@ class Dashboard extends Component{
                 
                 <Tabs 
                 selectedIndex={this.state.current_tab}
-                onSelect={this.handleTabChange}>
-                    <TabList>
+                onSelect={this.handleTabChange}
+                >
+                    <Tab>
+                    {this.state.current_tab===0?
+                     
+                     <div>
+                         <svg class="Rectangle_5">
+                             <rect fill="rgba(242,242,242,1)" id="Rectangle_5" rx="0" ry="0" x="0" y="0" width="208.184" height="82.721">
+                             </rect>
+                         </svg>
+                         <div id="_________-selected">
+                             <span>Κουστούμι</span>
+                         </div>
+                         <svg class="Rectangle_7">
+                             <rect fill="rgba(255,222,23,1)" id="Rectangle_7" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535"></rect>
+                         </svg>
+                         </div>          
+                        :
+                        <div id="_________">
+                            <span>Κουστούμι</span>
+                        </div>         
+                    }
+                    </Tab>
+                    
                         <Tab>
-                            <div id="_________">
-                                <span>Κουστούμι</span>
-                            </div>
+                            {this.state.current_tab===1?
+                                <div id="_____-selected">
+                                    <span>Συνοδευτικό</span>
+                                </div>
+                                :
+                                <div id="_____">
+                                    <span>Συνοδευτικό</span>
+                                </div>
+                            }
+                            
                         </Tab>
-                        <Tab>
-                            <div id="_____">
-                                <span>Χρήση</span>
-                            </div>
+                        <Tab className="__________________-selected">
+                            {this.state.current_tab===2?
+                                <div id="__________________-selected">
+                                    <span>Χρήση</span>
+                                </div>
+                                :
+                                <div id="__________________">
+                                    <span>Χρήση</span>
+                                </div>
+                            }
+                            
                         </Tab>
-                        <Tab>
-                            <div id="__________________">
-                                <span>Θεατρική παράσταση</span>
-                            </div>
-                        </Tab>
-                    </TabList>
-                
-                    <TabPanel className="Tabs">
-                    <h2>Any content {this.state.current_tab}</h2>
-                    </TabPanel>
-                    <TabPanel>
-                    <h2>Any content {this.state.current_tab}</h2>
-                    </TabPanel>
+                        {/*<Tab>
+                            {this.state.current_tab===2?
+                                <div id="__________________-selected">
+                                    <span>Θεατρική παράσταση</span>
+                                </div>
+                                :
+                                <div id="__________________">
+                                    <span>Θεατρική παράσταση</span>
+                                </div>
+                            }
+                            
+                        </Tab>*/}
+                   
                 </Tabs>
-
+                
+                <div>
                 {this.state.current_tab===0 &&
-                    <div>
-                            <Paper>
-                            <Table className="table">
-                                <TableHead>
-                                    <TableRow>
+                    <div id="Table">
+                        <Table>
+                            <TableHead >
+                                <TableRow className="_______bt">
+                                    <TableCell 
+                                    
+                                    sorted={null}>
+                                        <span><strong>EIKONA</strong></span>
+                                    </TableCell>
                                     <TableCell
+                                    
                                     sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}>
                                     <strong>Τίτλος</strong> 
@@ -893,47 +939,46 @@ class Dashboard extends Component{
                                 theatrical_plays={this.state.tp_data}
                                 costume={this.state.costume}
                                 editing={this.state.editing}></CostumeForm>
-                            </Paper>
                         </div>
                     }
                 {this.state.current_tab===1 &&
-                    <Paper>
-                        <Table className="table">
-                            <TableHead>
+                    <div  id="_______bt">
+                        <Table>
+                            <TableHead>    
                                 <TableRow>
-                                    <TableCell><strong>Όνομα</strong></TableCell>
-                                    <TableCell><strong>Περιγραφή</strong></TableCell>
-                                    <TableCell><strong>Κοστούμι</strong></TableCell>
-                                    <TableCell><strong>Εποχή</strong></TableCell>
-                                    <TableCell><strong>Χρήση</strong></TableCell>
-                                    <TableCell><strong>Φύλο</strong></TableCell>
-                                    <TableCell><strong>Ύλικο</strong></TableCell>
-                                    <TableCell><strong>Τεχνική</strong></TableCell>
-                                    <TableCell><strong>Περιοχή Αναφοράς</strong></TableCell>
-                                    <TableCell><strong>Σχεδιαστής</strong></TableCell>
-                                    <TableCell><strong>Ρόλοι</strong></TableCell>
-                                    <TableCell><strong>Ηθοποιοί</strong></TableCell>
-                                    <TableCell></TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>{this.renderTableAccessoriesData()} </TableBody>
+                                        <TableCell><strong>Όνομα</strong></TableCell>
+                                        <TableCell><strong>Περιγραφή</strong></TableCell>
+                                        <TableCell><strong>Κοστούμι</strong></TableCell>
+                                        <TableCell><strong>Εποχή</strong></TableCell>
+                                        <TableCell><strong>Χρήση</strong></TableCell>
+                                        <TableCell><strong>Φύλο</strong></TableCell>
+                                        <TableCell><strong>Ύλικο</strong></TableCell>
+                                        <TableCell><strong>Τεχνική</strong></TableCell>
+                                        <TableCell><strong>Περιοχή Αναφοράς</strong></TableCell>
+                                        <TableCell><strong>Σχεδιαστής</strong></TableCell>
+                                        <TableCell><strong>Ρόλοι</strong></TableCell>
+                                        <TableCell><strong>Ηθοποιοί</strong></TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>{this.renderTableAccessoriesData()} </TableBody>
                         </Table>
                         <IconButton><AddIcon onClick={() => this.handleAddAccessory()}></AddIcon></IconButton>
-                        <AccessoryForm
-                            isOpen={this.state.isAccessoryDialogOpen}
-                            handleClose={this.handleCloseDialog.bind(this)}
-                            user={this.state.user.user_id}
-                            accessories={this.state.accessories}
-                            editing={this.state.editing}
-                            accessory={this.state.accessory}
-                            uses={this.state.use_data}
-                            costumes={this.state.costume_data}
+                            <AccessoryForm
+                                isOpen={this.state.isAccessoryDialogOpen}
+                                handleClose={this.handleCloseDialog.bind(this)}
+                                user={this.state.user.user_id}
+                                accessories={this.state.accessories}
+                                editing={this.state.editing}
+                                accessory={this.state.accessory}
+                                uses={this.state.use_data}
+                                costumes={this.state.costume_data}
                         />
-                    </Paper>
+                    </div>
                     }
                 {this.state.current_tab===2 &&
-                        <Paper>
-                            <Table className="table">
+                        <div id="_______bt">
+                            <Table>
                             <TableHead>
                                 <TableRow>
                                 <TableCell
@@ -969,11 +1014,11 @@ class Dashboard extends Component{
                                 theatrical_plays={this.state.tp_data}
                                 editing={this.state.editing}
                                 use={this.state.use}></UseForm>
-                        </Paper>
+                        </div>
                     }
                 {this.state.current_tab===3 &&
-                        <Paper>
-                            <Table className="table">
+                        <div id="_______bt">
+                            <Table>
                             <TableHead>
                                 <TableRow>
                                     <TableCell sorted={column === 'title' ? direction : null}
@@ -996,7 +1041,7 @@ class Dashboard extends Component{
                                 editing={this.state.editing}
                                 tp={this.state.tp}
                                 />
-                        </Paper>
+                        </div>
                 }
 
                     
@@ -1008,6 +1053,8 @@ class Dashboard extends Component{
             
 
                
+                </div>
+              
             </React.Fragment>
           );
     
