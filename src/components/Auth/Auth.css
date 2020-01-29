@@ -1,24 +1,347 @@
-.Auth {
-    margin: 20px auto;
-    width: 80%;
-    text-align: center;
-    box-shadow: 0 2px 3px #ccc;
-    border: 1px solid #eee;
-    padding: 10px;
+:root {
+    --web-view-ids: Web_1920___1;
+}
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
+    border: none;
+}
+#Web_1920___1 {
+    position: absolute;
+    width: 1920px;
+    height: 1080px;
+    background-color: rgba(255,255,255,1);
+    overflow: hidden;
+    --web-view-name: Web 1920 – 1;
+    --web-view-id: Web_1920___1;
+    --web-scale-on-resize: true;
+    --web-enable-deep-linking: true;
+}
+#Group_1 {
+    position: absolute;
+    width: 1920px;
+    height: 1079.057px;
+    left: 2.593px;
+    top: 0px;
+    overflow: visible;
+}
+.Rectangle_3_k {
+    position: absolute;
+    overflow: visible;
+    width: 1920px;
+    height: 834.399px;
+    left: 2.593px;
+    top: 0px;
+}
+#WELCOME {
+    position: absolute;
+    left: 566.177px;
+    top: 264.32px;
+    overflow: visible;
+    width: 494px;
+    white-space: nowrap;
+    line-height: 132.72003173828125px;
+    margin-top: -11.060005187988281px;
+    text-align: left;
+    font-family: InputMono-Thin;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 110.60002136230469px;
+    color: rgba(255,255,255,1);
+}
+.Path_1 {
+    overflow: visible;
+    position: absolute;
+    width: 1920px;
+    height: 602.09px;
+    left: 2.593px;
+    top: 476.968px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#costumART {
+    transform: matrix(1,0,0,1,20.5569,129.82) rotate(-90deg);
+    transform-origin: center;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+    width: 141px;
+    white-space: nowrap;
+    line-height: 29.341476440429688px;
+    margin-top: -2.4451236724853516px;
+    text-align: left;
+    font-family: InputMono-Thin;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24.451229095458984px;
+    color: rgba(255,222,23,1);
+}
+#in_tailored_times {
+    position: absolute;
+    left: 574.42px;
+    top: 366.273px;
+    overflow: visible;
+    width: 746px;
+    white-space: nowrap;
+    line-height: 82.60436248779297px;
+    margin-top: -6.883697509765625px;
+    text-align: left;
+    font-family: InputMono-Thin;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 68.83696746826172px;
+    color: rgba(255,222,23,1);
 }
 
-@media (min-width: 600px) {
-    .Auth {
-        width: 500px;
-    }
+.Line_1 {
+    overflow: visible;
+    position: absolute;
+    width: 359.152px;
+    height: 0.5px;
+    left: 587.21px;
+    top: 745.946px;
+    transform: matrix(1,0,0,1,0,0);
 }
 
-.FormControl {
-    width: 30%;
-    margin-bottom: 3% !important;
+.email_input{
+    font-family: 'Times New Roman', Times, serif;
 }
 
-.LogInForm{
-    margin: 6% 4%;
+.Line_2 {
+    overflow: visible;
+    position: absolute;
+    width: 359.152px;
+    height: 0.5px;
+    left: 587.21px;
+    top: 834.399px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Don_t_have_an_acount___ {
+    position: absolute;
+    left: 587.21px;
+    top: 1004.608px;
+    overflow: visible;
+    width: 178px;
+    white-space: nowrap;
+    line-height: 21.600000381469727px;
+    margin-top: -1.8000001907348633px;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: rgba(255,255,255,1);
+    letter-spacing: -0.17px;
+}
+#Sign_up {
+    position: absolute;
+    left: 587.21px;
+    top: 1030.987px;
+    overflow: visible;
+    width: 41px;
+    white-space: nowrap;
+    line-height: 14.40000057220459px;
+    margin-top: -1.200000286102295px;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(255,222,23,1);
+}
+#LOGIN {
+    position: absolute;
+    left: 581.211px;
+    top: 623.279px;
+    overflow: visible;
+    width: 121px;
+    white-space: nowrap;
+    line-height: 45.23467254638672px;
+    margin-top: -3.7695560455322266px;
+    text-align: left;
+    font-family: InputMono-Thin;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 37.695560455322266px;
+    color: rgba(255,222,23,1);
+}
+#USERNAME {
+    position: absolute;
+    left: 587.21px;
+    top: 692.838px;
+    overflow: visible;
+    width: 59px;
+    white-space: nowrap;
+    line-height: 13.200000762939453px;
+    margin-top: -1.1000003814697266px;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    color: rgba(88,89,91,1);
+}
+#PASSWORD {
+    position: absolute;
+    left: 587.21px;
+    top: 777.183px;
+    overflow: visible;
+    width: 59px;
+    white-space: nowrap;
+    line-height: 13.200000762939453px;
+    margin-top: -1.1000003814697266px;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    color: rgba(88,89,91,1);
+}
+#Forgot_your_password_or_user_n {
+    position: absolute;
+    left: 997.412px;
+    top: 1004.608px;
+    overflow: visible;
+    width: 291px;
+    white-space: nowrap;
+    line-height: 21.600000381469727px;
+    margin-top: -1.8000001907348633px;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: rgba(255,255,255,1);
+    letter-spacing: -0.17px;
+}
+#Retrieve {
+    position: absolute;
+    left: 997.412px;
+    top: 1030.987px;
+    overflow: visible;
+    width: 44px;
+    white-space: nowrap;
+    line-height: 14.40000057220459px;
+    margin-top: -1.200000286102295px;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(255,222,23,1);
+}
+#administrator_gmail_com {
+    position: absolute;
+    left: 587.21px;
+    top: 715.217px;
+    overflow: visible;
+    width: 199px;
+    white-space: nowrap;
+    line-height: 21.600000381469727px;
+    margin-top: -1.8000001907348633px;
+    text-align: left;
+    font-family: Roboto-Light;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: rgba(255,255,255,1);
+    letter-spacing: -0.17px;
+}
+#coustumartadmin {
+    position: absolute;
+    left: 587.21px;
+    top: 805.498px;
+    overflow: visible;
+    width: 138px;
+    white-space: nowrap;
+    line-height: 21.600000381469727px;
+    margin-top: -1.8000001907348633px;
+    text-align: left;
+    font-family: Roboto-Light;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: rgba(255,255,255,1);
+    letter-spacing: -0.17px;
+}
+#Group_3 {
+    position: absolute;
+    width: 43.539px;
+    height: 43.539px;
+    left: 588.865px;
+    top: 874.764px;
+    overflow: visible;
+}
+#Group_2 {
+    position: absolute;
+    width: 43.539px;
+    height: 43.539px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+.Path_2 {
+    overflow: visible;
+    position: absolute;
+    width: 5.594px;
+    height: 10.692px;
+    left: 19.435px;
+    top: 16.965px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Ellipse_1 {
+    position: absolute;
+    overflow: visible;
+    width: 44.305px;
+    height: 44.305px;
+    left: 0px;
+    top: 0px;
+}
+.Line_3 {
+    overflow: visible;
+    position: absolute;
+    width: 1924.593px;
+    height: 1px;
+    left: -2px;
+    top: 992.127px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Line_4 {
+    overflow: visible;
+    position: absolute;
+    width: 1px;
+    height: 87.873px;
+    left: 543.614px;
+    top: 992.127px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Line_5 {
+    overflow: visible;
+    position: absolute;
+    width: 1px;
+    height: 87.873px;
+    left: 945.861px;
+    top: 992.127px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Line_6 {
+    overflow: visible;
+    position: absolute;
+    width: 799.593px;
+    height: 0.75px;
+    left: 574.42px;
+    top: 438.085px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Rectangle_4 {
+    opacity: 0.4;
+}
+.Rectangle_4 {
+    position: absolute;
+    overflow: visible;
+    width: 798.843px;
+    height: 36.461px;
+    left: 574.42px;
+    top: 391.846px;
 }
