@@ -1,35 +1,10 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 
-import {TextField, Button, FormControl, Input} from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import { login } from './UserFunctions.js'
 import './Auth.css'
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        '& label.Mui-focused': {
-            color: 'green',
-          },
-          '& .MuiInput-underline:after': {
-            borderBottomColor: 'green',
-          },
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: 'red',
-            },
-            '&:hover fieldset': {
-              borderColor: 'yellow',
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: 'green',
-            },
-          },
-    }
-}));
 
 class Auth extends Component{
 
@@ -147,33 +122,31 @@ class Auth extends Component{
                 <div id="LOGIN">
                     <span>LOGIN</span>
                 </div>
-                <Input
-                classes={{root: 'email_input'}}
-                value={email}
-                name="email"
-                onChange={this.onChange}
-                />
-                <div id="USERNAME">
-                    <span>USERNAME</span>
+                <div id="EMAIL">
+                    <span>EMAIL</span>
                 </div>
+                <input
+                    id="EmailInput"
+                    type='text'
+                    value={email}
+                    name="email"
+                    onChange={this.onChange}
+                    required={true}
+                />            
                 <div id="PASSWORD">
                     <span>PASSWORD</span>
                 </div>
-                <div id="Group_3">
-                    <button onClick={this.handleSubmit}>
-                    <div id="Group_2">
-                    <svg class="Path_2" viewBox="-1486.308 -340.855 4.67 9.609">
-                        <path fill="rgba(0,0,0,0)" stroke="rgba(255,222,23,1)" stroke-width="0.7658530473709106px" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" shape-rendering="auto" id="Path_2" d="M -1486.3076171875 -340.8554382324219 L -1481.637817382812 -336.0059509277344 L -1486.3076171875 -331.2462768554688">
-                        </path>
-                    </svg>
-                    <svg class="Ellipse_1">
-                        <ellipse fill="rgba(0,0,0,0)" stroke="rgba(255,222,23,1)" stroke-width="0.7658530473709106px" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" shape-rendering="auto" id="Ellipse_1" rx="21.769573211669922" ry="21.769573211669922" cx="21.769573211669922" cy="21.769573211669922">
-                        </ellipse>
-                    </svg>
-                    </div>
+                <input
+                    id="PasswordInput"
+                    name="password"
+                    type='password'
+                    value={password}
+                    onChange={this.onChange}
+                    required={true}
+                />    
+                <button id="BUTTON">
+                    <img src={require('../../styles/images/ROUND_BTN.png')} onClick={this.handleSubmit} />
                 </button>
-                </div>
-               
                 <svg class="Line_3" viewBox="0 0 1924.593 1">
                     <path fill="transparent" stroke="rgba(255,222,23,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_3" d="M 0 0 L 1924.592529296875 0">
                     </path>

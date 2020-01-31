@@ -36,7 +36,7 @@ import UseForm from '../Forms/UseForm.js';
 import TpForm from '../Forms/TpForm.js';
 import ConfirmationDialog from '../Dashboard/ConfirmationDialog.js';
 
-import "../../styles/Dashboard.css"
+import "../Dashboard/Dashboard.css"
 
 import jwt_decode from 'jwt-decode';
 import { use_categories, techniques, sexs, materials } from '../../utils/options.js';
@@ -255,8 +255,8 @@ class Dashboard extends Component{
     /*Get costumes from db*/
     getCostumes = (decoded) => {
         if(decoded){
-            //axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: decoded.role}})
-            axios.get("http://localhost:8108/costumes",{params: {user: decoded.role}})
+            axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: decoded.role}})
+            //axios.get("http://localhost:8108/costumes",{params: {user: decoded.role}})
             .then(res => {
                 const costume_data = res.data.response;
                 this.setState({ costume_data });
@@ -267,8 +267,8 @@ class Dashboard extends Component{
             )
         }
         else{
-            //axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: decoded.role}})
-            axios.get("http://localhost:8108/costumes",{params: {user: this.state.user.role}})
+            axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: this.state.user.role}})
+            //axios.get("http://localhost:8108/costumes",{params: {user: this.state.user.role}})
             .then(res => {
                 const costume_data = res.data.response;
                 this.setState({ costume_data });
@@ -284,8 +284,8 @@ class Dashboard extends Component{
     /* Get uses from database*/ 
     get_uses = _ => {
         let self = this;
-        //axios.get("http://88.197.53.80/kostoumart-api/uses/")
-        axios.get("http://localhost:8108/uses")
+        axios.get("http://88.197.53.80/kostoumart-api/uses/")
+        //axios.get("http://localhost:8108/uses")
         .then(res => {
             const use_data = res.data.response;
             this.setState({ use_data });
@@ -296,8 +296,8 @@ class Dashboard extends Component{
 
     /*Get Theatrical Plays from database*/
     get_theatrical_plays = _ => {
-        //axios.get("http://88.197.53.80/kostoumart-api/tps/")
-        axios.get("http://localhost:8108/tps")
+        axios.get("http://88.197.53.80/kostoumart-api/tps/")
+        //axios.get("http://localhost:8108/tps")
         .then(res => {
             const tp_data = res.data.response;
             this.setState({ tp_data });
@@ -307,8 +307,8 @@ class Dashboard extends Component{
     }
 
     getAccessories = () => {
-         //axios.get("http://88.197.53.80/kostoumart-api/accessories")
-         axios.get("http://localhost:8108/accessories")
+        axios.get("http://88.197.53.80/kostoumart-api/accessories")
+        //axios.get("http://localhost:8108/accessories")
          .then(res => {
              const accessories = res.data.response;
              this.setState({ accessories });
@@ -318,8 +318,8 @@ class Dashboard extends Component{
     }
 
     get_costume(index){
-        //axios.get('http://88.197.53.80/kostoumart-api/costumes/')
-        axios.get("http://localhost:8108/costumes/"+index)
+        axios.get('http://88.197.53.80/kostoumart-api/costumes/')
+        //axios.get("http://localhost:8108/costumes/"+index)
         .then(res => {
             const costume = res.data.response;
             this.setState({ costume });
@@ -716,13 +716,17 @@ class Dashboard extends Component{
 
         return (
             <React.Fragment>
+                <svg class="Rectangle_1">
+                    <rect fill="rgba(242,242,242,1)" id="Rectangle_1" rx="0" ry="0" x="0" y="0" width="1843.697" height="1041.044">
+                    </rect>
+                </svg>
+                <img id="Background" src={require('../../styles/images/Background.png')} srcset="Background.png 1x, Background@2x.png 2x"></img>
                 <NotificationContainer/>
                 <Header 
                     name={this.state.appName}
                     email={this.state.user.email}
                     logOut={this.logOut.bind(this)}>
                 </Header>
-               
                 <div>
                     <IconButton onClick={this.handleDrawerOpen}></IconButton>
                         <Drawer
@@ -803,61 +807,53 @@ class Dashboard extends Component{
                     <div id="Tailoring_Times">
                         <span>Tailoring Times</span>
                     </div>
-                    <div id="costumART">
+                    <div id="costumART-Dashboard">
                         <span>costumART</span>
                     </div>
                 </div>
-                
+
                 <Tabs 
+                className="react-tabs__tab-list"
                 selectedIndex={this.state.current_tab}
                 onSelect={this.handleTabChange}
                 >
                     <Tab>
-                    {this.state.current_tab===0?
-                     
-                     <div>
-                         <svg class="Rectangle_5">
-                             <rect fill="rgba(242,242,242,1)" id="Rectangle_5" rx="0" ry="0" x="0" y="0" width="208.184" height="82.721">
-                             </rect>
-                         </svg>
-                         <div id="_________-selected">
-                             <span>Κουστούμι</span>
-                         </div>
-                         <svg class="Rectangle_7">
-                             <rect fill="rgba(255,222,23,1)" id="Rectangle_7" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535"></rect>
-                         </svg>
-                         </div>          
+                        {this.state.current_tab===0?
+                            <div className="react-tabs__tab--selected">
+                            <span>  Κοστούμι</span>
+                            </div>
                         :
-                        <div id="_________">
-                            <span>Κουστούμι</span>
-                        </div>         
-                    }
+                            <div className="react-tabs__tab">
+                            <span>Κοστούμι</span>
+                            </div>
+                        }
+                        
+                        
                     </Tab>
+                    <Tab className="react-tabs__tab">
+                        {this.state.current_tab===1?
+                            <div className="react-tabs__tab--selected">
+                            <span>Συνοδευτικό</span>
+                            </div>
+                        :
+                            <div className="react-tabs__tab">
+                            <span>Συνοδευτικό</span>
+                            </div>
+                        }
+                    </Tab>
+                    <Tab className="react-tabs__tab">
+                        {this.state.current_tab===2?
+                            <div className="react-tabs__tab--selected">
+                            <span>Χρήση</span>
+                            </div>
+                        :
+                            <div className="react-tabs__tab">
+                            <span>Χρήση</span>
+                            </div>
+                        }
                     
-                        <Tab>
-                            {this.state.current_tab===1?
-                                <div id="_____-selected">
-                                    <span>Συνοδευτικό</span>
-                                </div>
-                                :
-                                <div id="_____">
-                                    <span>Συνοδευτικό</span>
-                                </div>
-                            }
-                            
-                        </Tab>
-                        <Tab className="__________________-selected">
-                            {this.state.current_tab===2?
-                                <div id="__________________-selected">
-                                    <span>Χρήση</span>
-                                </div>
-                                :
-                                <div id="__________________">
-                                    <span>Χρήση</span>
-                                </div>
-                            }
-                            
-                        </Tab>
+                    </Tab>
+                      
                         {/*<Tab>
                             {this.state.current_tab===2?
                                 <div id="__________________-selected">
@@ -875,17 +871,15 @@ class Dashboard extends Component{
                 
                 <div>
                 {this.state.current_tab===0 &&
-                    <div id="Table">
+                    <div id="_______bt">
                         <Table>
                             <TableHead >
                                 <TableRow className="_______bt">
                                     <TableCell 
-                                    
                                     sorted={null}>
                                         <span><strong>EIKONA</strong></span>
                                     </TableCell>
                                     <TableCell
-                                    
                                     sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}>
                                     <strong>Τίτλος</strong> 
@@ -1050,11 +1044,8 @@ class Dashboard extends Component{
                     index = {this.state.index}
                     handleClose={this.handleCloseConfirmationDialog.bind(this)}
                     handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
-            
-
-               
+                           
                 </div>
-              
             </React.Fragment>
           );
     

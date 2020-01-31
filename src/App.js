@@ -16,10 +16,6 @@ class App extends Component{
   render(){
     return(
       <div id="Web_1920___1" className="App">
-          <svg class="Rectangle_1">
-                    <rect fill="rgba(242,242,242,1)" id="Rectangle_1" rx="0" ry="0" x="0" y="0" width="1843.697" height="1041.044">
-                    </rect>
-          </svg>
           <Routes name={this.state.appName}/>
       </div>
     );

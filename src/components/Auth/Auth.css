@@ -104,10 +104,6 @@
     transform: matrix(1,0,0,1,0,0);
 }
 
-.email_input{
-    font-family: 'Times New Roman', Times, serif;
-}
-
 .Line_2 {
     overflow: visible;
     position: absolute;
@@ -117,6 +113,20 @@
     top: 834.399px;
     transform: matrix(1,0,0,1,0,0);
 }
+
+#BUTTON{
+    position: absolute;
+    overflow: visible;
+    left: 587.21px;
+    top: 860px;
+    background-color: rgba(56, 56, 56, 1);
+}
+
+#BUTTON:hover{
+    background-color: rgb(56, 56, 23);
+    cursor: pointer;
+}
+
 #Don_t_have_an_acount___ {
     position: absolute;
     left: 587.21px;
@@ -166,7 +176,27 @@
     font-size: 37.695560455322266px;
     color: rgba(255,222,23,1);
 }
-#USERNAME {
+
+#EmailInput {
+    position: absolute;
+    overflow: visible;
+    left: 587.21px;
+    top: 715.217px;
+    border: 0;
+    outline: 0;
+    border-bottom: 1px dashed rgba(255,222,23,1);
+    border-radius: 0px!important;
+    font-family: InputMono-Thin;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: rgba(255,255,255,1)!important;
+    letter-spacing: -0.17px;
+    text-align: left;
+    background-color: rgba(56, 56, 56, 1);
+}
+
+#EMAIL {
     position: absolute;
     left: 587.21px;
     top: 692.838px;
@@ -182,6 +212,26 @@
     font-size: 11px;
     color: rgba(88,89,91,1);
 }
+
+#PasswordInput {
+    position: absolute;
+    overflow: visible;
+    left: 587.21px;
+    top: 810px;
+    border: 0;
+    outline: 0;
+    border-bottom: 1px dashed rgba(255,222,23,1);
+    border-radius: 0px!important;
+    font-family: InputMono-Thin;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: rgba(255,255,255,1)!important;
+    letter-spacing: -0.17px;
+    text-align: left;
+    background-color: rgba(56, 56, 56, 1);
+}
+
 #PASSWORD {
     position: absolute;
     left: 587.21px;
@@ -198,6 +248,7 @@
     font-size: 11px;
     color: rgba(88,89,91,1);
 }
+
 #Forgot_your_password_or_user_n {
     position: absolute;
     left: 997.412px;
@@ -231,23 +282,7 @@
     font-size: 12px;
     color: rgba(255,222,23,1);
 }
-#administrator_gmail_com {
-    position: absolute;
-    left: 587.21px;
-    top: 715.217px;
-    overflow: visible;
-    width: 199px;
-    white-space: nowrap;
-    line-height: 21.600000381469727px;
-    margin-top: -1.8000001907348633px;
-    text-align: left;
-    font-family: Roboto-Light;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    color: rgba(255,255,255,1);
-    letter-spacing: -0.17px;
-}
+
 #coustumartadmin {
     position: absolute;
     left: 587.21px;
@@ -290,14 +325,7 @@
     top: 16.965px;
     transform: matrix(1,0,0,1,0,0);
 }
-.Ellipse_1 {
-    position: absolute;
-    overflow: visible;
-    width: 44.305px;
-    height: 44.305px;
-    left: 0px;
-    top: 0px;
-}
+
 .Line_3 {
     overflow: visible;
     position: absolute;
@@ -313,15 +341,6 @@
     width: 1px;
     height: 87.873px;
     left: 543.614px;
-    top: 992.127px;
-    transform: matrix(1,0,0,1,0,0);
-}
-.Line_5 {
-    overflow: visible;
-    position: absolute;
-    width: 1px;
-    height: 87.873px;
-    left: 945.861px;
     top: 992.127px;
     transform: matrix(1,0,0,1,0,0);
 }

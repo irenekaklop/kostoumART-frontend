@@ -1,18 +1,10 @@
 import React from 'react';
-import logo from '../../logo.png'
-import '../../styles/Header.css';
+import '../../components/Dashboard/Dashboard.css';
 import Vector_Smart_Object from '../../styles/images/Vector_Smart_Object.png'
 
 
 
 class Header extends React.Component {
-
-  constructor(props){
-    super(props)
-    this.state={
-
-    }
-  }
 
   logOut(){
     this.setState(() => {this.props.logOut()})
@@ -47,15 +39,13 @@ class Header extends React.Component {
           <rect fill="rgba(56,56,56,1)" id="Rectangle_9" rx="0" ry="0" x="0" y="0" width="378.633" height="112.152">
           </rect>
           </svg>
-          <div id="LogoutContainer">
-            <div id="Logout">
-              <p onClick={() => this.logOut()}>Logout</p>
-            </div>
-          </div>
+          
+          <button id="LOGOUT_BUTTON" onClick={() => this.logOut()}>Logout</button>
+           
           <div id="USERNAME">
             <span>USERNAME</span>
           </div>
-          <div id="administrator_gmail_com">
+          <div id="administrator_email">
             <span>{this.props.email}</span>
           </div>
           <svg class="Line_5" viewBox="0 0 1 66.176">
