@@ -3,28 +3,12 @@ import {Redirect} from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import { Paper, Button, TextField, Drawer, Divider, MenuItem, InputLabel, Select} from '@material-ui/core';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
-import FilterListIcon from '@material-ui/icons/FilterList';
-import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
@@ -123,7 +107,7 @@ class Dashboard extends Component{
             } });
             console.log("decoded", decoded);
             this.get_uses();
-            this.get_theatrical_plays();
+            this.get_theathical_plays();
             this.getCostumes(decoded);
             this.getAccessories();
         }
@@ -294,8 +278,8 @@ class Dashboard extends Component{
         )
     }
 
-    /*Get Theatrical Plays from database*/
-    get_theatrical_plays = _ => {
+    /*Get Theathical Plays from database*/
+    get_theathical_plays = _ => {
         axios.get("http://88.197.53.80/kostoumart-api/tps/")
         //axios.get("http://localhost:8108/tps")
         .then(res => {
@@ -352,7 +336,7 @@ class Dashboard extends Component{
             this.setState({isUseDialogOpen: false});
         }
         else if(this.state.isTPDialogOpen){
-            this.get_theatrical_plays();
+            this.get_theathical_plays();
             this.setState({isTPDialogOpen: false});
         }
         else if(this.state.isAccessoryDialogOpen){
@@ -401,7 +385,7 @@ class Dashboard extends Component{
             this.get_uses();
         }
         else if(value===3){
-            this.get_theatrical_plays();
+            this.get_theathical_plays();
         }
         this.setState({
           current_tab: value
@@ -466,7 +450,7 @@ class Dashboard extends Component{
             isTPDialogOpen: true,
         });
         for(var i=0; i<this.state.tp_data.length; i++){
-            if(this.state.tp_data[i].theatrical_play_id === index){
+            if(this.state.tp_data[i].theathical_play_id === index){
                 this.state.tp = this.state.tp_data[i];
             }
         }
@@ -506,7 +490,7 @@ class Dashboard extends Component{
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");
                     this.getCostumes();
-                    this.get_theatrical_plays();
+                    this.get_theathical_plays();
                     return ret;
                 }
             })
@@ -553,8 +537,8 @@ class Dashboard extends Component{
         }
         else if(this.state.current_tab===3){
             for(var i=0; i<this.state.costume_data.length; i++){
-                if(this.state.costume_data[i].theatrical_play_id){
-                    if(this.state.costume_data[i].theatrical_play_id===index){
+                if(this.state.costume_data[i].theathical_play_id){
+                    if(this.state.costume_data[i].theathical_play_id===index){
                     this.handleOpenConfirmationDialog(index);
                     return;
                     }
@@ -567,76 +551,78 @@ class Dashboard extends Component{
 
     renderTableCostumesData() {
         return this.state.current_costumes.map((costume, index) => {
-            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, parts } = costume //destructuring
+            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, parts } = costume //desthucturing
+            for (var element in costume){
+                if (!element || element===''){
+                    element='/t';
+                }}
+            
             return (
-                <TableRow key={costume_id}>
-                    <TableCell>
-                        <svg id="Rectangle_10">
-                            <rect fill="rgba(0,0,0,0)" stroke="rgba(119,119,119,1)" stroke-width="0.7658530473709106px" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" shape-rendering="auto" id="Rectangle_10" rx="0" ry="0" x="0" y="0" width="175.926" height="161.279">
-                            </rect>
-                        </svg>
-                    </TableCell>
-                <TableCell >{costume_name}</TableCell>
-                <TableCell>{description}</TableCell>
-                <TableCell>{date}</TableCell>
-                <TableCell>{sex}</TableCell>
-                <TableCell>{use_name}</TableCell>
-                <TableCell>{material}</TableCell>
-                <TableCell>{technique}</TableCell>
-                <TableCell>{location}</TableCell>
-                <TableCell>{designer}</TableCell>
-                <TableCell>{tp_title}</TableCell>
-                <TableCell>{parts}</TableCell>
-                <TableCell>{actors}</TableCell>
-                <TableCell>
+                <tr className="TableRow" key={costume_id}>
+                    <td>
+	                   <img id="Image" src={require("../../styles/images/Rectangle_20.png")}/>  
+                    </td>
+                <td >{costume_name}</td>
+                <td>{description}</td>
+                <td>{date}</td>
+                <td>{sex}</td>
+                <td>{use_name}</td>
+                <td>{material}</td>
+                <td>{technique}</td>
+                <td>{location}</td>
+                <td>{designer}</td>
+                <td>{tp_title}</td>
+                <td>{parts}</td>
+                <td>{actors}</td>
+                <td>
                     <IconButton><DeleteIcon onClick={()=>{this.handleCostumeDelete(costume_name);}}></DeleteIcon> </IconButton>
-                    <IconButton><EditIcon onClick={() => this.handleCostumeEditing(costume_id)}/></IconButton></TableCell>
-                </TableRow>
+                    <IconButton><EditIcon onClick={() => this.handleCostumeEditing(costume_id)}/></IconButton></td>
+                </tr>
             )
         })
     }
 
     renderTableUsesData() {
         return this.state.use_data.map((use, index) => {
-            const { useID, name, use_category,description, customs } = use //destructuring
+            const { useID, name, use_category,description, customs } = use //desthucturing
             return (
-                <TableRow key={useID}>
-                    <TableCell>
+                <tr key={useID}>
+                    <th>
                         {name}
-                   </TableCell>
-                    <TableCell>
+                   </th>
+                    <th>
                         {use_category}
-                    </TableCell>
-                    <TableCell>
+                    </th>
+                    <th>
                         {description}
-                    </TableCell>
-                    <TableCell>
+                    </th>
+                    <th>
                         {customs}
-                    </TableCell>
-                    <TableCell>
+                    </th>
+                    <th>
                         <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(useID);}}></DeleteIcon></IconButton>
                     <IconButton><EditIcon onClick={() => {this.handleUseEditing(useID);}}/></IconButton>
-                    </TableCell>
-                </TableRow>
+                    </th>
+                </tr>
             )
         })
     }
 
     renderTableTPsData() {
         return this.state.tp_data.map((tp, index) => {
-            const { theatrical_play_id, title, date, actors, director, theater } = tp //destructuring
+            const { theathical_play_id, title, date, actors, director, theater } = tp //desthucturing
             return (
-                <TableRow key={theatrical_play_id}>
-                <TableCell>{title}</TableCell>
-                <TableCell>{date}</TableCell>
-                <TableCell >{actors}</TableCell>
-                <TableCell>{director}</TableCell>
-                <TableCell>{theater}</TableCell>
-                <TableCell>
-                    <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(theatrical_play_id);}}></DeleteIcon></IconButton>
-                    <IconButton><EditIcon onClick={() => this.handleTPEditing(theatrical_play_id)}/></IconButton>
-                </TableCell>
-                </TableRow>
+                <tr key={theathical_play_id}>
+                <th>{title}</th>
+                <th>{date}</th>
+                <th >{actors}</th>
+                <th>{director}</th>
+                <th>{theater}</th>
+                <th>
+                    <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(theathical_play_id);}}></DeleteIcon></IconButton>
+                    <IconButton><EditIcon onClick={() => this.handleTPEditing(theathical_play_id)}/></IconButton>
+                </th>
+                </tr>
             )
         })
     }
@@ -645,24 +631,24 @@ class Dashboard extends Component{
         return this.state.accessories.map((accessory, index) => {
             const {accessory_id, name, description, date, sex, material, technique, location, designer, parts, actors, costume_name, use_name, user} = accessory;
             return (
-                <TableRow key={accessory_id}>
-                <TableCell>{name}</TableCell>
-                <TableCell>{description}</TableCell>
-                <TableCell>{costume_name}</TableCell>
-                <TableCell >{date}</TableCell>
-                <TableCell>{use_name}</TableCell>
-                <TableCell>{sex}</TableCell>
-                <TableCell>{material}</TableCell>
-                <TableCell>{technique}</TableCell>
-                <TableCell>{location}</TableCell>
-                <TableCell>{designer}</TableCell>
-                <TableCell>{parts}</TableCell>
-                <TableCell>{actors}</TableCell>
-                <TableCell>
+                <tr key={accessory_id}>
+                <th>{name}</th>
+                <th>{description}</th>
+                <th>{costume_name}</th>
+                <th >{date}</th>
+                <th>{use_name}</th>
+                <th>{sex}</th>
+                <th>{material}</th>
+                <th>{technique}</th>
+                <th>{location}</th>
+                <th>{designer}</th>
+                <th>{parts}</th>
+                <th>{actors}</th>
+                <th>
                     <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}></DeleteIcon></IconButton>
                     <IconButton><EditIcon onClick={() => this.handleTPEditing(accessory_id)}/></IconButton>
-                </TableCell>
-                </TableRow>
+                </th>
+                </tr>
             )
         })
     }
@@ -782,19 +768,19 @@ class Dashboard extends Component{
 		                </ellipse>
 	                </svg>
                     <svg class="Ellipse_2">
-                        <ellipse fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_2" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
+                        <ellipse fill="rgba(0,0,0,0)" sthoke="rgba(88,89,91,1)" sthoke-width="0.5398867130279541px" sthoke-linejoin="miter" sthoke-linecap="butt" sthoke-miterlimit="10" shape-rendering="auto" id="Ellipse_2" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
                         </ellipse>
                     </svg>
                     <svg class="Ellipse_3">
-                        <ellipse fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_3" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
+                        <ellipse fill="rgba(0,0,0,0)" sthoke="rgba(88,89,91,1)" sthoke-width="0.5398867130279541px" sthoke-linejoin="miter" sthoke-linecap="butt" sthoke-miterlimit="10" shape-rendering="auto" id="Ellipse_3" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
                         </ellipse>
                     </svg>
                     <svg class="Path_3" viewBox="2136.044 -1141.338 10.654 5.373">
-                        <path fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_3" d="M 2144.010986328125 -1135.964965820312 C 2145.4951171875 -1135.964965820312 2146.697998046875 -1137.16796875 2146.697998046875 -1138.651000976562 C 2146.697998046875 -1140.135009765625 2145.4951171875 -1141.338012695312 2144.010986328125 -1141.338012695312 L 2138.73095703125 -1141.338012695312 C 2137.2470703125 -1141.338012695312 2136.0439453125 -1140.135009765625 2136.0439453125 -1138.651000976562 C 2136.0439453125 -1137.16796875 2137.2470703125 -1135.964965820312 2138.73095703125 -1135.964965820312 L 2144.010986328125 -1135.964965820312 Z">
+                        <path fill="rgba(0,0,0,0)" sthoke="rgba(88,89,91,1)" sthoke-width="0.5398867130279541px" sthoke-linejoin="miter" sthoke-linecap="butt" sthoke-miterlimit="10" shape-rendering="auto" id="Path_3" d="M 2144.010986328125 -1135.964965820312 C 2145.4951171875 -1135.964965820312 2146.697998046875 -1137.16796875 2146.697998046875 -1138.651000976562 C 2146.697998046875 -1140.135009765625 2145.4951171875 -1141.338012695312 2144.010986328125 -1141.338012695312 L 2138.73095703125 -1141.338012695312 C 2137.2470703125 -1141.338012695312 2136.0439453125 -1140.135009765625 2136.0439453125 -1138.651000976562 C 2136.0439453125 -1137.16796875 2137.2470703125 -1135.964965820312 2138.73095703125 -1135.964965820312 L 2144.010986328125 -1135.964965820312 Z">
                         </path>
                     </svg>
                     <svg class="Path_4" viewBox="2117.19 -1157.051 10.654 5.374">
-                        <path fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_4" d="M 2119.876953125 -1151.677001953125 C 2118.39306640625 -1151.677001953125 2117.18994140625 -1152.880004882812 2117.18994140625 -1154.364013671875 C 2117.18994140625 -1155.848022460938 2118.39306640625 -1157.051025390625 2119.876953125 -1157.051025390625 L 2125.156982421875 -1157.051025390625 C 2126.64111328125 -1157.051025390625 2127.843994140625 -1155.848022460938 2127.843994140625 -1154.364013671875 C 2127.843994140625 -1152.880004882812 2126.64111328125 -1151.677001953125 2125.156982421875 -1151.677001953125 L 2119.876953125 -1151.677001953125 Z">
+                        <path fill="rgba(0,0,0,0)" sthoke="rgba(88,89,91,1)" sthoke-width="0.5398867130279541px" sthoke-linejoin="miter" sthoke-linecap="butt" sthoke-miterlimit="10" shape-rendering="auto" id="Path_4" d="M 2119.876953125 -1151.677001953125 C 2118.39306640625 -1151.677001953125 2117.18994140625 -1152.880004882812 2117.18994140625 -1154.364013671875 C 2117.18994140625 -1155.848022460938 2118.39306640625 -1157.051025390625 2119.876953125 -1157.051025390625 L 2125.156982421875 -1157.051025390625 C 2126.64111328125 -1157.051025390625 2127.843994140625 -1155.848022460938 2127.843994140625 -1154.364013671875 C 2127.843994140625 -1152.880004882812 2126.64111328125 -1151.677001953125 2125.156982421875 -1151.677001953125 L 2119.876953125 -1151.677001953125 Z">
                         </path>
                     </svg>
                     <svg class="Rectangle_8">
@@ -821,6 +807,11 @@ class Dashboard extends Component{
                         {this.state.current_tab===0?
                             <div className="react-tabs__tab--selected">
                             <span>  Κοστούμι</span>
+                            <br></br>
+                            <svg class="UnderlineTabTitle">
+                                <rect fill="rgba(255,222,23,1)" id="UnderlineTabTitle" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535">
+                                </rect>
+                            </svg>
                             </div>
                         :
                             <div className="react-tabs__tab">
@@ -834,6 +825,11 @@ class Dashboard extends Component{
                         {this.state.current_tab===1?
                             <div className="react-tabs__tab--selected">
                             <span>Συνοδευτικό</span>
+                            <br></br>
+                            <svg class="UnderlineTabTitle">
+                                <rect fill="rgba(255,222,23,1)" id="UnderlineTabTitle" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535">
+                                </rect>
+                            </svg>
                             </div>
                         :
                             <div className="react-tabs__tab">
@@ -845,6 +841,11 @@ class Dashboard extends Component{
                         {this.state.current_tab===2?
                             <div className="react-tabs__tab--selected">
                             <span>Χρήση</span>
+                            <br></br>
+                            <svg class="UnderlineTabTitle">
+                                <rect fill="rgba(255,222,23,1)" id="UnderlineTabTitle" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535">
+                                </rect>
+                            </svg>
                             </div>
                         :
                             <div className="react-tabs__tab">
@@ -853,111 +854,132 @@ class Dashboard extends Component{
                         }
                     
                     </Tab>
-                      
-                        {/*<Tab>
-                            {this.state.current_tab===2?
-                                <div id="__________________-selected">
-                                    <span>Θεατρική παράσταση</span>
-                                </div>
+                    <Tab>
+                        {this.state.current_tab===3?
+                            <div className="react-tabs__tab--selected">
+                                <span>Θεατρική παράσταση</span>
+                                <br></br>
+                                <svg class="UnderlineTabTitle">
+                                    <rect fill="rgba(255,222,23,1)" id="UnderlineTabTitle" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535">
+                                    </rect>
+                                </svg>
+                            </div>
                                 :
-                                <div id="__________________">
-                                    <span>Θεατρική παράσταση</span>
-                                </div>
-                            }
-                            
-                        </Tab>*/}
-                   
+                            <div className="react-tabs__tab">
+                                <span>Θεατρική παράσταση</span>
+                            </div>
+                        }    
+                    </Tab>                   
                 </Tabs>
                 
                 <div>
                 {this.state.current_tab===0 &&
-                    <div id="_______bt">
-                        <Table>
-                            <TableHead >
-                                <TableRow className="_______bt">
-                                    <TableCell 
+                    <div>
+                        <table className="Table">
+                            <thead className="TableHead">
+                                <tr>
+                                    <th
+                                    id="ColumnImageCostume"
                                     sorted={null}>
-                                        <span><strong>EIKONA</strong></span>
-                                    </TableCell>
-                                    <TableCell
+                                        <span><sthong>EIKONA</sthong></span>
+                                    </th>
+                                    <th
+                                    id="ColumnNameCostume"
                                     sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}>
-                                    <strong>Τίτλος</strong> 
-                                    </TableCell>
-                                    <TableCell
+                                    <sthong>ΤΙΤΛΟΣ</sthong> 
+                                    </th>
+                                    <th
+                                    id="ColumnDescrCostume"
                                     sorted={column === 'descr' ? direction : null}
-                                    onClick={this.handleSort('descr')}><strong>Περιγραφή</strong></TableCell>
-                                    <TableCell
+                                    onClick={this.handleSort('descr')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
+                                    <th
+                                    id="ColumnDateCostume"
                                     sorted={column === 'date' ? direction : null}
-                                    onClick={this.handleSort('date')}><strong>Εποχή</strong></TableCell>
-                                    <TableCell
+                                    onClick={this.handleSort('date')}><sthong>ΕΠΟΧΗ</sthong></th>
+                                    <th
+                                    id="ColumnSexCostume"
                                     sorted={column === 'sex' ? direction : null}
-                                    onClick={this.handleSort('sex')}><strong>Φύλο</strong></TableCell>
-                                    <TableCell
+                                    onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
+                                    <th
+                                    id="ColumnUseCostume"
                                     sorted={column === 'use_name' ? direction : null}
-                                    onClick={this.handleSort('use_name')}><strong>Χρήση</strong></TableCell>
-                                    <TableCell sorted={column === 'material' ? direction : null}
-                                    onClick={this.handleSort('material')}><strong>Υλικό κατασκευής</strong></TableCell>
-                                    <TableCell
+                                    onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
+                                    <th 
+                                    id="ColumnMaterial"
+                                    sorted={column === 'material' ? direction : null}
+                                    onClick={this.handleSort('material')}><sthong>ΥΛΙΚΟ ΚΑΤΑΣΚΕΥΗΣ</sthong></th>
+                                    <th
+                                    id="ColumnTechnique"
                                     sorted={column === 'technique' ? direction : null}
-                                    onClick={this.handleSort('technique')}><strong>Τεχνική Κατασκευής</strong></TableCell>
-                                    <TableCell
+                                    onClick={this.handleSort('technique')}><sthong>ΤΕΧΝΙΚΗ</sthong></th>
+                                    <th
+                                    id="ColumnLocation"
                                     sorted={column === 'location' ? direction : null}
-                                    onClick={this.handleSort('location')}><strong>Περιοχή Αναφοράς</strong></TableCell>
-                                    <TableCell
+                                    onClick={this.handleSort('location')}><sthong>ΠΕΡΙΟΧΗ</sthong></th>
+                                    <th
+                                    id="ColumnDesigner"
                                     sorted={column === 'designer' ? direction : null}
-                                    onClick={this.handleSort('designer')}><strong>Σχεδιαστής</strong></TableCell>
-                                    <TableCell
+                                    onClick={this.handleSort('designer')}><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
+                                    <th
+                                    id="ColumnTPCostume"
                                     sorted={column === 'tp_title' ? direction : null}
-                                    onClick={this.handleSort('tp_title')}><strong>Θεατρικές Παραστάσεις</strong></TableCell>
-                                    <TableCell
+                                    onClick={this.handleSort('tp_title')}><sthong>ΘΕΑΤΡΙΚΕΣ ΠΑΡΑΣΤΑΣΕΙΣ</sthong></th>
+                                    <th
+                                    id="ColumnPartsCostume"
                                     sorted={column === 'parts' ? direction : null}
-                                    onClick={this.handleSort('parts')}><strong>Ρόλος</strong></TableCell>
-                                    <TableCell
+                                    onClick={this.handleSort('parts')}><sthong>ΡΟΛΟΣ</sthong></th>
+                                    <th
+                                    id="ColumnActors"
                                     sorted={column === 'actors' ? direction : null}
-                                    onClick={this.handleSort('actors')}><strong>Ηθοποιοί</strong></TableCell>
-                                    <TableCell></TableCell>
-                                    </TableRow> 
-                                </TableHead>
-                                <TableBody>
+                                    onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
+                                    <th
+                                    id="ColumnActions"></th>
+                                    </tr> 
+                                </thead>
+                                <tbody className="TableBody">
                                     {this.renderTableCostumesData()} 
-                                </TableBody>
-                            </Table>
-                            <IconButton><AddIcon onClick={() => this.handleAddCostume()}></AddIcon></IconButton>
+                                </tbody>
+                            </table>
+                            <svg class="Path_23" viewBox="2982.425 -216.026 162.096 25.428">
+                                <path fill="rgba(255,255,255,1)" id="Path_23" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
+                                </path>
+                            </svg>
+                            <button id="ButtonAdd"><span onClick={() => this.handleAddCostume()}>Προσθήκη</span></button>
                             <CostumeForm 
                                 isOpen={this.state.isCostumeDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
                                 user={this.state.user.user_id}
                                 costumes={this.state.costume_data}
                                 uses={this.state.use_data}
-                                theatrical_plays={this.state.tp_data}
+                                theathical_plays={this.state.tp_data}
                                 costume={this.state.costume}
                                 editing={this.state.editing}></CostumeForm>
                         </div>
                     }
                 {this.state.current_tab===1 &&
                     <div  id="_______bt">
-                        <Table>
-                            <TableHead>    
-                                <TableRow>
-                                        <TableCell><strong>Όνομα</strong></TableCell>
-                                        <TableCell><strong>Περιγραφή</strong></TableCell>
-                                        <TableCell><strong>Κοστούμι</strong></TableCell>
-                                        <TableCell><strong>Εποχή</strong></TableCell>
-                                        <TableCell><strong>Χρήση</strong></TableCell>
-                                        <TableCell><strong>Φύλο</strong></TableCell>
-                                        <TableCell><strong>Ύλικο</strong></TableCell>
-                                        <TableCell><strong>Τεχνική</strong></TableCell>
-                                        <TableCell><strong>Περιοχή Αναφοράς</strong></TableCell>
-                                        <TableCell><strong>Σχεδιαστής</strong></TableCell>
-                                        <TableCell><strong>Ρόλοι</strong></TableCell>
-                                        <TableCell><strong>Ηθοποιοί</strong></TableCell>
-                                        <TableCell></TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>{this.renderTableAccessoriesData()} </TableBody>
-                        </Table>
-                        <IconButton><AddIcon onClick={() => this.handleAddAccessory()}></AddIcon></IconButton>
+                        <table>
+                            <thead>    
+                                <tr>
+                                    <th><sthong>Όνομα</sthong></th>
+                                    <th><sthong>Περιγραφή</sthong></th>
+                                    <th><sthong>Κοστούμι</sthong></th>
+                                    <th><sthong>Εποχή</sthong></th>
+                                    <th><sthong>Χρήση</sthong></th>
+                                    <th><sthong>Φύλο</sthong></th>
+                                    <th><sthong>Ύλικο</sthong></th>
+                                    <th><sthong>Τεχνική</sthong></th>
+                                    <th><sthong>Περιοχή Αναφοράς</sthong></th>
+                                    <th><sthong>Σχεδιαστής</sthong></th>
+                                    <th><sthong>Ρόλοι</sthong></th>
+                                    <th><sthong>Ηθοποιοί</sthong></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>{this.renderTableAccessoriesData()} </tbody>
+                        </table>
+                        
                             <AccessoryForm
                                 isOpen={this.state.isAccessoryDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
@@ -972,32 +994,32 @@ class Dashboard extends Component{
                     }
                 {this.state.current_tab===2 &&
                         <div id="_______bt">
-                            <Table>
-                            <TableHead>
-                                <TableRow>
-                                <TableCell
+                            <table>
+                            <thead>
+                                <tr>
+                                <th
                                 sorted={column === 'name' ? direction : null}
                                 onClick={this.handleSort('name')}>
-                                <strong>Όνομα</strong> 
-                                </TableCell>
-                                <TableCell
+                                <sthong>Όνομα</sthong> 
+                                </th>
+                                <th
                                 sorted={column === 'use_category' ? direction : null}
                                 onClick={this.handleSort('use_category')}>
-                                <strong>Κατηγορία Χρήσης</strong></TableCell>
-                                <TableCell
+                                <sthong>Κατηγορία Χρήσης</sthong></th>
+                                <th
                                 sorted={column === 'description' ? direction : null}
                                 onClick={this.handleSort('description')}>
-                                <strong>Περιγραφή</strong></TableCell>
-                                <TableCell
+                                <sthong>Περιγραφή</sthong></th>
+                                <th
                                 sorted={column === 'customs' ? direction : null}
                                 onClick={this.handleSort('customs')}>
-                                <strong>Έθιμα</strong>
-                                </TableCell>
-                                <TableCell></TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>{this.renderTableUsesData()}</TableBody>
-                        </Table>
+                                <sthong>Έθιμα</sthong>
+                                </th>
+                                <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>{this.renderTableUsesData()}</tbody>
+                        </table>
                         <IconButton><AddIcon onClick={() => this.handleAddUse()}></AddIcon></IconButton>
                         <UseForm 
                                 isOpen={this.state.isUseDialogOpen}
@@ -1005,33 +1027,33 @@ class Dashboard extends Component{
                                 user={this.state.user.user_id}
                                 costumes={this.state.costume_data}
                                 uses={this.state.use_data}
-                                theatrical_plays={this.state.tp_data}
+                                theathical_plays={this.state.tp_data}
                                 editing={this.state.editing}
                                 use={this.state.use}></UseForm>
                         </div>
                     }
                 {this.state.current_tab===3 &&
                         <div id="_______bt">
-                            <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sorted={column === 'title' ? direction : null}
-                                    onClick={this.handleSort('title')}><strong>Όνομα Παράστασης</strong></TableCell>
-                                    <TableCell><strong>Χρονολογία</strong></TableCell>
-                                    <TableCell><strong>Ηθοποιοί</strong></TableCell>
-                                    <TableCell><strong>Σκηνοθέτης</strong></TableCell>
-                                    <TableCell><strong>Θέατρο</strong></TableCell>
-                                    <TableCell></TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>{this.renderTableTPsData()} </TableBody>
-                            </Table>
+                            <table>
+                            <thead>
+                                <tr>
+                                    <th sorted={column === 'title' ? direction : null}
+                                    onClick={this.handleSort('title')}><sthong>Όνομα Παράστασης</sthong></th>
+                                    <th><sthong>Χρονολογία</sthong></th>
+                                    <th><sthong>Ηθοποιοί</sthong></th>
+                                    <th><sthong>Σκηνοθέτης</sthong></th>
+                                    <th><sthong>Θέατρο</sthong></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>{this.renderTableTPsData()} </tbody>
+                            </table>
                             <IconButton><AddIcon onClick={() => this.handleAddTP()}></AddIcon></IconButton>
                             <TpForm
                                 isOpen={this.state.isTPDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
                                 user={this.state.user.user_id}
-                                theatrical_plays={this.state.tp_data}
+                                theathical_plays={this.state.tp_data}
                                 editing={this.state.editing}
                                 tp={this.state.tp}
                                 />

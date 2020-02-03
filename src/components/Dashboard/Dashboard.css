@@ -98,9 +98,9 @@
   position: absolute;
   overflow: visible;
   width: 1843.697px;
-  height: 47.774px;
+  height: 54px;
   left: 74.302px;
-  top: 65.865px;
+  top: 61px;
   line-height: 18px;
   margin-top: -1.5px;
   text-align: left;
@@ -110,6 +110,7 @@
   font-size: 15px;
   color: rgba(56,56,56,1);
   letter-spacing: 0.4px;
+  background: linear-gradient(to left, rgba(255,0,0,0), #ffde17);
 }
 
 .react-tabs__tab {
@@ -126,59 +127,38 @@
   background: rgba(242,242,242,1);
   width: 208.184px;
   height: 82.721px;
+  margin-top: -5.8px;
+  margin-left: -12px;
 }
 
-#_________ {
-  position: absolute;
-  left: 123.639px;
-  top: 81.255px;
-  overflow: visible;
-  width: 92px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: InputMono-Bold;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(56,56,56,1);
-  letter-spacing: 0.4px;
+.UnderlineTabTitle {
+  width: 87.443px;
+  height: 5.535px;
 }
-#_____ {
+
+#ButtonAdd {
   position: absolute;
-  left: 348.898px;
-  top: 81.255px;
-  overflow: visible;
-  width: 51px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: InputMono-Bold;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(255,255,255,1);
-  letter-spacing: 0.4px;
+	left: 938px;
+	top: 1032.311px;
+	overflow: visible;
+		width: 65px;
+		white-space: nowrap;
+		line-height: 18px;
+		margin-top: -3px;
+		text-align: left;
+		font-family: InputMono-Light;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 12px;
+		color: rgba(88,89,91,1);
+		letter-spacing: 0.4px;
 }
-#__________________ {
-  position: absolute;
-  left: 476.722px;
-  top: 81.255px;
-  overflow: visible;
-  width: 183px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: InputMono-Bold;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(255,255,255,1);
-  letter-spacing: 0.4px;
+
+#ButtonAdd:hover{
+  cursor: pointer;
+  background-color: rgb(56, 56, 23);
 }
+
 .Rectangle_6 {
   position: absolute;
   overflow: visible;
@@ -265,14 +245,7 @@
   top: 77.765px;
   transform: matrix(1,0,0,1,0,0);
 }
-.Rectangle_7 {
-  position: absolute;
-  overflow: visible;
-  width: 87.443px;
-  height: 5.535px;
-  left: 123.639px;
-  top: 108.104px;
-}
+
 .Rectangle_8 {
   position: absolute;
   overflow: visible;
@@ -634,122 +607,124 @@
   top: 202.861px;
   transform: matrix(1,0,0,1,0,0);
 }
-#_______bt {
+
+.Table {
   position: absolute;
+  overflow: visible;
   left: 126.469px;
   top: 170.123px;
-  overflow: visible;
-  width: 39px;
-  white-space: nowrap;
-  line-height: 70px;
   margin-top: -30px;
   text-align: left;
   font-family: Roboto-Medium;
   font-style: normal;
   font-weight: normal;
-  font-size: 10px;
   color: rgba(35,31,32,1);
   letter-spacing: 0.43px;
 }
+
+td { 
+  padding:15px;
+} 
+
+th{
+  padding:5px;
+  border-bottom: 2px solid rgba(88,89,91,1);
+}
+
+.TableHead {
+  font-size: 10px;
+  
+}
+
+.TableBody {
+  font-size: 15px;
+  vertical-align: top;
+
+}
+
+#ColumnImageCostume {
+  width: 176.69px;
+  transform-origin: 0px 0px;
+}
+
 .Line_8 {
-  overflow: visible;
-  position: absolute;
   width: 174.887px;
   height: 1px;
-  left: 123.639px;
-  top: 202.861px;
   transform: matrix(1,0,0,1,0,0);
 }
-.Line_9 {
-  overflow: visible;
+
+#Image {
+  width: 140.266px;
+  height: 128.587px;
+}
+
+
+#ColumnNameCostume {
+  /*width: 85px;*/
+}
+
+#ColumnDescrCostume {
+  width: 250.996px;
+}
+
+#ColumnSexCostume {
+  /*width: 42px;*/
+}
+
+#ColumnSexCostume {
+  /*width: 89px;*/
+}
+
+#ColumnUseCostume {
+  /*width: 89px;*/
+}
+
+#ColumnMaterial {
+  /*width: 47px;*/
+}
+
+#ColumnLocation {
+  width: 130px;
+}
+
+#ColumnDesigner {
+  /*width: 110px;*/
+}
+
+#ColumnTPCostume {
+  /*width: 80px;*/
+}
+
+#ColumnPartsCostume {
+  width: 80px;
+}
+
+#ColumnActors {
+  width: 110px;
+}
+
+#ColumnEditor {
+  width:119px;
+}
+
+#ColumnActions {
+  width:49px;
+}
+
+.Rectangle_10 {
   position: absolute;
-  width: 255.058px;
-  height: 1px;
-  left: 443.373px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_10 {
   overflow: visible;
-  position: absolute;
-  width: 90.425px;
-  height: 1px;
-  left: 775.495px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
+  width: 176.692px;
+  height: 162.045px;
 }
-.Line_11 {
+
+#Group_11 {
+  position: absolute;
+  width: 140.266px;
+  height: 128.587px;
   overflow: visible;
-  position: absolute;
-  width: 49.232px;
-  height: 1px;
-  left: 882.959px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
 }
-.Line_12 {
-  overflow: visible;
-  position: absolute;
-  width: 83.587px;
-  height: 1px;
-  left: 950.142px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_13 {
-  overflow: visible;
-  position: absolute;
-  width: 138.409px;
-  height: 1px;
-  left: 1044.599px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_14 {
-  overflow: visible;
-  position: absolute;
-  width: 84.807px;
-  height: 1px;
-  left: 1435.658px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_15 {
-  overflow: visible;
-  position: absolute;
-  width: 113.298px;
-  height: 1px;
-  left: 1537.553px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_16 {
-  overflow: visible;
-  position: absolute;
-  width: 107.678px;
-  height: 1px;
-  left: 1201.238px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_17 {
-  overflow: visible;
-  position: absolute;
-  width: 98.573px;
-  height: 1px;
-  left: 1325.526px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_18 {
-  overflow: visible;
-  position: absolute;
-  width: 1px;
-  height: 190.671px;
-  left: 1810.368px;
-  top: 215.518px;
-  transform: matrix(1,0,0,1,0,0);
-}
+
 #Group_34 {
   position: absolute;
   width: 37.786px;
@@ -902,185 +877,7 @@
   top: 310.853px;
   transform: matrix(1,0,0,1,0,0);
 }
-#___________________ {
-  position: absolute;
-  left: 320.285px;
-  top: 246.202px;
-  overflow: visible;
-  width: 85px;
-  white-space: nowrap;
-  line-height: 20px;
-  margin-top: -2px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  color: rgba(56,56,56,1);
-}
-#_______cm {
-  position: absolute;
-  left: 715.519px;
-  top: 289.405px;
-  overflow: visible;
-  width: 42px;
-  white-space: nowrap;
-  line-height: 70px;
-  margin-top: -30px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 10px;
-  color: rgba(56,56,56,1);
-  letter-spacing: 0.43px;
-}
-#Lorem_Ipsum_dummy_text__typese {
-  position: absolute;
-  left: 772.495px;
-  top: 247.202px;
-  overflow: visible;
-  width: 89px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(56,56,56,1);
-}
-#_____________________________ {
-  position: absolute;
-  left: 1044.599px;
-  top: 248.202px;
-  overflow: visible;
-  width: 130px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -2px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  color: rgba(56,56,56,1);
-}
-#_________________cp {
-  position: absolute;
-  left: 1326.526px;
-  top: 247.202px;
-  overflow: visible;
-  width: 80px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(56,56,56,1);
-}
-#_________________cq {
-  position: absolute;
-  left: 1435.658px;
-  top: 247.202px;
-  overflow: visible;
-  width: 80px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(56,56,56,1);
-}
-#__________________________ {
-  position: absolute;
-  left: 1197.613px;
-  top: 247.202px;
-  overflow: visible;
-  width: 110px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(56,56,56,1);
-}
-#___________________________cs {
-  position: absolute;
-  left: 1538.552px;
-  top: 247.202px;
-  overflow: visible;
-  width: 110px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(56,56,56,1);
-}
-#_______ {
-  position: absolute;
-  left: 884.893px;
-  top: 289.405px;
-  overflow: visible;
-  width: 47px;
-  white-space: nowrap;
-  line-height: 70px;
-  margin-top: -30px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 10px;
-  color: rgba(56,56,56,1);
-  letter-spacing: 0.43px;
-}
-#________cu {
-  position: absolute;
-  left: 949.965px;
-  top: 265.616px;
-  overflow: visible;
-  width: 72px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(56,56,56,1);
-}
-.Path_9 {
-  overflow: visible;
-  position: absolute;
-  width: 15.962px;
-  height: 34.351px;
-  left: 727.935px;
-  top: 247.409px;
-  transform: matrix(1,0,0,1,0,0);
-}
-#Group_9 {
-  position: absolute;
-  width: 25.413px;
-  height: 23.992px;
-  left: 894.869px;
-  top: 251.436px;
-  overflow: visible;
-}
+
 .Path_10 {
   overflow: visible;
   position: absolute;
@@ -1106,22 +903,7 @@
   font-size: 15px;
   color: rgba(56,56,56,1);
 }
-.Rectangle_10 {
-  position: absolute;
-  overflow: visible;
-  width: 176.692px;
-  height: 162.045px;
-  left: 123.639px;
-  top: 244.91px;
-}
-#Group_11 {
-  position: absolute;
-  width: 140.266px;
-  height: 128.587px;
-  left: 141.469px;
-  top: 261.256px;
-  overflow: visible;
-}
+
 .Line_23 {
   overflow: visible;
   position: absolute;
@@ -2262,12 +2044,7 @@
 }
 #Rectangle_20 {
   opacity: 0.86;
-  position: absolute;
-  width: 247px;
-  height: 140px;
-  left: 88.504px;
-  top: 833.785px;
-  overflow: visible;
+	width: 247px;
 }
 .Rectangle_21 {
   position: absolute;
@@ -2293,6 +2070,7 @@
   font-size: 9px;
   color: rgba(88,89,91,1);
 }
+
 .Path_23 {
   overflow: visible;
   position: absolute;
@@ -2310,30 +2088,4 @@
   left: 916.555px;
   top: 1039.416px;
   transform: matrix(1,0,0,1,0,0);
-}
-.Line_40 {
-  overflow: visible;
-  position: absolute;
-  width: 0.725px;
-  height: 19.692px;
-  left: 926.4px;
-  top: 1029.57px;
-  transform: matrix(1,0,0,1,0,0);
-}
-#_________fu {
-  position: absolute;
-  left: 947.689px;
-  top: 1032.311px;
-  overflow: visible;
-  width: 65px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -3px;
-  text-align: left;
-  font-family: InputMono-Light;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(88,89,91,1);
-  letter-spacing: 0.4px;
 }
