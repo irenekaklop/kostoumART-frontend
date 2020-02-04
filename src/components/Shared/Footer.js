@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import "../../styles/Footer.css";
+import "../../components/Dashboard/Dashboard.css";
 
 const styles = theme => ({
   root: {
@@ -18,13 +18,12 @@ const styles = theme => ({
 
 function Footer(props) {
   const { classes } = props;
-
   return (
-    <footer>
-        <div className="footer">
-            <p>Copyright 2019 , <a href="http://88.197.53.80/eirini/"> KostoumArt</a></p>
+    
+      <div id="COPYRIGHT_2019___KOSTOUMART">
+          <span>COPYRIGHT 2019 | <a href="http://88.197.53.80/eirini/"> KOSTOUMART</a></span>
         </div>
-    </footer>
+  
   );
 }
 

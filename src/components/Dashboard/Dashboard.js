@@ -8,7 +8,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import AddIcon from '@material-ui/icons/Add';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
@@ -28,6 +27,8 @@ import { use_categories, techniques, sexs, materials } from '../../utils/options
 import _ from 'lodash'
 
 import Header from '../Shared/Header.js';
+import Footer from '../Shared/Footer.js';
+import {EditButton, DeleteButton} from '../Shared/Buttons.js'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 class Dashboard extends Component{
@@ -87,6 +88,7 @@ class Dashboard extends Component{
 
         this.logOut = this.logOut.bind(this);
         this.resetTimeout = this.resetTimeout.bind(this);
+        this.handleCostumeEditing = this.handleCostumeEditing.bind(this)
 
         //Set Timeout in case of inactivity 
         for (var i in this.events) {
@@ -420,8 +422,8 @@ class Dashboard extends Component{
     handleCostumeEditing(index){
         for(var i=0; i < this.state.costume_data.length; i++){
             if(this.state.costume_data[i].costume_id === index){
-                //axios.get('http://88.197.53.80/kostoumart-api/costumes/'+index)
-                axios.get("http://localhost:8108/costumes/"+index)
+                axios.get('http://88.197.53.80/kostoumart-api/costumes/'+index)
+                //axios.get("http://localhost:8108/costumes/"+index)
                 .then(res => {
                     const costume = res.data.response;
                     this.setState({ costume: costume, editing: true,
@@ -575,8 +577,9 @@ class Dashboard extends Component{
                 <td>{parts}</td>
                 <td>{actors}</td>
                 <td>
-                    <IconButton><DeleteIcon onClick={()=>{this.handleCostumeDelete(costume_name);}}></DeleteIcon> </IconButton>
-                    <IconButton><EditIcon onClick={() => this.handleCostumeEditing(costume_id)}/></IconButton></td>
+                    <div onClick={() => this.handleCostumeEditing(costume_id)}><EditButton/></div>
+                    <div onClick={()=> this.handleCostumeDelete(costume_name)}><DeleteButton/></div>
+                </td>
                 </tr>
             )
         })
@@ -587,22 +590,22 @@ class Dashboard extends Component{
             const { useID, name, use_category,description, customs } = use //desthucturing
             return (
                 <tr key={useID}>
-                    <th>
+                    <td>
                         {name}
-                   </th>
-                    <th>
+                   </td>
+                    <td>
                         {use_category}
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         {description}
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         {customs}
-                    </th>
-                    <th>
-                        <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(useID);}}></DeleteIcon></IconButton>
-                    <IconButton><EditIcon onClick={() => {this.handleUseEditing(useID);}}/></IconButton>
-                    </th>
+                    </td>
+                    <td>
+                        <div onClick={() => {this.handleUseEditing(useID);}}><EditButton/></div>
+                        <div onClick={()=>{this.handleConfirmationForDelete(useID);}}><DeleteButton/></div>
+                    </td>
                 </tr>
             )
         })
@@ -613,15 +616,15 @@ class Dashboard extends Component{
             const { theathical_play_id, title, date, actors, director, theater } = tp //desthucturing
             return (
                 <tr key={theathical_play_id}>
-                <th>{title}</th>
-                <th>{date}</th>
-                <th >{actors}</th>
-                <th>{director}</th>
-                <th>{theater}</th>
-                <th>
-                    <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(theathical_play_id);}}></DeleteIcon></IconButton>
-                    <IconButton><EditIcon onClick={() => this.handleTPEditing(theathical_play_id)}/></IconButton>
-                </th>
+                <td>{title}</td>
+                <td>{date}</td>
+                <td >{actors}</td>
+                <td>{director}</td>
+                <td>{theater}</td>
+                <td>
+                    <div onClick={() => this.handleTPEditing(theathical_play_id)}><EditButton/></div>
+                    <div onClick={()=>{this.handleConfirmationForDelete(theathical_play_id);}}><DeleteButton/></div>
+                </td>
                 </tr>
             )
         })
@@ -632,22 +635,22 @@ class Dashboard extends Component{
             const {accessory_id, name, description, date, sex, material, technique, location, designer, parts, actors, costume_name, use_name, user} = accessory;
             return (
                 <tr key={accessory_id}>
-                <th>{name}</th>
-                <th>{description}</th>
-                <th>{costume_name}</th>
-                <th >{date}</th>
-                <th>{use_name}</th>
-                <th>{sex}</th>
-                <th>{material}</th>
-                <th>{technique}</th>
-                <th>{location}</th>
-                <th>{designer}</th>
-                <th>{parts}</th>
-                <th>{actors}</th>
-                <th>
-                    <IconButton><DeleteIcon onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}></DeleteIcon></IconButton>
-                    <IconButton><EditIcon onClick={() => this.handleTPEditing(accessory_id)}/></IconButton>
-                </th>
+                <td>{name}</td>
+                <td>{description}</td>
+                <td>{costume_name}</td>
+                <td>{date}</td>
+                <td>{use_name}</td>
+                <td>{sex}</td>
+                <td>{material}</td>
+                <td>{technique}</td>
+                <td>{location}</td>
+                <td>{designer}</td>
+                <td>{parts}</td>
+                <td>{actors}</td>
+                <td>
+                    <div onClick={() => this.handleAccessoryEditing(accessory_id)}><EditButton/></div>
+                    <div onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}><DeleteButton/></div>
+                </td>
                 </tr>
             )
         })
@@ -713,6 +716,7 @@ class Dashboard extends Component{
                     email={this.state.user.email}
                     logOut={this.logOut.bind(this)}>
                 </Header>
+                {/*Filters and right sidebar*/}
                 <div>
                     <IconButton onClick={this.handleDrawerOpen}></IconButton>
                         <Drawer
@@ -798,6 +802,7 @@ class Dashboard extends Component{
                     </div>
                 </div>
 
+                {/*Tabs*/}
                 <Tabs 
                 className="react-tabs__tab-list"
                 selectedIndex={this.state.current_tab}
@@ -871,7 +876,8 @@ class Dashboard extends Component{
                         }    
                     </Tab>                   
                 </Tabs>
-                
+
+                {/*Tab panels*/}
                 <div>
                 {this.state.current_tab===0 &&
                     <div>
@@ -945,7 +951,14 @@ class Dashboard extends Component{
                                 <path fill="rgba(255,255,255,1)" id="Path_23" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
                                 </path>
                             </svg>
-                            <button id="ButtonAdd"><span onClick={() => this.handleAddCostume()}>Προσθήκη</span></button>
+                            <button className="ButtonAdd" onClick={() => this.handleAddCostume()}>
+                                <svg id="ButtonAddIcon">
+                                    <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.7254922986030579px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" d="M 19.69155883789062 0 L 0 0">
+                                    </path>
+                                </svg>
+                                <span id="ButtonAddText">προσθήκη</span>
+                            </button>
+                            
                             <CostumeForm 
                                 isOpen={this.state.isCostumeDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
@@ -958,69 +971,91 @@ class Dashboard extends Component{
                         </div>
                     }
                 {this.state.current_tab===1 &&
-                    <div  id="_______bt">
-                        <table>
-                            <thead>    
+                    <div>
+                        <table className="Table">
+                            <thead className="TableHead">    
                                 <tr>
-                                    <th><sthong>Όνομα</sthong></th>
-                                    <th><sthong>Περιγραφή</sthong></th>
-                                    <th><sthong>Κοστούμι</sthong></th>
-                                    <th><sthong>Εποχή</sthong></th>
-                                    <th><sthong>Χρήση</sthong></th>
-                                    <th><sthong>Φύλο</sthong></th>
-                                    <th><sthong>Ύλικο</sthong></th>
-                                    <th><sthong>Τεχνική</sthong></th>
-                                    <th><sthong>Περιοχή Αναφοράς</sthong></th>
-                                    <th><sthong>Σχεδιαστής</sthong></th>
-                                    <th><sthong>Ρόλοι</sthong></th>
-                                    <th><sthong>Ηθοποιοί</sthong></th>
-                                    <th></th>
+                                    <th><sthong>ONOMA</sthong></th>
+                                    <th><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
+                                    <th><sthong>ΚΟΣΤΟΥΜΙ</sthong></th>
+                                    <th><sthong>ΕΠΟΧΗ</sthong></th>
+                                    <th><sthong>ΧΡΗΣΗ</sthong></th>
+                                    <th><sthong>ΦΥΛΟ</sthong></th>
+                                    <th><sthong>ΥΛΙΚΟ</sthong></th>
+                                    <th><sthong>ΤΕΧΝΙΚΗ</sthong></th>
+                                    <th><sthong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</sthong></th>
+                                    <th><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
+                                    <th><sthong>ΡΟΛΟΙ</sthong></th>
+                                    <th><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
+                                    <th id="ColumnActions"></th>
                                 </tr>
                             </thead>
-                            <tbody>{this.renderTableAccessoriesData()} </tbody>
+                            <tbody className="TableBody">{this.renderTableAccessoriesData()} </tbody>
                         </table>
                         
-                            <AccessoryForm
-                                isOpen={this.state.isAccessoryDialogOpen}
-                                handleClose={this.handleCloseDialog.bind(this)}
-                                user={this.state.user.user_id}
-                                accessories={this.state.accessories}
-                                editing={this.state.editing}
-                                accessory={this.state.accessory}
-                                uses={this.state.use_data}
-                                costumes={this.state.costume_data}
+                        <AccessoryForm
+                            isOpen={this.state.isAccessoryDialogOpen}
+                            handleClose={this.handleCloseDialog.bind(this)}
+                            user={this.state.user.user_id}
+                            accessories={this.state.accessories}
+                            editing={this.state.editing}
+                            accessory={this.state.accessory}
+                            uses={this.state.use_data}
+                            costumes={this.state.costume_data}
                         />
+
+                        <svg class="Path_23" viewBox="2982.425 -216.026 162.096 25.428">
+                            <path fill="rgba(255,255,255,1)" id="Path_23" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
+                            </path>
+                        </svg>
+                        <button className="ButtonAdd" onClick={() => this.handleAddAccessory()}>
+                                <svg id="ButtonAddIcon">
+                                    <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.7254922986030579px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" d="M 19.69155883789062 0 L 0 0">
+                                    </path>
+                                </svg>
+                                <span id="ButtonAddText">προσθήκη</span>
+                            </button>
                     </div>
                     }
                 {this.state.current_tab===2 &&
-                        <div id="_______bt">
-                            <table>
-                            <thead>
+                        <div>
+                            <table className="Table">
+                            <thead className="TableHead">
                                 <tr>
                                 <th
                                 sorted={column === 'name' ? direction : null}
                                 onClick={this.handleSort('name')}>
-                                <sthong>Όνομα</sthong> 
+                                <sthong>ΟΝΟΜΑ</sthong> 
                                 </th>
                                 <th
                                 sorted={column === 'use_category' ? direction : null}
                                 onClick={this.handleSort('use_category')}>
-                                <sthong>Κατηγορία Χρήσης</sthong></th>
+                                <sthong>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</sthong></th>
                                 <th
                                 sorted={column === 'description' ? direction : null}
                                 onClick={this.handleSort('description')}>
-                                <sthong>Περιγραφή</sthong></th>
+                                <sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
                                 <th
                                 sorted={column === 'customs' ? direction : null}
                                 onClick={this.handleSort('customs')}>
-                                <sthong>Έθιμα</sthong>
+                                <sthong>ΕΘΙΜΑ</sthong>
                                 </th>
-                                <th></th>
+                                <th id="ColumnActions"></th>
                                 </tr>
                             </thead>
-                            <tbody>{this.renderTableUsesData()}</tbody>
+                            <tbody className="TableBody">{this.renderTableUsesData()}</tbody>
                         </table>
-                        <IconButton><AddIcon onClick={() => this.handleAddUse()}></AddIcon></IconButton>
+                        <svg class="Path_23" viewBox="2982.425 -216.026 162.096 25.428">
+                                <path fill="rgba(255,255,255,1)" id="Path_23" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
+                                </path>
+                        </svg>
+                        <button className="ButtonAdd" onClick={() => this.handleAddUse()}>
+                                <svg id="ButtonAddIcon">
+                                    <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.7254922986030579px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" d="M 19.69155883789062 0 L 0 0">
+                                    </path>
+                                </svg>
+                                <span id="ButtonAddText">προσθήκη</span>
+                        </button>
                         <UseForm 
                                 isOpen={this.state.isUseDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
@@ -1033,22 +1068,32 @@ class Dashboard extends Component{
                         </div>
                     }
                 {this.state.current_tab===3 &&
-                        <div id="_______bt">
-                            <table>
-                            <thead>
+                        <div>
+                            <table className="Table">
+                            <thead className="TableHead">
                                 <tr>
                                     <th sorted={column === 'title' ? direction : null}
-                                    onClick={this.handleSort('title')}><sthong>Όνομα Παράστασης</sthong></th>
-                                    <th><sthong>Χρονολογία</sthong></th>
-                                    <th><sthong>Ηθοποιοί</sthong></th>
-                                    <th><sthong>Σκηνοθέτης</sthong></th>
-                                    <th><sthong>Θέατρο</sthong></th>
-                                    <th></th>
+                                    onClick={this.handleSort('title')}><sthong>ΟΝΟΜΑ ΠΑΡΑΣΤΑΣΗΣ</sthong></th>
+                                    <th><sthong>ΧΡΟΝΟΛΟΓΙΑ</sthong></th>
+                                    <th><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
+                                    <th><sthong>ΣΚΗΝΟΘΕΤΗΣ</sthong></th>
+                                    <th><sthong>ΘΕΑΤΡΟ</sthong></th>
+                                    <th id="ColumnActions"></th>
                                 </tr>
                             </thead>
-                            <tbody>{this.renderTableTPsData()} </tbody>
+                            <tbody className="TableBody">{this.renderTableTPsData()} </tbody>
                             </table>
-                            <IconButton><AddIcon onClick={() => this.handleAddTP()}></AddIcon></IconButton>
+                            <svg class="Path_23" viewBox="2982.425 -216.026 162.096 25.428">
+                                <path fill="rgba(255,255,255,1)" id="Path_23" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
+                                </path>
+                            </svg>
+                            <button className="ButtonAdd" onClick={() => this.handleAddTP()}>
+                                <svg id="ButtonAddIcon">
+                                    <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.7254922986030579px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" d="M 19.69155883789062 0 L 0 0">
+                                    </path>
+                                </svg>
+                                <span id="ButtonAddText">προσθήκη</span>
+                            </button>
                             <TpForm
                                 isOpen={this.state.isTPDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
@@ -1068,6 +1113,29 @@ class Dashboard extends Component{
                     handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
                            
                 </div>
+
+                {/*logout action*/}
+                <div>
+                    <svg class="Rectangle_9">
+                        <rect fill="rgba(56,56,56,1)" id="Rectangle_9" rx="0" ry="0" x="0" y="0" width="378.633" height="112.152">
+                        </rect>
+                    </svg>
+                        
+                    <button id="LOGOUT_BUTTON" onClick={() => this.logOut()}>Logout</button>
+            
+                    <div id="USERNAME">
+                        <span>USERNAME</span>
+                    </div>
+                    <div id="administrator_email">
+                        <span>{this.state.user.email}</span>
+                    </div>
+                    <svg class="Line_5" viewBox="0 0 1 66.176">
+                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_5" d="M 0 0 L 0 66.17550659179688">
+                        </path>
+                    </svg>
+                </div>
+                
+                <Footer/>
             </React.Fragment>
           );
     

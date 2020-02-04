@@ -1,0 +1,171 @@
+.EditButton {
+    padding: 12px;
+}
+.Group_34 {
+    position: absolute;
+    border: 0;
+    vertical-align: middle;
+    cursor: pointer;
+    margin: 0;
+    display: inline-flex;
+    outline: 0;
+    position: relative;
+    align-items: center;
+    user-select: none;
+    width: 37.786px;
+    height: 37.786px;
+    overflow: visible;
+    background-color: transparent;
+
+}
+.Group_34:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+.Group_5 {
+    position: absolute;
+    width: 19.209px;
+    height: 22.396px;
+    left: 9.288px;
+    top: 7.695px;
+    overflow: visible;
+}
+.Line_19 {
+    overflow: visible;
+    position: absolute;
+    width: 14.165px;
+    height: 14.165px;
+    left: 0px;
+    top: 8.783px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Path_7 {
+    overflow: visible;
+    position: absolute;
+    width: 7.009px;
+    height: 6.882px;
+    left: 13.109px;
+    top: 3.187px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Path_8 {
+    overflow: visible;
+    position: absolute;
+    width: 6.244px;
+    height: 16.444px;
+    left: 12.419px;
+    top: 0px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Ellipse_4 {
+    position: absolute;
+    overflow: visible;
+    width: 38.568px;
+    height: 38.568px;
+    left: 0px;
+    top: 0px;
+}
+
+#edit {
+    position: absolute;
+    overflow: visible;
+    width: 33px;
+    white-space: nowrap;
+    line-height: 18px;
+    text-align: center;
+    font-family: InputMono-Light;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(56,56,56,1);
+    letter-spacing: 0.4px;
+    top: 40px;
+}
+
+#delete {
+    position: absolute;
+    overflow: visible;
+    width: 33px;
+    white-space: nowrap;
+    line-height: 18px;
+    text-align: center;
+    font-family: InputMono-Light;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(56,56,56,1);
+    letter-spacing: 0.4px;
+    top: 40px;
+}
+
+.DeleteButton {
+    padding: 12px;
+}
+.Group_35 {
+    position: absolute;
+    border: 0;
+    vertical-align: middle;
+    cursor: pointer;
+    margin: 0;
+    display: inline-flex;
+    outline: 0;
+    position: relative;
+    align-items: center;
+    user-select: none;
+    width: 37.786px;
+    height: 37.786px;
+    overflow: visible;
+    background-color: transparent;
+}
+.Group_35:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+.Group_7 {
+    position: absolute;
+    width: 20.475px;
+    height: 20.475px;
+    left: 8.656px;
+    top: 8.656px;
+    overflow: visible;
+}
+.Line_20 {
+    overflow: visible;
+    position: absolute;
+    width: 18.591px;
+    height: 18.591px;
+    left: 2.436px;
+    top: 2.436px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Ellipse_5 {
+    position: absolute;
+    overflow: visible;
+    width: 3.727px;
+    height: 3.727px;
+    left: 0px;
+    top: 0px;
+}
+.Line_21 {
+    overflow: visible;
+    position: absolute;
+    width: 18.591px;
+    height: 18.591px;
+    left: 0px;
+    top: 2.436px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Ellipse_6 {
+    position: absolute;
+    overflow: visible;
+    width: 3.727px;
+    height: 3.727px;
+    left: 17.53px;
+    top: 0px;
+}
+.Ellipse_7 {
+    position: absolute;
+    overflow: visible;
+    width: 38.568px;
+    height: 38.568px;
+    left: 0px;
+    top: 0px;
+}
