@@ -10,8 +10,6 @@ import Input from '@material-ui/core/Input';
 import Chip from '@material-ui/core/Chip';
 import Select from '@material-ui/core/Select';
 
-import { Autocomplete } from '@material-ui/lab';
-
 import CloseIcon from '@material-ui/icons/Close';
 import WarningIcon from '@material-ui/icons/Warning';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';

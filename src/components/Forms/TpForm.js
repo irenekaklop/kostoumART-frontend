@@ -10,13 +10,8 @@ import Input from '@material-ui/core/Input';
 import Chip from '@material-ui/core/Chip';
 import Select from '@material-ui/core/Select';
 
-import { Autocomplete } from '@material-ui/lab';
 
 import CloseIcon from '@material-ui/icons/Close';
-import WarningIcon from '@material-ui/icons/Warning';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
