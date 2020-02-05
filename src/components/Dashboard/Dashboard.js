@@ -576,8 +576,13 @@ class Dashboard extends Component{
                 <td>{tp_title}</td>
                 <td>{parts}</td>
                 <td>{actors}</td>
-                <td>
+                <td className="td_actions">
                     <div onClick={() => this.handleCostumeEditing(costume_id)}><EditButton/></div>
+                    <br/>
+                    <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
+                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
+                        </path>
+                    </svg>
                     <div onClick={()=> this.handleCostumeDelete(costume_name)}><DeleteButton/></div>
                 </td>
                 </tr>
@@ -602,8 +607,13 @@ class Dashboard extends Component{
                     <td>
                         {customs}
                     </td>
-                    <td>
+                    <td className="td_actions">
                         <div onClick={() => {this.handleUseEditing(useID);}}><EditButton/></div>
+                        <br/>
+                        <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
+                            <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
+                            </path>
+                        </svg>
                         <div onClick={()=>{this.handleConfirmationForDelete(useID);}}><DeleteButton/></div>
                     </td>
                 </tr>
@@ -621,8 +631,13 @@ class Dashboard extends Component{
                 <td >{actors}</td>
                 <td>{director}</td>
                 <td>{theater}</td>
-                <td>
+                <td className="td_actions">
                     <div onClick={() => this.handleTPEditing(theathical_play_id)}><EditButton/></div>
+                    <br/>
+                    <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
+                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
+                        </path>
+                    </svg>
                     <div onClick={()=>{this.handleConfirmationForDelete(theathical_play_id);}}><DeleteButton/></div>
                 </td>
                 </tr>
@@ -647,8 +662,13 @@ class Dashboard extends Component{
                 <td>{designer}</td>
                 <td>{parts}</td>
                 <td>{actors}</td>
-                <td>
+                <td className="td_actions">
                     <div onClick={() => this.handleAccessoryEditing(accessory_id)}><EditButton/></div>
+                    <br/>
+                    <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
+                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
+                        </path>
+                    </svg>
                     <div onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}><DeleteButton/></div>
                 </td>
                 </tr>
@@ -940,15 +960,15 @@ class Dashboard extends Component{
                                     sorted={column === 'actors' ? direction : null}
                                     onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
                                     <th
-                                    id="ColumnActions"></th>
+                                    id="th_actions"></th>
                                     </tr> 
                                 </thead>
                                 <tbody className="TableBody">
                                     {this.renderTableCostumesData()} 
                                 </tbody>
                             </table>
-                            <svg class="Path_23" viewBox="2982.425 -216.026 162.096 25.428">
-                                <path fill="rgba(255,255,255,1)" id="Path_23" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
+                            <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
+                                <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
                                 </path>
                             </svg>
                             <button className="ButtonAdd" onClick={() => this.handleAddCostume()}>
@@ -987,7 +1007,7 @@ class Dashboard extends Component{
                                     <th><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
                                     <th><sthong>ΡΟΛΟΙ</sthong></th>
                                     <th><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
-                                    <th id="ColumnActions"></th>
+                                    <th id="th_actions"></th>
                                 </tr>
                             </thead>
                             <tbody className="TableBody">{this.renderTableAccessoriesData()} </tbody>
@@ -1004,8 +1024,8 @@ class Dashboard extends Component{
                             costumes={this.state.costume_data}
                         />
 
-                        <svg class="Path_23" viewBox="2982.425 -216.026 162.096 25.428">
-                            <path fill="rgba(255,255,255,1)" id="Path_23" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
+                        <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
+                            <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
                             </path>
                         </svg>
                         <button className="ButtonAdd" onClick={() => this.handleAddAccessory()}>
@@ -1040,13 +1060,13 @@ class Dashboard extends Component{
                                 onClick={this.handleSort('customs')}>
                                 <sthong>ΕΘΙΜΑ</sthong>
                                 </th>
-                                <th id="ColumnActions"></th>
+                                <th id="th_actions"></th>
                                 </tr>
                             </thead>
                             <tbody className="TableBody">{this.renderTableUsesData()}</tbody>
                         </table>
-                        <svg class="Path_23" viewBox="2982.425 -216.026 162.096 25.428">
-                                <path fill="rgba(255,255,255,1)" id="Path_23" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
+                        <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
+                                <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
                                 </path>
                         </svg>
                         <button className="ButtonAdd" onClick={() => this.handleAddUse()}>
@@ -1074,17 +1094,22 @@ class Dashboard extends Component{
                                 <tr>
                                     <th sorted={column === 'title' ? direction : null}
                                     onClick={this.handleSort('title')}><sthong>ΟΝΟΜΑ ΠΑΡΑΣΤΑΣΗΣ</sthong></th>
-                                    <th><sthong>ΧΡΟΝΟΛΟΓΙΑ</sthong></th>
-                                    <th><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
-                                    <th><sthong>ΣΚΗΝΟΘΕΤΗΣ</sthong></th>
-                                    <th><sthong>ΘΕΑΤΡΟ</sthong></th>
-                                    <th id="ColumnActions"></th>
+                                    <th sorted={column === 'date' ? direction : null}
+                                    onClick={this.handleSort('date')}><sthong>ΧΡΟΝΟΛΟΓΙΑ</sthong></th>
+                                    <th sorted={column === 'actors' ? direction : null}
+                                    onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
+                                    <th sorted={column === 'director' ? direction : null}
+                                    onClick={this.handleSort('director')}><sthong>ΣΚΗΝΟΘΕΤΗΣ</sthong></th>
+                                    <th
+                                    sorted={column === 'theater' ? direction : null}
+                                    onClick={this.handleSort('theater')}><sthong>ΘΕΑΤΡΟ</sthong></th>
+                                    <th id="th_actions"></th>
                                 </tr>
                             </thead>
                             <tbody className="TableBody">{this.renderTableTPsData()} </tbody>
                             </table>
-                            <svg class="Path_23" viewBox="2982.425 -216.026 162.096 25.428">
-                                <path fill="rgba(255,255,255,1)" id="Path_23" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
+                            <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
+                                <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
                                 </path>
                             </svg>
                             <button className="ButtonAdd" onClick={() => this.handleAddTP()}>

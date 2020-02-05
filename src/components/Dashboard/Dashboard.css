@@ -152,11 +152,11 @@
   color: rgba(88,89,91,1);
   letter-spacing: 0.4px;
   background-color: white;
+  cursor: pointer;
 }
 
 .ButtonAdd:hover {
-  cursor: pointer;
-  box-shadow: 0px 0px 20px 0px rgba(88,89,91,0.32);
+  background-color: rgba(0, 0, 0, 0.04);
 }
 
 #ButtonAddIcon {
@@ -327,12 +327,12 @@
   line-height: 14.40000057220459px;
   margin-top: -1.200000286102295px;
   width: 50px;
-	white-space: nowrap;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 #LOGOUT_BUTTON:hover{
-  cursor: pointer;
-  background-color: rgb(56, 56, 23);
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
 #USERNAME {
@@ -641,6 +641,20 @@ td {
 th{
   padding:5px;
   border-bottom: 2px solid rgba(88,89,91,1);
+  cursor: pointer;
+}
+
+th:hover{
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.td_actions {
+  border-left: 2px solid rgba(88,89,91,1);
+}
+
+#th_actions{
+  border-bottom:none;
+  width:49px;
 }
 
 .TableHead {
@@ -656,7 +670,14 @@ th{
 
 #ColumnImageCostume {
   width: 176.69px;
+  padding:5px;
+  border-bottom: 2px solid rgba(88,89,91,1);
   transform-origin: 0px 0px;
+  cursor: inherit;
+}
+
+#ColumnImageCostume:hover {
+  background-color: inherit;
 }
 
 .Line_8 {
@@ -737,13 +758,11 @@ th{
   overflow: visible;
 }
 
-.Line_22 {
+.ButtonsDivider {
   overflow: visible;
   position: absolute;
   width: 65.961px;
   height: 1px;
-  left: 1810.368px;
-  top: 310.853px;
   transform: matrix(1,0,0,1,0,0);
 }
 
@@ -1821,65 +1840,6 @@ th{
   font-size: 15px;
   color: rgba(56,56,56,1);
 }
-#________fi {
-  position: absolute;
-  left: 884.893px;
-  top: 867.809px;
-  overflow: visible;
-  width: 44px;
-  white-space: nowrap;
-  line-height: 70px;
-  margin-top: -30px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 10px;
-  color: rgba(56,56,56,1);
-}
-#________fj {
-  position: absolute;
-  left: 949.965px;
-  top: 844.02px;
-  overflow: visible;
-  width: 72px;
-  white-space: nowrap;
-  line-height: 18px;
-  margin-top: -1.5px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(56,56,56,1);
-}
-.Path_21 {
-  overflow: visible;
-  position: absolute;
-  width: 15.962px;
-  height: 34.35px;
-  left: 727.935px;
-  top: 825.814px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Path_22 {
-  overflow: visible;
-  position: absolute;
-  width: 25.413px;
-  height: 23.992px;
-  left: 894.869px;
-  top: 829.841px;
-  transform: matrix(1,0,0,1,0,0);
-}
-
-.Rectangle_19 {
-  position: absolute;
-  overflow: visible;
-  width: 176.692px;
-  height: 162.045px;
-  left: 123.639px;
-  top: 823.315px;
-}
 #Rectangle_20 {
   opacity: 0.86;
 	width: 247px;
@@ -1909,7 +1869,7 @@ th{
   color: rgba(88,89,91,1);
 }
 
-.Path_23 {
+.PanelCurve {
   overflow: visible;
   position: absolute;
   width: 162.096px;
