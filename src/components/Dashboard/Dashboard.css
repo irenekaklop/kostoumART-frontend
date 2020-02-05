@@ -100,16 +100,9 @@
   width: 1843.697px;
   height: 54px;
   left: 74.302px;
-  top: 61px;
-  line-height: 18px;
+  top: 60.2px;
   margin-top: -1.5px;
   text-align: left;
-  font-family: InputMono-Bold;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(56,56,56,1);
-  letter-spacing: 0.4px;
   background: linear-gradient(to left, rgba(255,0,0,0), #ffde17);
 }
 
@@ -119,16 +112,22 @@
   list-style: none;
   padding: 6px 12px;
   cursor: pointer;
+  font-family: InputMono-Bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: rgba(255,255,255,1);
+  letter-spacing: 0.4px;
+  
 }
 
 .react-tabs__tab--selected {
   padding: 6px 12px;
   text-align: center;
+  color: rgba(56,56,56,1);
   background: rgba(242,242,242,1);
   width: 208.184px;
   height: 82.721px;
-  margin-top: -5.8px;
-  margin-left: -12px;
 }
 
 .UnderlineTabTitle {
@@ -169,7 +168,6 @@
   margin-left: 16.34px;
   width: 65px;
 }
-
 .Rectangle_6 {
   position: absolute;
   overflow: visible;
@@ -177,111 +175,6 @@
   height: 157.785px;
   left: 1904.319px;
   top: 209.079px;
-}
-.Ellipse_1 {
-  position: absolute;
-  overflow: visible;
-  width: 58.122px;
-  height: 58.122px;
-  left: 5px;
-  top: 56.5px;
-}
-.Ellipse_2 {
-  position: absolute;
-  overflow: visible;
-  width: 5.913px;
-  height: 5.913px;
-  left: 26.681px;
-  top: 82.874px;
-}
-.Line_1 {
-  overflow: visible;
-  position: absolute;
-  width: 8.377px;
-  height: 0.54px;
-  left: 18.304px;
-  top: 85.561px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Ellipse_3 {
-  position: absolute;
-  overflow: visible;
-  width: 5.913px;
-  height: 5.913px;
-  left: 42.438px;
-  top: 82.874px;
-}
-.Line_2 {
-  overflow: visible;
-  position: absolute;
-  width: 8.377px;
-  height: 0.54px;
-  left: 34.061px;
-  top: 85.561px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Path_3 {
-  overflow: visible;
-  position: absolute;
-  width: 11.194px;
-  height: 5.913px;
-  left: 37.157px;
-  top: 90.791px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_3 {
-  overflow: visible;
-  position: absolute;
-  width: 18.854px;
-  height: 0.54px;
-  left: 18.304px;
-  top: 93.477px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Path_4 {
-  overflow: visible;
-  position: absolute;
-  width: 11.194px;
-  height: 5.914px;
-  left: 18.303px;
-  top: 75.078px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_4 {
-  overflow: visible;
-  position: absolute;
-  width: 18.854px;
-  height: 0.54px;
-  left: 28.958px;
-  top: 77.765px;
-  transform: matrix(1,0,0,1,0,0);
-}
-
-.Rectangle_8 {
-  position: absolute;
-  overflow: visible;
-  width: 21.327px;
-  height: 411.419px;
-  left: 23.631px;
-  top: 255.749px;
-}
-#FILTERS {
-  transform: matrix(1,0,0,1,11.2625,122.8705) rotate(-90deg);
-  transform-origin: center;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  overflow: visible;
-  width: 46px;
-  white-space: nowrap;
-  line-height: 12px;
-  margin-top: -1px;
-  text-align: left;
-  font-family: InputMono-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 10px;
-  color: rgba(56,56,56,1);
 }
 #Tailoring_Times {
   transform: matrix(1,0,0,1,-160.7261,438.9189) rotate(-90deg);
@@ -310,6 +203,15 @@
   height: 112.152px;
   left: 1534.495px;
   top: 0.487px;
+}
+
+.Rectangle_8 {
+  position: absolute;
+  overflow: visible;
+  width: 21.327px;
+  height: 411.419px;
+  left: 23.631px;
+  top: 255.749px;
 }
 
 #LOGOUT_BUTTON {
@@ -1877,4 +1779,14 @@ th:hover{
   left: 883.539px;
   top: 1016.103px;
   transform: matrix(1,0,0,1,0,0);
+}
+
+.Filters {
+  flex: 0 0 auto;
+  color: rgba(0, 0, 0, 0.54);
+  padding: 12px;
+  overflow: visible;
+  font-size: 1.5rem;
+  text-align: center;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }

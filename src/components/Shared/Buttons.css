@@ -169,3 +169,122 @@
     left: 0px;
     top: 0px;
 }
+
+.FilterButton {
+    position: absolute;
+    overflow: visible;
+    width: 58.10982131958008px;
+    height: 200px;
+    left: 10px;
+    top: 0px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.FilterButton:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.Ellipse_1 {
+    position: absolute;
+    overflow: visible;
+    width: 58.122px;
+    height: 58.122px;
+    left: 0px;
+    top: 56.5px;
+}
+.Ellipse_2 {
+    position: absolute;
+    overflow: visible;
+    width: 5.913px;
+    height: 5.913px;
+    left: 21.681px;
+    top: 82.874px;
+}
+.Line_1 {
+    overflow: visible;
+    position: absolute;
+    width: 8.377px;
+    height: 0.54px;
+    left: 13.304px;
+    top: 85.561px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Ellipse_3 {
+    position: absolute;
+    overflow: visible;
+    width: 5.913px;
+    height: 5.913px;
+    left: 37.438px;
+    top: 82.874px;
+}
+.Line_2 {
+    overflow: visible;
+    position: absolute;
+    width: 8.377px;
+    height: 0.54px;
+    left: 29.061px;
+    top: 85.561px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Path_3 {
+    overflow: visible;
+    position: absolute;
+    width: 11.194px;
+    height: 5.913px;
+    left: 32.157px;
+    top: 90.791px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Line_3 {
+    overflow: visible;
+    position: absolute;
+    width: 18.854px;
+    height: 0.54px;
+    left: 13.304px;
+    top: 93.477px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Path_4 {
+    overflow: visible;
+    position: absolute;
+    width: 11.194px;
+    height: 5.914px;
+    left: 13.303px;
+    top: 75.078px;
+    transform: matrix(1,0,0,1,0,0);
+}
+.Line_4 {
+    overflow: visible;
+    position: absolute;
+    width: 18.854px;
+    height: 0.54px;
+    left: 23.958px;
+    top: 77.765px;
+    transform: matrix(1,0,0,1,0,0);
+}
+
+.Rectangle_8 {
+    position: absolute;
+    overflow: visible;
+    width: 21.327px;
+    height: 411.419px;
+    left: 18.631‬px;
+    top: 255.749px;
+}
+  #FILTERS {
+    transform: matrix(1,0,0,1,11.2625,122.8705) rotate(-90deg);
+    transform-origin: center;
+    position: absolute;
+    left: 0px;
+    top: 5px;
+    overflow: visible;
+    white-space: nowrap;
+    line-height: 12px;
+    text-align: left;
+    font-family: InputMono-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    color: rgba(56,56,56,1);
+  }

@@ -75,7 +75,56 @@ class DeleteButton extends Component {
     }
 }
 
+class FilterButtons extends Component {
+    render(){
+        return(
+                <button class="FilterButton">
+                    <svg class="Ellipse_1">
+                        <ellipse fill="rgba(255,222,23,1)" id="Ellipse_1" rx="29.06102180480957" ry="29.06102180480957" cx="29.06102180480957" cy="29.06102180480957">
+                        </ellipse>
+                    </svg>
+                    <svg class="Ellipse_2">
+                        <ellipse fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_2" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
+                        </ellipse>
+                    </svg>
+                    <svg class="Line_1" viewBox="0 0 8.377 0">
+                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_1" d="M 8.377081871032715 0 L 0 1.079570211004466e-09">
+                        </path>
+                    </svg>
+                    <svg class="Ellipse_3">
+                        <ellipse fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_3" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
+                        </ellipse>
+                    </svg>
+                    <svg class="Line_2" viewBox="0 0 8.377 0">
+                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_2" d="M 8.377081871032715 0 L 0 1.079570211004466e-09">
+                        </path>
+                    </svg>
+                    <svg class="Path_3" viewBox="2136.044 -1141.338 10.654 5.373">
+                        <path fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_3" d="M 2144.010986328125 -1135.964965820312 C 2145.4951171875 -1135.964965820312 2146.697998046875 -1137.16796875 2146.697998046875 -1138.651000976562 C 2146.697998046875 -1140.135009765625 2145.4951171875 -1141.338012695312 2144.010986328125 -1141.338012695312 L 2138.73095703125 -1141.338012695312 C 2137.2470703125 -1141.338012695312 2136.0439453125 -1140.135009765625 2136.0439453125 -1138.651000976562 C 2136.0439453125 -1137.16796875 2137.2470703125 -1135.964965820312 2138.73095703125 -1135.964965820312 L 2144.010986328125 -1135.964965820312 Z">
+                        </path>
+                    </svg>
+                    <svg class="Line_3" viewBox="0 0 18.854 0">
+                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_3" d="M 18.85396003723145 0 L 0 1.080479705706239e-09">
+                        </path>
+                    </svg>
+                    <svg class="Path_4" viewBox="2117.19 -1157.051 10.654 5.374">
+                        <path fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_4" d="M 2119.876953125 -1151.677001953125 C 2118.39306640625 -1151.677001953125 2117.18994140625 -1152.880004882812 2117.18994140625 -1154.364013671875 C 2117.18994140625 -1155.848022460938 2118.39306640625 -1157.051025390625 2119.876953125 -1157.051025390625 L 2125.156982421875 -1157.051025390625 C 2126.64111328125 -1157.051025390625 2127.843994140625 -1155.848022460938 2127.843994140625 -1154.364013671875 C 2127.843994140625 -1152.880004882812 2126.64111328125 -1151.677001953125 2125.156982421875 -1151.677001953125 L 2119.876953125 -1151.677001953125 Z">
+                        </path>
+                    </svg>
+                    <svg class="Line_4" viewBox="0 0 18.854 0">
+                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_4" d="M 0 0 L 18.85396003723145 2.401066012680531e-10">
+                        </path>
+                    </svg>
+                    <div id="FILTERS">
+                        <span>FILTERS</span>
+                    </div>
+                </button>
+        );
+    }
+}
+
 export {
     EditButton,
-    DeleteButton
+    DeleteButton,
+    FilterButtons
 }

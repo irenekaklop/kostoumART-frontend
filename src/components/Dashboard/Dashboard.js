@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 
-import AppBar from '@material-ui/core/AppBar';
 import { Paper, Button, TextField, Drawer, Divider, MenuItem, InputLabel, Select} from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
@@ -28,8 +25,9 @@ import _ from 'lodash'
 
 import Header from '../Shared/Header.js';
 import Footer from '../Shared/Footer.js';
-import {EditButton, DeleteButton} from '../Shared/Buttons.js'
+import {EditButton, DeleteButton, FilterButtons} from '../Shared/Buttons.js'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import Sidebar from 'react-sidebar';
 
 class Dashboard extends Component{
 
@@ -738,12 +736,21 @@ class Dashboard extends Component{
                 </Header>
                 {/*Filters and right sidebar*/}
                 <div>
-                    <IconButton onClick={this.handleDrawerOpen}></IconButton>
-                        <Drawer
-                            variant="persistent"
-                            anchor="left"
-                            open={filterDrawerOpen}
-                        >
+                    <Sidebar
+                        sidebar={<b>Sidebar content</b>}
+                        open={this.state.filterDrawerOpen}
+                        onSetOpen={this.handleDrawerOpen}
+                        styles={{ sidebar: { background: "white" } }}
+                    >
+                        <div className="Filters" onClick={this.handleDrawerOpen}>
+                        <FilterButtons/>
+                        </div>
+                    </Sidebar>
+                    <Drawer
+                        variant="persistent"
+                        anchor="left"
+                        open={filterDrawerOpen}
+                    >
                             <div>
                                 <IconButton onClick={this.handleDrawerClose}>
                                     {this.state.filterDrawerOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
@@ -783,37 +790,15 @@ class Dashboard extends Component{
                                         ))} 
                                 </Select>
                             <br/><br/>
-                            <Divider/>
-                            <Button onClick={this.applyCostumeFilters}>Eφαρμογή</Button>                            
-                            <Button onClick={this.resetCostumeFilters}>Επαναφορα</Button>
-                        </Drawer>
-                    <svg class="Ellipse_1">
-                        <ellipse fill="rgba(255,222,23,1)" id="Ellipse_1" rx="29.06102180480957" ry="29.06102180480957" cx="29.06102180480957" cy="29.06102180480957">
-		                </ellipse>
-	                </svg>
-                    <svg class="Ellipse_2">
-                        <ellipse fill="rgba(0,0,0,0)" sthoke="rgba(88,89,91,1)" sthoke-width="0.5398867130279541px" sthoke-linejoin="miter" sthoke-linecap="butt" sthoke-miterlimit="10" shape-rendering="auto" id="Ellipse_2" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
-                        </ellipse>
-                    </svg>
-                    <svg class="Ellipse_3">
-                        <ellipse fill="rgba(0,0,0,0)" sthoke="rgba(88,89,91,1)" sthoke-width="0.5398867130279541px" sthoke-linejoin="miter" sthoke-linecap="butt" sthoke-miterlimit="10" shape-rendering="auto" id="Ellipse_3" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
-                        </ellipse>
-                    </svg>
-                    <svg class="Path_3" viewBox="2136.044 -1141.338 10.654 5.373">
-                        <path fill="rgba(0,0,0,0)" sthoke="rgba(88,89,91,1)" sthoke-width="0.5398867130279541px" sthoke-linejoin="miter" sthoke-linecap="butt" sthoke-miterlimit="10" shape-rendering="auto" id="Path_3" d="M 2144.010986328125 -1135.964965820312 C 2145.4951171875 -1135.964965820312 2146.697998046875 -1137.16796875 2146.697998046875 -1138.651000976562 C 2146.697998046875 -1140.135009765625 2145.4951171875 -1141.338012695312 2144.010986328125 -1141.338012695312 L 2138.73095703125 -1141.338012695312 C 2137.2470703125 -1141.338012695312 2136.0439453125 -1140.135009765625 2136.0439453125 -1138.651000976562 C 2136.0439453125 -1137.16796875 2137.2470703125 -1135.964965820312 2138.73095703125 -1135.964965820312 L 2144.010986328125 -1135.964965820312 Z">
-                        </path>
-                    </svg>
-                    <svg class="Path_4" viewBox="2117.19 -1157.051 10.654 5.374">
-                        <path fill="rgba(0,0,0,0)" sthoke="rgba(88,89,91,1)" sthoke-width="0.5398867130279541px" sthoke-linejoin="miter" sthoke-linecap="butt" sthoke-miterlimit="10" shape-rendering="auto" id="Path_4" d="M 2119.876953125 -1151.677001953125 C 2118.39306640625 -1151.677001953125 2117.18994140625 -1152.880004882812 2117.18994140625 -1154.364013671875 C 2117.18994140625 -1155.848022460938 2118.39306640625 -1157.051025390625 2119.876953125 -1157.051025390625 L 2125.156982421875 -1157.051025390625 C 2126.64111328125 -1157.051025390625 2127.843994140625 -1155.848022460938 2127.843994140625 -1154.364013671875 C 2127.843994140625 -1152.880004882812 2126.64111328125 -1151.677001953125 2125.156982421875 -1151.677001953125 L 2119.876953125 -1151.677001953125 Z">
-                        </path>
-                    </svg>
+                        <Divider/>
+                        <Button onClick={this.applyCostumeFilters}>Eφαρμογή</Button>                            
+                        <Button onClick={this.resetCostumeFilters}>Επαναφορα</Button>
+                    </Drawer>
+                    
                     <svg class="Rectangle_8">
                         <rect fill="rgba(255,222,23,1)" id="Rectangle_8" rx="0" ry="0" x="0" y="0" width="21.327" height="411.419">
                         </rect>
                     </svg>
-                    <div id="FILTERS">
-                        <span>FILTERS</span>
-                    </div>
                     <div id="Tailoring_Times">
                         <span>Tailoring Times</span>
                     </div>
