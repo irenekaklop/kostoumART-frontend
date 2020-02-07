@@ -3,39 +3,17 @@ import React, {Component} from 'react';
 import { Paper, TextField, Button, Snackbar, SnackbarContent } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import Chip from '@material-ui/core/Chip';
-import Select from '@material-ui/core/Select';
 
+import Select from 'react-select';
 
 import CloseIcon from '@material-ui/icons/Close';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import Geosuggest from 'react-geosuggest';
-import "../Geosuggest/Geosuggest.css";
 
-
-import {sexs, materials, techniques, use_categories,years} from "../../utils/options";
 import "./Forms.css";
 
 import axios from 'axios';
-import { ninvoke } from 'q';
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
-      width: 100,
-    },
-  },
-};
-
 
 class TpForm extends Component{
 
@@ -49,7 +27,7 @@ class TpForm extends Component{
             date: [],
             actors: '',
             director: '',
-            years: '',
+            years: [],
             user_id: '',
             submit: false,
             redirectToReferrer: false,
@@ -59,12 +37,16 @@ class TpForm extends Component{
             error_missing_value: false,
             insert: false
         };
-        const year = (new Date('1800')).getFullYear();
-        this.state.years = Array.from(new Array(300),(val, index) => (index + year).toString());
         this.onChange = this.onChange.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState){
+        if(prevState.years!=[]){
+            var startYear=1800;
+            for(var i=0; i < 100; i++){
+                this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
+            }
+        }
         if(prevState.insert){
             this.resetForm();
         }
@@ -72,12 +54,19 @@ class TpForm extends Component{
             let d_arr;
             if(this.props.tp.date.includes(",")){
                 d_arr = this.props.tp.date.split(",");
+
             }
-            else if (this.props.tp.date===''){
+            else if(this.props.tp.date.length===0){
                 d_arr = []
             }
             else{
-                d_arr = [this.props.tp.date]
+                d_arr = [this.props.tp.date];
+            }
+            
+            console.log("darr", d_arr)
+            let arrDates=[];
+            for(var i=0; i < d_arr.length; i++){
+                arrDates.push({value: d_arr[i], label: d_arr[i]})
             }
             this.setState({
                 tp: this.props.tp,
@@ -85,7 +74,7 @@ class TpForm extends Component{
                 theater: this.props.tp.theater,
                 actors: this.props.tp.actors,
                 director: this.props.tp.director,
-                date: d_arr,
+                date: arrDates,
                 theatrical_play_id: this.props.tp.theatrical_play_id,
                 tp_data: this.props.theatrical_plays
                 })
@@ -95,6 +84,7 @@ class TpForm extends Component{
             
         }
         console.log("TP state", this.state)
+        console.log("TP props", this.props)
     }
 
     onChange = ( evt ) => { 
@@ -102,8 +92,9 @@ class TpForm extends Component{
         console.log(this.state)
     };
 
-    handleDateSelect = (evt) => {
-        this.setState({ date: evt.target.value });
+    handleDateSelect = (date) => {
+        console.log(date)
+        this.setState({date})
     }
 
     handleClose(){
@@ -138,10 +129,15 @@ class TpForm extends Component{
     }
 
     handleInsert(){
-        let data ={title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater, userId: this.state.user_id};
-        if(this.state.date.length===0){
-            data.date='';
+        let dates='';
+        for(var i=0; i < this.state.date.length; i++){
+            dates = dates+this.state.date[i].value;
+            if(i != this.state.date.length-1){
+                dates=dates+','
+            }
         }
+        console.log("dates", dates);
+        let data ={title: this.state.name, date: dates, actors: this.state.actors, director: this.state.director, theater: this.state.theater, userId: this.state.user_id};
         //axios.post("http://88.197.53.80/kostoumart-api/tps", data)
         axios.post('http://localhost:8108/tps', data)
         .then(res => {
@@ -239,6 +235,7 @@ class TpForm extends Component{
     render(){
         const {name, theater, director, date} = this.state;
         console.log(this.state)
+        
         return(
             <div>
                 <NotificationContainer>{this.createNotification()}</NotificationContainer>
@@ -257,47 +254,63 @@ class TpForm extends Component{
                             <div className="FormContent">
                                 <div className="FormTitle">Θεατρική παράσταση</div>
                                 <br/>
-                                <FormControl className="FormControl">
-                                <TextField required 
-                                label="Όνομα Παράστασης" 
-                                name="name" 
-                                value={name} 
-                                onChange={this.onChange}></TextField>
-                                </FormControl>
+                                <div id='InputArea'>
+                                    <div id='Label'>
+                                        <span>ONOMA ΠΑΡΑΣΤΑΣΗΣ *</span>
+                                    </div>
+                                    <input
+                                        id="TextArea"
+                                        type='text'
+                                        name="name" 
+                                        value={name} 
+                                        onChange={this.onChange}
+                                        required={true}
+                                    />
+                                </div>
                                 <br/>
-                                <FormControl className="FormControl">
-                                    <InputLabel>Ημερομηνία</InputLabel>
+                                <div id='InputArea'>
+                                    <div id='Label'>
+                                        <span>XΡΟΝΟΛΟΓΙΑ</span>
+                                    </div>
                                     <Select
-                                        multiple
-                                        label="select"
+                                        isMulti
+                                        name="date"
+                                        options={this.state.years}
                                         value={date}
                                         onChange={this.handleDateSelect}
-                                        input={<Input id="select-multiple-chip" />}
-                                        renderValue={selected => (
-                                            <div>
-                                            {selected.map(label => (
-                                                <Chip key={label} label={label}/>
-                                            ))}
-                                            </div>
-                                        )}
-                                        MenuProps={MenuProps}
-                                    >
-                                        {
-                                            this.state.years.map((year, index) => (
-                                                <MenuItem key={`year${index}`} value={year}>
-                                                    {year}
-                                                </MenuItem>
-                                            ))}
-                                    </Select>
-                                </FormControl>
+                                        closeMenuOnSelect={true} 
+                                    />
+                                </div>
                                 <br/>
-                            <FormControl className="FormControl">
-                                <TextField  required label="Σκηνοθέτης" name="director" value={director} onChange={this.onChange}></TextField>
-                            </FormControl>
+                                <div id='InputArea'>
+                                    <div id='Label'>
+                                        <span>ΣΚΗΝΟΘΕΤΗΣ *</span>
+                                    </div>
+                                    <input
+                                        id="TextArea"
+                                        type='text'
+                                        name="director"
+                                        value={director} 
+                                        onChange={this.onChange}
+                                        required={true}
+                                    />
+                                </div>
                                 <br/>
-                            <FormControl className="FormControl">
-                                <TextField  required label="Θέατρο" name="theater" value={theater} onChange={this.onChange}></TextField>
-                            </FormControl>
+                                <div id='InputArea'>
+                                    <div id='Label'>
+                                        <span>ΘΕΑΤΡΟ</span>
+                                    </div>
+                                    <input
+                                        id="TextArea"
+                                        type='text'
+                                        name="theater"
+                                        value={theater} 
+                                        onChange={this.onChange}
+                                        required={false}
+                                    />
+                                </div>
+                                <br/>
+                               
                             <br/><br/><br/>
                                 <div className="button-submit">
                                     <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>

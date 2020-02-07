@@ -1,13 +1,3 @@
-.select-container{
-    width: 40%;
-    margin-top: 1%;
-    margin-bottom: 1%;
-  }
-  
-.select-container-link{
-    width: 50%;
-}
-
 .FormControl {
   width: 100%;
   margin-bottom: 3% !important;
@@ -26,4 +16,78 @@
 
 .SelectContainer{
   width: 250px;
+}
+
+#InputArea {
+  width: 104px;
+  height: 50px;
+  padding: 3%;
+}
+
+#LabelWithSubtitle {
+  width: 400px;
+  height: 16px;
+  margin-top: -1.1000003814697266px;
+	text-align: left;
+	font-family: Roboto-Regular;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 11px;
+	color: rgba(255,222,23,1);
+}
+
+.Title {
+  margin: 0px; /* remove all margins to fit two divs in the container */
+  display: inline-block; /* display block elements in one line */
+}
+
+.Subtitle {
+  margin: 0px;
+  margin-left: 10px;
+  display: inline-block;
+  font-size: 9px;
+  color: rgba(147,149,152,1);
+}
+
+#Label {
+  width: 350px;
+  height: 16px;
+	white-space: nowrap;
+	margin-top: -1.1000003814697266px;
+	text-align: left;
+	font-family: Roboto-Regular;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 11px;
+	color: rgba(255,222,23,1);
+}
+
+#TextArea {
+  width: 646.89px;
+  height: 50px;
+  margin-top: 8.5px;
+  text-align: left;
+  font-family: RobotoSlab-Light;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 19px;
+  color: rgba(88,89,91,1);
+  border-bottom: 1px solid rgba(255,222,23,1);
+  border-radius: 0px!important;
+}
+
+textarea {
+  resize: none;
+}
+
+.css-2b097c-container {
+  width: 646.89px;
+  height: 50px;
+  margin-top: 8.5px;
+}
+
+.css-yk16xz-control {
+  border: none!important;
+  border-bottom: 1px solid rgba(255,222,23,1)!important;
+  border-radius: 0px!important;
 }

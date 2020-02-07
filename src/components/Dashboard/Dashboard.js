@@ -107,7 +107,7 @@ class Dashboard extends Component{
             } });
             console.log("decoded", decoded);
             this.get_uses();
-            this.get_theathical_plays();
+            this.get_theatrical_plays();
             this.getCostumes(decoded);
             this.getAccessories();
         }
@@ -239,8 +239,8 @@ class Dashboard extends Component{
     /*Get costumes from db*/
     getCostumes = (decoded) => {
         if(decoded){
-            axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: decoded.role}})
-            //axios.get("http://localhost:8108/costumes",{params: {user: decoded.role}})
+            //axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: decoded.role}})
+            axios.get("http://localhost:8108/costumes",{params: {user: decoded.role}})
             .then(res => {
                 const costume_data = res.data.response;
                 this.setState({ costume_data });
@@ -251,8 +251,8 @@ class Dashboard extends Component{
             )
         }
         else{
-            axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: this.state.user.role}})
-            //axios.get("http://localhost:8108/costumes",{params: {user: this.state.user.role}})
+            //axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: this.state.user.role}})
+            axios.get("http://localhost:8108/costumes",{params: {user: this.state.user.role}})
             .then(res => {
                 const costume_data = res.data.response;
                 this.setState({ costume_data });
@@ -268,8 +268,8 @@ class Dashboard extends Component{
     /* Get uses from database*/ 
     get_uses = _ => {
         let self = this;
-        axios.get("http://88.197.53.80/kostoumart-api/uses/")
-        //axios.get("http://localhost:8108/uses")
+        //axios.get("http://88.197.53.80/kostoumart-api/uses/")
+        axios.get("http://localhost:8108/uses")
         .then(res => {
             const use_data = res.data.response;
             this.setState({ use_data });
@@ -278,10 +278,10 @@ class Dashboard extends Component{
         )
     }
 
-    /*Get Theathical Plays from database*/
-    get_theathical_plays = _ => {
-        axios.get("http://88.197.53.80/kostoumart-api/tps/")
-        //axios.get("http://localhost:8108/tps")
+    /*Get theatrical Plays from database*/
+    get_theatrical_plays = _ => {
+        //axios.get("http://88.197.53.80/kostoumart-api/tps/")
+        axios.get("http://localhost:8108/tps")
         .then(res => {
             const tp_data = res.data.response;
             this.setState({ tp_data });
@@ -291,8 +291,8 @@ class Dashboard extends Component{
     }
 
     getAccessories = () => {
-        axios.get("http://88.197.53.80/kostoumart-api/accessories")
-        //axios.get("http://localhost:8108/accessories")
+        //axios.get("http://88.197.53.80/kostoumart-api/accessories")
+        axios.get("http://localhost:8108/accessories")
          .then(res => {
              const accessories = res.data.response;
              this.setState({ accessories });
@@ -302,8 +302,8 @@ class Dashboard extends Component{
     }
 
     get_costume(index){
-        axios.get('http://88.197.53.80/kostoumart-api/costumes/')
-        //axios.get("http://localhost:8108/costumes/"+index)
+        //axios.get('http://88.197.53.80/kostoumart-api/costumes/')
+        axios.get("http://localhost:8108/costumes/"+index)
         .then(res => {
             const costume = res.data.response;
             this.setState({ costume });
@@ -336,7 +336,7 @@ class Dashboard extends Component{
             this.setState({isUseDialogOpen: false});
         }
         else if(this.state.isTPDialogOpen){
-            this.get_theathical_plays();
+            this.get_theatrical_plays();
             this.setState({isTPDialogOpen: false});
         }
         else if(this.state.isAccessoryDialogOpen){
@@ -385,7 +385,7 @@ class Dashboard extends Component{
             this.get_uses();
         }
         else if(value===3){
-            this.get_theathical_plays();
+            this.get_theatrical_plays();
         }
         this.setState({
           current_tab: value
@@ -420,8 +420,8 @@ class Dashboard extends Component{
     handleCostumeEditing(index){
         for(var i=0; i < this.state.costume_data.length; i++){
             if(this.state.costume_data[i].costume_id === index){
-                axios.get('http://88.197.53.80/kostoumart-api/costumes/'+index)
-                //axios.get("http://localhost:8108/costumes/"+index)
+                //axios.get('http://88.197.53.80/kostoumart-api/costumes/'+index)
+                axios.get("http://localhost:8108/costumes/"+index)
                 .then(res => {
                     const costume = res.data.response;
                     this.setState({ costume: costume, editing: true,
@@ -450,7 +450,7 @@ class Dashboard extends Component{
             isTPDialogOpen: true,
         });
         for(var i=0; i<this.state.tp_data.length; i++){
-            if(this.state.tp_data[i].theathical_play_id === index){
+            if(this.state.tp_data[i].theatrical_play_id === index){
                 this.state.tp = this.state.tp_data[i];
             }
         }
@@ -490,7 +490,7 @@ class Dashboard extends Component{
                 if(res.statusText ==="OK"){
                     let ret=this.createNotification("delete-success");
                     this.getCostumes();
-                    this.get_theathical_plays();
+                    this.get_theatrical_plays();
                     return ret;
                 }
             })
@@ -537,8 +537,8 @@ class Dashboard extends Component{
         }
         else if(this.state.current_tab===3){
             for(var i=0; i<this.state.costume_data.length; i++){
-                if(this.state.costume_data[i].theathical_play_id){
-                    if(this.state.costume_data[i].theathical_play_id===index){
+                if(this.state.costume_data[i].theatrical_play_id){
+                    if(this.state.costume_data[i].theatrical_play_id===index){
                     this.handleOpenConfirmationDialog(index);
                     return;
                     }
@@ -621,22 +621,22 @@ class Dashboard extends Component{
 
     renderTableTPsData() {
         return this.state.tp_data.map((tp, index) => {
-            const { theathical_play_id, title, date, actors, director, theater } = tp //desthucturing
+            const { theatrical_play_id, title, date, actors, director, theater } = tp //desthucturing
             return (
-                <tr key={theathical_play_id}>
+                <tr key={theatrical_play_id}>
                 <td>{title}</td>
                 <td>{date}</td>
                 <td >{actors}</td>
                 <td>{director}</td>
                 <td>{theater}</td>
                 <td className="td_actions">
-                    <div onClick={() => this.handleTPEditing(theathical_play_id)}><EditButton/></div>
+                    <div onClick={() => this.handleTPEditing(theatrical_play_id)}><EditButton/></div>
                     <br/>
                     <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
                         <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
                         </path>
                     </svg>
-                    <div onClick={()=>{this.handleConfirmationForDelete(theathical_play_id);}}><DeleteButton/></div>
+                    <div onClick={()=>{this.handleConfirmationForDelete(theatrical_play_id);}}><DeleteButton/></div>
                 </td>
                 </tr>
             )
@@ -935,7 +935,7 @@ class Dashboard extends Component{
                                     <th
                                     id="ColumnTPCostume"
                                     sorted={column === 'tp_title' ? direction : null}
-                                    onClick={this.handleSort('tp_title')}><sthong>ΘΕΑΤΡΙΚΕΣ ΠΑΡΑΣΤΑΣΕΙΣ</sthong></th>
+                                    onClick={this.handleSort('tp_title')}><sthong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</sthong></th>
                                     <th
                                     id="ColumnPartsCostume"
                                     sorted={column === 'parts' ? direction : null}
@@ -970,7 +970,7 @@ class Dashboard extends Component{
                                 user={this.state.user.user_id}
                                 costumes={this.state.costume_data}
                                 uses={this.state.use_data}
-                                theathical_plays={this.state.tp_data}
+                                theatrical_plays={this.state.tp_data}
                                 costume={this.state.costume}
                                 editing={this.state.editing}></CostumeForm>
                         </div>
@@ -1067,7 +1067,7 @@ class Dashboard extends Component{
                                 user={this.state.user.user_id}
                                 costumes={this.state.costume_data}
                                 uses={this.state.use_data}
-                                theathical_plays={this.state.tp_data}
+                                theatrical_plays={this.state.tp_data}
                                 editing={this.state.editing}
                                 use={this.state.use}></UseForm>
                         </div>
@@ -1108,7 +1108,7 @@ class Dashboard extends Component{
                                 isOpen={this.state.isTPDialogOpen}
                                 handleClose={this.handleCloseDialog.bind(this)}
                                 user={this.state.user.user_id}
-                                theathical_plays={this.state.tp_data}
+                                theatrical_plays={this.state.tp_data}
                                 editing={this.state.editing}
                                 tp={this.state.tp}
                                 />

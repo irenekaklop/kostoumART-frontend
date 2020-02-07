@@ -537,13 +537,14 @@
 }
 
 td { 
-  padding:15px;
+  line-height: 17px;
 } 
 
-th{
+th {
   padding:5px;
   border-bottom: 2px solid rgba(88,89,91,1);
   cursor: pointer;
+  line-height: 12px!important;
 }
 
 th:hover{

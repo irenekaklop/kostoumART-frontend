@@ -11,15 +11,9 @@ import Chip from '@material-ui/core/Chip';
 import Select from '@material-ui/core/Select';
 
 import CloseIcon from '@material-ui/icons/Close';
-import WarningIcon from '@material-ui/icons/Warning';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import Geosuggest from 'react-geosuggest';
-import "../Geosuggest/Geosuggest.css";
 
 
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
@@ -265,19 +259,20 @@ class UseForm extends Component{
                                 <div className="FormContent">
                                     <div className="FormTitle">Χρήση</div>
                                     <br/>
-                                <FormControl className="FormControl">
-                                    <TextField
-                                            label="Όνομα Δραστηριότητας"
+                                    <div id='InputArea'>
+                                        <div id="Label">
+                                            <span>ONOMA ΔΡΑΣΤΗΡΙΟΤΗΤΑΣ</span>
+                                        </div>
+                                        <input
+                                            id="TextArea"
                                             value={name}
                                             name="name"
                                             onChange={this.onChange}
-                                            margin="none"
                                             required={true}
-                                            inputProps={{style: { fontSize: 14 }}}
-                                    />
-                                </FormControl>
+                                        />
+                                    </div>
                                 <br/>
-                                <FormControl className="FormControl" required>
+                                <div id='InputArea'>
                                     <InputLabel id="demo-simple-select-required-label">Κατηγορία Χρήσης</InputLabel>
                                     <Select
                                     className="SelectContainer"
@@ -293,31 +288,39 @@ class UseForm extends Component{
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                </FormControl>
+                                </div>
                                 <br/>
-                                <FormControl className="FormControl">
-                                    <TextField
-                                        label="Περιγραφή"
-                                        name="description"
-                                        value={description}
-                                        onChange={this.onChange}
-                                        margin="none"
-                                        multiline
-                                        rowsMax="4"
-                                        required={true}
-                                        inputProps={{style: { fontSize: 14 }}}
-                                        ></TextField>
-                                        <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
-                                </FormControl>
-                                <br/>
-                                <FormControl className="FormControl">
-                                        <TextField
-                                        label="Ήθη/Έθιμα"
-                                        name="customs"
-                                        value={customs}
-                                        onChange={this.onChange}
+                                <div id='InputArea'>
+                                    <div id="LabelWithSubtitle">
+                                        <div className="Title">
+                                            <span>ΠΕΡΙΓΡΑΦΗ</span>
+                                        </div>
+                                        <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
+                                    </div>
+                                        
+                                        <textarea
+                                            id="TextArea"
+                                            name="description"
+                                            value={description}
+                                            onChange={this.onChange}
+                                            multiline
+                                            rowsMax="4"
+                                            required={true}
                                         />
-                                </FormControl>
+                                    </div>
+                                <br/>
+                                <div id='InputArea'>
+                                        <div id="Label">
+                                            <span>ΗΘΗ/ΕΘΙΜΑ</span>
+                                        </div>
+                                        <input
+                                            id="TextArea"
+                                            name="customs"
+                                            value={customs}
+                                            onChange={this.onChange}
+                                            required={false}
+                                        />
+                                    </div>
                                 <br/><br/><br/>
                                     <div className="button-submit">
                                         <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
