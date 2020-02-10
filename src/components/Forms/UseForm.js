@@ -3,18 +3,12 @@ import React, {Component} from 'react';
 import { Paper, TextField, Button, Snackbar, SnackbarContent } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import Chip from '@material-ui/core/Chip';
-import Select from '@material-ui/core/Select';
 
 import CloseIcon from '@material-ui/icons/Close';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-
+import Select from 'react-select';
 
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import "./Forms.css";
@@ -91,8 +85,8 @@ class UseForm extends Component{
         }
     }
 
-    handleCategorySelect = (evt) => {
-        this.setState({ selectedCategoryOption: evt.target.value });
+    handleCategorySelect = (selectedCategoryOption) => {
+        this.setState({ selectedCategoryOption });
         console.log("Option selected:", this.state.selectedCategoryOption)
     }
 
@@ -273,21 +267,17 @@ class UseForm extends Component{
                                     </div>
                                 <br/>
                                 <div id='InputArea'>
-                                    <InputLabel id="demo-simple-select-required-label">Κατηγορία Χρήσης</InputLabel>
+                                    <div id="Label">
+                                            <span>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</span>
+                                        </div>
                                     <Select
-                                    className="SelectContainer"
-                                    required={true}
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={selectedCategoryOption}
-                                    onChange={this.handleCategorySelect}
-                                    >
-                                        {use_categories.map(use => (
-                                            <MenuItem key={use.value} value={use.label}>
-                                                {use.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
+                                        name="selectedCategoryOption"
+                                        value={selectedCategoryOption}
+                                        onChange={this.handleCategorySelect}
+                                        required={true}
+                                        options={use_categories}
+                                        closeMenuOnSelect={true} 
+                                    />
                                 </div>
                                 <br/>
                                 <div id='InputArea'>

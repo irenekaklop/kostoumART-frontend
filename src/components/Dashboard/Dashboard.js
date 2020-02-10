@@ -52,7 +52,7 @@ class Dashboard extends Component{
             //Accessories
             accessories: [],
             //For Insert Form
-            isCostumeDialogOpen: false,
+            isCostumeFormOpen: false,
             isUseDialogOpen: false,
             isTPDialogOpen: false,
             isConfirmationDialogOpen: false,
@@ -328,9 +328,9 @@ class Dashboard extends Component{
         if(this.state.editing){
             this.setState({ editing: false });
         }
-        if(this.state.isCostumeDialogOpen){
+        if(this.state.isCostumeFormOpen){
             this.getCostumes();
-            this.setState({isCostumeDialogOpen: false});}
+            this.setState({isCostumeFormOpen: false});}
         else if(this.state.isUseDialogOpen){
             this.get_uses();
             this.setState({isUseDialogOpen: false});
@@ -395,8 +395,9 @@ class Dashboard extends Component{
 
     handleAddCostume= () => {
         this.setState({
-          isCostumeDialogOpen: true,
-        });
+            isCostumeFormOpen: true,
+        })
+        console.log("HandleAddcostume")
     };
 
     handleAddUse = () => {
@@ -425,7 +426,7 @@ class Dashboard extends Component{
                 .then(res => {
                     const costume = res.data.response;
                     this.setState({ costume: costume, editing: true,
-                        isCostumeDialogOpen: true,});
+                        isCostumeFormOpen: true,});
                 }
                 )
             }
@@ -884,7 +885,7 @@ class Dashboard extends Component{
 
                 {/*Tab panels*/}
                 <div>
-                {this.state.current_tab===0 &&
+                {this.state.current_tab===0 && !this.state.isCostumeFormOpen &&
                     <div>
                         <table className="Table">
                             <thead className="TableHead">
@@ -919,7 +920,7 @@ class Dashboard extends Component{
                                     <th 
                                     id="ColumnMaterial"
                                     sorted={column === 'material' ? direction : null}
-                                    onClick={this.handleSort('material')}><sthong>ΥΛΙΚΟ ΚΑΤΑΣΚΕΥΗΣ</sthong></th>
+                                    onClick={this.handleSort('material')}><sthong>ΥΛΙΚΟ<br/>ΚΑΤΑΣΚΕΥΗΣ</sthong></th>
                                     <th
                                     id="ColumnTechnique"
                                     sorted={column === 'technique' ? direction : null}
@@ -956,25 +957,30 @@ class Dashboard extends Component{
                                 <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
                                 </path>
                             </svg>
-                            <button className="ButtonAdd" onClick={() => this.handleAddCostume()}>
+                            <button className="ButtonAdd" onClick={()=>this.handleAddCostume()}>
                                 <svg id="ButtonAddIcon">
                                     <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.7254922986030579px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" d="M 19.69155883789062 0 L 0 0">
                                     </path>
                                 </svg>
                                 <span id="ButtonAddText">προσθήκη</span>
                             </button>
-                            
-                            <CostumeForm 
-                                isOpen={this.state.isCostumeDialogOpen}
-                                handleClose={this.handleCloseDialog.bind(this)}
-                                user={this.state.user.user_id}
-                                costumes={this.state.costume_data}
-                                uses={this.state.use_data}
-                                theatrical_plays={this.state.tp_data}
-                                costume={this.state.costume}
-                                editing={this.state.editing}></CostumeForm>
                         </div>
-                    }
+                }
+               
+                {this.state.isCostumeFormOpen ?(
+                    console.log("Form should be called"),
+                    <CostumeForm isOpen={this.state.isCostumeDialogOpen}
+                    handleClose={this.handleCloseDialog.bind(this)}
+                    user={this.state.user.user_id}
+                    costumes={this.state.costume_data}
+                    uses={this.state.use_data}
+                    theatrical_plays={this.state.tp_data}
+                    costume={this.state.costume}
+                    editing={this.state.editing}></CostumeForm>)
+                    :
+                    <div></div>
+                }
+
                 {this.state.current_tab===1 &&
                     <div>
                         <table className="Table">
@@ -1021,7 +1027,8 @@ class Dashboard extends Component{
                                 <span id="ButtonAddText">προσθήκη</span>
                             </button>
                     </div>
-                    }
+                }
+            
                 {this.state.current_tab===2 &&
                         <div>
                             <table className="Table">

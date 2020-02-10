@@ -559,10 +559,13 @@ th:hover{
   border-bottom:none;
   width:49px;
 }
+#th_actions:hover {
+  background-color: inherit;
+  cursor: inherit;
+}
 
 .TableHead {
   font-size: 10px;
-  
 }
 
 .TableBody {

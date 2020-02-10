@@ -1,20 +1,12 @@
 import React, {Component} from 'react';
 
 import { Paper, TextField, Button, Snackbar, SnackbarContent } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import Chip from '@material-ui/core/Chip';
-import Select from '@material-ui/core/Select';
 
-import CloseIcon from '@material-ui/icons/Close';
-import WarningIcon from '@material-ui/icons/Warning';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
+import Select from 'react-select';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
@@ -26,28 +18,6 @@ import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import "./Forms.css";
 
 import axios from 'axios';
-import { ninvoke } from 'q';
-import { thisExpression } from '@babel/types';
-
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const variantIcon = {
-    success: CheckCircleIcon,
-    warning: WarningIcon,
-    error: ErrorIcon,
-    info: InfoIcon,
-  };
-  
 
 class  CostumeForm extends Component{
     constructor(props) {
@@ -412,227 +382,207 @@ class  CostumeForm extends Component{
         console.log(u_options);
 
         return(
-            <div>
+            <React.Fragment>
+                <div id="ADD">
                 <NotificationContainer>{this.createNotification()}</NotificationContainer>
-                <Dialog
-                    open={this.props.isOpen}
-                    onClose={() => this.handleClose(false)}
-                    aria-labelledby="input-dialog"
-                    aria-describedby="input-dialog"
-                    maxWidth={'lg'}
-                    fullWidth={true}
-                    >
-                        <DialogContent>
-                            <CloseIcon
-                            style={{ float: 'right', cursor: 'pointer' }}
-                            onClick={() => this.handleClose(false)}/>
-                            
-                            <form onSubmit={this.submit}>
-                                <div className="FormContent">
-                                    <div className="FormTitle">Kουστούμι</div>
-                                    <br/>
-                                    <FormControl className="FormControl">
-                                        <TextField
-                                            label="Όνομα"
-                                            name="name"
-                                            value={name}
-                                            onChange={this.onChange}
-                                            required={true}
-                                            />
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl className="FormControl">
-                                        <TextField
-                                            label="Περιγραφή"
-                                            name="descr"
-                                            value={descr}
-                                            onChange={this.onChange}
-                                            margin="none"
-                                            multiline
-                                            rowsMax="4"
-                                            required={true}
-                                            inputProps={{style: { fontSize: 14 }}}
-                                            />
-                                            <div className="remaining-chars"><span id="chars">{this.state.description_MAXlegnth-this.decription_legnth()}</span> characters remaining</div>
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl required className="FormControl">
-                                        <InputLabel id="demo-simple-select-required-label">Κατηγορία χρήσης</InputLabel>
-                                        <Select
-                                        className="SelectContainer"
+                <div id="FormTitle">Kουστούμι</div>
+                    <form onSubmit={this.submit}>
+                        <div>
+                            <br/>
+                            <div id='CostumeName'>
+                                <div id='CostumeNameArea'>   
+                                    <div id="CostumeNameLabel">
+                                        <span>ΟΝΟΜΑ</span> 
+                                    </div>
+                                    <input
+                                        id="TextArea"
+                                        type='text'
+                                        name="name" 
+                                        value={name} 
+                                        onChange={this.onChange}
+                                        required={true}
+                                        />    
+                                </div>
+                            </div>
+                            <br/>
+                            <div id='CostumeDescription'>
+                                <div id="CostumeDescriptionArea">
+                                    <div id="LabelWithSubtitle">
+                                    <div className="Title">
+                                            <span>ΠΕΡΙΓΡΑΦΗ</span>
+                                    </div>
+                                    <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
+                                </div>
+                                <textarea
+                                id="DescriptionInput"
+                                type='text'
+                                name="descr"
+                                value={descr}
+                                onChange={this.onChange}
+                                required={true}
+                                />
+                                </div>
+                            </div>
+                            <br/>
+                            <div id='CostumeUseCategory'>
+                                <div id='CostumeUseCategoryArea'>
+                                    <div id='CostumeNameLabel'>
+                                        <span>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</span>
+                                    </div>
+                                    <Select
+                                        className='UseSelect'
+                                        name="selectedUseCategoryOption"
                                         required={true}
                                         onChange={this.onChangeCategory}
                                         value={selectedUseCategoryOption}
-                                        >
-                                            {u_options.map( category => (
-                                                <MenuItem key={category.label} value={category.label}>
-                                                    {category.label}
-                                                </MenuItem>
-                                            ))} 
-                                        </Select>
-                                    </FormControl>
-
-                                    <FormControl required className="FormControl">
-                                        <InputLabel>Όνομα Χρήσης</InputLabel>
-                                            <Select
-                                            disabled={this.state.enableSelectUse}
-                                            className="SelectContainer"
-                                            required={true}
-                                            onChange={this.handleUseSelect}
-                                            value={selectedUseOption}
-                                            >
-                                                {u_options.map( category => (
-                                                    category.label === selectedUseCategoryOption ?
-                                                    (category.options.map(use => (
-                                                            <MenuItem key={use.label} value={use.label}>
-                                                                {use.label}
-                                                            </MenuItem>
-                                                        ))):
-                                                   (console.log("None"))
-                                                ))} 
-                                            </Select>
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl className="FormControl">
-                                        <InputLabel>Εποχή</InputLabel>
-                                        <Select
-                                        className="SelectContainer"
-                                        value={selectedDateOption}
-                                        onChange={this.handleDateSelect}>
-                                            {
-                                                this.state.years.map((year, index) => (
-                                                    <MenuItem key={`year${index}`} value={year}>
-                                                        {year}
-                                                    </MenuItem>
-                                                ))
-                                            }
-
-                                        </Select>
-                                    </FormControl> 
-                                    <br/>
-                                    <FormControl required className="FormControl">
-                                        <InputLabel>Φύλο</InputLabel>
-                                        <Select
-                                        className="SelectContainer"
+                                        options={use_categories}
+                                    />
+                                </div>
+                            </div>
+                            <div id='CostumeUseName'>
+                                <div id='CostumeUseNameArea'>
+                                    <div id="CostumeNameLabel">
+                                        <span>ΟΝΟΜΑ ΧΡΗΣΗΣ</span>
+                                    </div>
+                                    <Select
+                                        className='UseSelect'
+                                        name="selectedUseOption"
                                         required={true}
-                                        multiple
-                                        value={selectedSexOption}
-                                        onChange={this.handleSexSelect}
-                                        input={<Input id="select-multiple-chip" />}
-                                        renderValue={selected => (
-                                            <div>
-                                            {selected.map(label => (
-                                                <Chip key={label} label={label}/>
-                                            ))}
-                                            </div>
-                                        )}
-                                        MenuProps={MenuProps}
-                                        >
-                                        {sexs.map(sex => (
-                                            <MenuItem key={sex.value} value={sex.label}>
-                                            {sex.label}
-                                            </MenuItem>
-                                        ))}
-                                        </Select>
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl required className="FormControl">
-                                        <InputLabel>Υλικό</InputLabel>
-                                        <Select
-                                        className="SelectContainer"
-                                        required={true}
-                                        value={selectedMaterialOption}
-                                        onChange={this.handleMaterialSelect}
-                                        >
-                                            {materials.map(material => (
-                                                <MenuItem key={material.value} value={material.label}>
-                                                    {material.label}
-                                                </MenuItem>
-                                            ))}   
-                                        </Select>
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl required className="FormControl">
-                                    <InputLabel>Τεχνική</InputLabel>
-                                        <Select
-                                        className="SelectContainer"
-                                        required={true}
-                                        value={selectedTechniqueOption}
-                                        onChange={this.handleTechniqueSelect}
-                                        >
-                                            {techniques.map(technique => (
-                                                <MenuItem key={technique.value} value={technique.label}>
-                                                    {technique.label}
-                                                </MenuItem>
-                                            ))}   
-                                        </Select>
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl className="FormControl">
-                                        <TextField
-                                            label="Σχεδιαστής"
-                                            name="designer"
-                                            value={this.state.designer}
-                                            onChange={this.onChange}
-                                            inputProps={{style: { fontSize: 14 }}}
-                                            />
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl required className="FormControl">
-                                        <InputLabel>Περιοχή Αναφοράς</InputLabel>
-                                        
-                                        <Geosuggest
-                                            className="geosuggest"
-                                            placeholder="Αναζήτηση"
-                                            initialValue={this.state.location}
-                                            required={true}
-                                            ref={el=>this._geoSuggest=el}
-                                            onSuggestSelect={this.handleLocationSelect}
-                                        />
-                                        {this.handleLocation()}
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl className="FormControl">
-                                    <InputLabel>Θεατρικές Παραστάσεις</InputLabel>
-                                        <Select
-                                        className="SelectContainer"
-                                        value={selectedTPOption}
-                                        onChange={this.handleTPSelect}
-                                        inputProps={{style: { fontSize: 14 }}}
-                                        >
-                                            {this.props.theatrical_plays ? (this.props.theatrical_plays.map(tp => (
-                                                <MenuItem key={tp.theatrical_play_id} value={tp.title}>
-                                                    {tp.title}
-                                                </MenuItem>
-                                            ))) : <MenuItem>No options</MenuItem>}   
-                                        </Select>
-                                    </FormControl>
-                                    <br/>
-                                    <FormControl className="FormControl">
-                                        <TextField
-                                            label="Hθοποιόι"
-                                            name="actors"
-                                            value={actors}
-                                            onChange={this.onChange}
-                                            inputProps={{style: { fontSize: 14 }}}/>
-                                    </FormControl> 
-                                    <FormControl className="FormControl">
-                                        <TextField
-                                            label="Ρόλοι"
-                                            name="parts"
-                                            value={parts}
-                                            onChange={this.onChange}
-                                            inputProps={{style: { fontSize: 14 }}}/>
-                                    </FormControl>       
-                                    <br/><br/><br/>
-                                    <div className="button-submit">
-                                        <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
+                                        onChange={this.handleUseSelect}
+                                        value={selectedUseOption}
+                                        options={u_options}/>        
+                                </div>
+                            </div>
+                            <br/>
+                            <div id='CostumeDate'>
+                                <div id="CostumeDateArea">
+                                    <div id='CostumeDateLabel'>
+                                        <span>ΕΠΟΧΗ</span>
                                     </div>
                                 </div>
-                            </form>
-                        </DialogContent>
-                    </Dialog>
-            </div>
+                                <Select
+                                    className="UseSelect"
+                                    name="selectedDateOption"
+                                    value={selectedDateOption}
+                                    onChange={this.handleDateSelect}
+                                    options={this.state.years}/>
+                            </div>
+                            <br/>
+                            <div id='CostumeSex'>
+                                <div id='CostumeSexArea'>
+                                    <div id='CostumeSexLabel'>
+                                        <span>ΦΥΛΟ</span>
+                                    </div>
+                                </div>
+                                <Select
+                                    className="UseSelect"
+                                    required={true}
+                                    isMulti
+                                    value={selectedSexOption}
+                                    onChange={this.handleSexSelect}
+                                    options={sexs}/>
+                            </div>
+                            <br/>
+                            <div id='CostumeTechnique'>
+                                <div id='CostumeTechniqueArea'>
+                                    <div id='CostumeTechniqueLabel'>
+                                        <span>TEXNIKH</span>
+                                    </div>
+                                </div>
+                                <Select
+                                className="UseSelect"
+                                required={true}
+                                name="selectedTechniqueOption"
+                                value={selectedTechniqueOption}
+                                onChange={this.handleTechniqueSelect}
+                                options={techniques}
+                                />       
+                            </div>
+                            <br/>
+                            {/*<div id='InputArea'>
+                                <div id='Label'>
+                                    <div id=''>
+                                    <span>YΛΙΚΟ ΚΑΤΑΣΚΕΥΗΣ</span>
+                                        </div>
+                                    </div>
+                                    <Select
+                                        className="SelectContainer"
+                                        required={true}
+                                        name="selectedMaterialOption"
+                                        value={selectedMaterialOption}
+                                        onChange={this.handleMaterialSelect}
+                                        options={materials}
+                                    />
+                               
+                            </div>*/}
+                            <br/>
+                            <div id='TP'>
+                                <div id='TPArea'>
+                                    <div id='TPLabel'>
+                                    <span>ΘΕΑΤΡΙΚΕΣ ΠΑΡΑΣΤΑΣΕΙΣ</span>
+                                    </div>    
+                                </div>
+                                <Select
+                                className="UseSelect"
+                                value={selectedTPOption}
+                                onChange={this.handleTPSelect}
+                                name='selectedTPOption'
+                                options={this.props.theatrical_plays}/>         
+                            </div>
+                            <div id='Designer'>
+                                <div id='DesignerArea'>
+                                    <div id='DesignerLabel'>
+                                        <span>ΣΧΕΔΙΑΣΤΗΣ</span>
+                                    </div>
+                                </div>
+                                <input
+                                id="TextArea"
+                                type='text'
+                                name="designer"
+                                value={this.state.designer}
+                                onChange={this.onChange}
+                                />
+                            </div>
+                            <br/>
+                            <div id='Geosuggest'>
+                                <div id='GeosuggestArea'>
+                                    <div id='GeosuggestLabel'>
+                                        <span>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</span>
+                                    </div>
+                                </div>
+                                <Geosuggest
+                                    className="geosuggest"
+                                    placeholder="Αναζήτηση"
+                                    initialValue={this.state.location}
+                                    required={true}
+                                    ref={el=>this._geoSuggest=el}
+                                    onSuggestSelect={this.handleLocationSelect}
+                                    />
+                                    {this.handleLocation()}
+                            </div>
+                            <br/>
+                            <div id='Actors'>
+                                <div id='ActorsArea'>
+                                    <div id='ActorsLabel'>
+                                        <span>ΗΘΟΠΟΙΟΣ</span>
+                                    </div>
+                                </div>
+                                <input
+                                id="TextArea"
+                                type='text'
+                                name="actors"
+                                value={actors}
+                                onChange={this.onChange}/>
+                            </div>        
+                            <br/><br/><br/>
+                            <div className="button-submit">
+                                <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
+                            </div>
+                            </div>
+                        </form>
+                </div>
+                
+           </React.Fragment>
            
         )  
     }
