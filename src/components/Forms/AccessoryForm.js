@@ -53,7 +53,7 @@ class  AccessoryForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            user_id: '',
+            user_id: this.props.user,
             accessory: null,
             name: '',
             description: '',

@@ -1,21 +1,14 @@
 import React, {Component} from 'react';
-
-import { Paper, TextField, Button, Snackbar, SnackbarContent } from '@material-ui/core';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import Chip from '@material-ui/core/Chip';
-
 import Select from 'react-select';
-
+import TextareaAutosize from 'react-textarea-autosize';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import Geosuggest from 'react-geosuggest';
-import "../Geosuggest/Geosuggest.css";
-
-
+import "../Geosuggest/Geosuggest.css"
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import "./Forms.css";
+
+import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 
 import axios from 'axios';
 
@@ -23,14 +16,10 @@ class  CostumeForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            user_id: '',
+            user_id: this.props.user,
             costume: null,
             name: '',
             descr: '',
-            //Uses' data
-            uses_data: '',
-            //Theatrical Plays data
-            tps_data: null,
             //For backend insert
             actors: '',
             designer: '',
@@ -66,26 +55,30 @@ class  CostumeForm extends Component{
             insert: false,
             isNotificationOpen: false,
             //////////////////////////////
-            years: '',
+            years: [],
         }
         this.onChange = this.onChange.bind(this);
-        const year = (new Date(1700)).getFullYear();
-        this.state.years = Array.from(new Array(100),(val, index) => (index + year));
+        this.handleUseSelect = this.handleUseSelect.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState){
-        console.log("props", this.props);
-        if(prevState.insert){
-            this.resetForm();
-            
+    componentDidMount(){
+        console.log("props costume form", this.props);
+        var startYear=1800;
+        for(var i=0; i < 100; i++){
+            this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
         }
-        if(this.props.editing && !prevProps.editing){
+
+        if(this.props.editing){
             let sex;
+            let arrSexs = [];
             if(this.props.costume[0].sex.includes(",")){
                 sex = this.props.costume[0].sex.split(",");
             }
             else{
                 sex = [this.props.costume[0].sex];
+            }
+            for(var i=0; i < sex.length; i++){
+                arrSexs.push({value: sex[i], label: sex[i]})
             }
             this.setState({
                 costume: this.props.costume[0],
@@ -95,27 +88,23 @@ class  CostumeForm extends Component{
                 actors: this.props.costume[0].actors,
                 designer: this.props.costume[0].designer,
                 parts: this.props.costume[0].parts,
-                selectedDateOption: this.props.costume[0].date,
-                selectedSexOption: sex,
-                selectedUseOption: this.props.costume[0].use_name,
-                selectedMaterialOption: this.props.costume[0].material,
-                selectedTechniqueOption: this.props.costume[0].technique,
-                selectedTPOption: this.props.costume[0].tp_title,
+                selectedDateOption:{value: this.props.costume[0].date, label: this.props.costume[0].date},
+                selectedSexOption: arrSexs,
+                selectedMaterialOption: {value: this.props.costume[0].material, label: this.props.costume[0].material},
+                selectedTechniqueOption: {value: this.props.costume[0].technique, label:  this.props.costume[0].technique},
+                selectedTPOption: {value: this.props.costume[0].tp_title, label:  this.props.costume[0].tp_title},
                 location: this.props.costume[0].location,
             })
             if(this.props.uses){
                 for(var i=0; i<this.props.uses.length; i++){
                     if(this.props.uses[i].useID===this.props.costume[0].useID){
                         this.setState({
-                            selectedUseCategoryOption: this.props.uses[i].use_category
+                            selectedUseCategoryOption: {value: this.props.uses[i].use_category, label: this.props.uses[i].use_category},
+                            selectedUseOption: {value: this.props.uses[i].name, label: this.props.uses[i].name}
                         })
                     }
                 }
             }
-           
-        }
-        if(this.props.user && !prevProps.user){
-            this.setState({user_id: this.props.user})
         }
         console.log('state', this.state);
     }
@@ -125,44 +114,45 @@ class  CostumeForm extends Component{
         this.setState(() => {this.props.handleClose()});
     }
 
-    onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
+    onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); 
+    console.log("state", this.state)};
 
-    onChangeCategory = (evt) => {
-        this.setState({selectedUseCategoryOption: evt.target.value,
-        enableSelectUse: false})
+    handleUseCategorySelect = (selectedUseCategoryOption) => {
+        this.setState({selectedUseCategoryOption});
+        this.setState({enableSelectUse: false});
     }
 
     /*For selection of date*/
-    handleDateSelect = (evt) => {
-        this.setState({ selectedDateOption: evt.target.value});
-        console.log(`Option selected:`, evt.target);
+    handleDateSelect = (selectedDateOption) => {
+        this.setState({ selectedDateOption});
+        console.log(`Option selected:`, this.state.selectedDateOption);
     }
 
     /*For selection of use categories*/
-    handleUseSelect = (evt) => {
-        this.setState({ selectedUseOption: evt.target.value});
-        console.log(`Option selected:`, evt.target);
+    handleUseSelect = (selectedUseOption) => {
+        this.setState({ selectedUseOption});
+        console.log(`Option selected:`, this.state.selectedUseOption);
     }
 
      /*For selection of theatrical plays*/
-     handleTPSelect = (evt) => {
-        this.setState({selectedTPOption: evt.target.value});
+     handleTPSelect = (selectedTPOption) => {
+        this.setState({selectedTPOption});
         console.log(`Option selected:`, this.state.selectedTPOption);
     }
 
     /*For mutli-selection of sex categories*/
-    handleSexSelect = (evt) => {
-        this.setState({ selectedSexOption: evt.target.value });
+    handleSexSelect = (selectedSexOption) => {
+        this.setState({ selectedSexOption });
         console.log(`Option selected:`, this.state.selectedSexOption);
     }
 
-    handleMaterialSelect = (evt) => {
-        this.setState({ selectedMaterialOption: evt.target.value });
+    handleMaterialSelect = (selectedMaterialOption) => {
+        this.setState({ selectedMaterialOption });
         console.log(`Option selected:`, this.state.selectedMaterialOption);
     }
 
-    handleTechniqueSelect = (evt) => {
-        this.setState({ selectedTechniqueOption: evt.target.value });
+    handleTechniqueSelect = (selectedTechniqueOption) => {
+        this.setState({ selectedTechniqueOption });
         console.log(`Option selected:`, this.state.selectedTechniqueOption);
     }
 
@@ -375,20 +365,18 @@ class  CostumeForm extends Component{
         }}
     
         /*For theatrical Plays*/
-        for (var key in this.state.tps_data){
-            p_options.push({label: this.state.tps_data[key].title, value:  this.state.tps_data[key].title}); 
+        for (var key in this.props.theatrical_plays){
+            p_options.push({label: this.props.theatrical_plays[key].title, value:  this.props.theatrical_plays[key].title}); 
         }
 
-        console.log(u_options);
+        console.log(u_options, p_options);
 
         return(
             <React.Fragment>
                 <div id="ADD">
                 <NotificationContainer>{this.createNotification()}</NotificationContainer>
                 <div id="FormTitle">Kουστούμι</div>
-                    <form onSubmit={this.submit}>
-                        <div>
-                            <br/>
+                    <form id="Form" onSubmit={this.submit}><br/>
                             <div id='CostumeName'>
                                 <div id='CostumeNameArea'>   
                                     <div id="CostumeNameLabel">
@@ -413,7 +401,7 @@ class  CostumeForm extends Component{
                                     </div>
                                     <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
                                 </div>
-                                <textarea
+                                <TextareaAutosize
                                 id="DescriptionInput"
                                 type='text'
                                 name="descr"
@@ -426,46 +414,55 @@ class  CostumeForm extends Component{
                             <br/>
                             <div id='CostumeUseCategory'>
                                 <div id='CostumeUseCategoryArea'>
-                                    <div id='CostumeNameLabel'>
-                                        <span>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</span>
-                                    </div>
-                                    <Select
-                                        className='UseSelect'
-                                        name="selectedUseCategoryOption"
-                                        required={true}
-                                        onChange={this.onChangeCategory}
-                                        value={selectedUseCategoryOption}
-                                        options={use_categories}
-                                    />
-                                </div>
-                            </div>
-                            <div id='CostumeUseName'>
-                                <div id='CostumeUseNameArea'>
                                     <div id="CostumeNameLabel">
                                         <span>ΟΝΟΜΑ ΧΡΗΣΗΣ</span>
                                     </div>
                                     <Select
-                                        className='UseSelect'
+                                        id="SelectContainer"
+                                        className="react-select"
                                         name="selectedUseOption"
                                         required={true}
                                         onChange={this.handleUseSelect}
                                         value={selectedUseOption}
-                                        options={u_options}/>        
+                                        options={u_options}
+                                        closeMenuOnSelect={true}
+                                        placeholder={''} />        
                                 </div>
+                            </div>
+                            <br/>
+                            <div id='CostumeUseName'>
+                                <div id='CostumeUseNameArea'>
+                                    <div id="CostumeNameLabel">
+                                        <span>YΛΙΚΟ ΚΑΤΑΣΚΕΥΗΣ</span>
+                                    </div>
+                                    
+                                    <Select
+                                        id="SelectContainer"
+                                        className="react-select"
+                                        required={true}
+                                        name="selectedMaterialOption"
+                                        value={selectedMaterialOption}
+                                        onChange={this.handleMaterialSelect}
+                                        options={materials}
+                                        placeholder={''}
+                                    />
+                               </div>
                             </div>
                             <br/>
                             <div id='CostumeDate'>
                                 <div id="CostumeDateArea">
                                     <div id='CostumeDateLabel'>
-                                        <span>ΕΠΟΧΗ</span>
+                                        <span>ΧΡΟΝΟΛΟΓΙΑ</span>
                                     </div>
                                 </div>
                                 <Select
-                                    className="UseSelect"
+                                    id="SelectContainer"
+                                    className="react-select"
                                     name="selectedDateOption"
                                     value={selectedDateOption}
                                     onChange={this.handleDateSelect}
-                                    options={this.state.years}/>
+                                    options={this.state.years}
+                                    placeholder={''}/>
                             </div>
                             <br/>
                             <div id='CostumeSex'>
@@ -475,12 +472,14 @@ class  CostumeForm extends Component{
                                     </div>
                                 </div>
                                 <Select
-                                    className="UseSelect"
+                                    id="SelectContainer"
+                                    className="react-select"
                                     required={true}
                                     isMulti
                                     value={selectedSexOption}
                                     onChange={this.handleSexSelect}
-                                    options={sexs}/>
+                                    options={sexs}
+                                    placeholder={''}/>
                             </div>
                             <br/>
                             <div id='CostumeTechnique'>
@@ -490,31 +489,16 @@ class  CostumeForm extends Component{
                                     </div>
                                 </div>
                                 <Select
-                                className="UseSelect"
+                                id="SelectContainer"
+                                className="react-select"
                                 required={true}
                                 name="selectedTechniqueOption"
                                 value={selectedTechniqueOption}
                                 onChange={this.handleTechniqueSelect}
                                 options={techniques}
+                                placeholder={''}
                                 />       
                             </div>
-                            <br/>
-                            {/*<div id='InputArea'>
-                                <div id='Label'>
-                                    <div id=''>
-                                    <span>YΛΙΚΟ ΚΑΤΑΣΚΕΥΗΣ</span>
-                                        </div>
-                                    </div>
-                                    <Select
-                                        className="SelectContainer"
-                                        required={true}
-                                        name="selectedMaterialOption"
-                                        value={selectedMaterialOption}
-                                        onChange={this.handleMaterialSelect}
-                                        options={materials}
-                                    />
-                               
-                            </div>*/}
                             <br/>
                             <div id='TP'>
                                 <div id='TPArea'>
@@ -523,11 +507,13 @@ class  CostumeForm extends Component{
                                     </div>    
                                 </div>
                                 <Select
-                                className="UseSelect"
+                                id="SelectContainer"
+                                className="react-select"
                                 value={selectedTPOption}
                                 onChange={this.handleTPSelect}
                                 name='selectedTPOption'
-                                options={this.props.theatrical_plays}/>         
+                                options={p_options}
+                                placeholder={''}/>         
                             </div>
                             <div id='Designer'>
                                 <div id='DesignerArea'>
@@ -543,6 +529,7 @@ class  CostumeForm extends Component{
                                 onChange={this.onChange}
                                 />
                             </div>
+                           
                             <br/>
                             <div id='Geosuggest'>
                                 <div id='GeosuggestArea'>
@@ -575,10 +562,10 @@ class  CostumeForm extends Component{
                                 onChange={this.onChange}/>
                             </div>        
                             <br/><br/><br/>
-                            <div className="button-submit">
-                                <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
-                            </div>
-                            </div>
+                            
+                            <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>
+                            <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
+                        
                         </form>
                 </div>
                 

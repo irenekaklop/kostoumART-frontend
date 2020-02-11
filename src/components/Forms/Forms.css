@@ -8,10 +8,6 @@
   margin: 6% 4%;
 }
 
-.SelectContainer{
-  width: 250px;
-}
-
 #InputArea {
   width: 796.206px;
   height: 58.607px;
@@ -46,7 +42,7 @@
 #TextArea {
   width: 646.89px;
   height: 50px;
-  margin-top: 8.5px;
+  margin-top: 13.45px;
   text-align: left;
   font-family: RobotoSlab-Light;
   font-style: normal;
@@ -58,28 +54,67 @@
   border-radius: 0px!important;
 }
 
-textarea {
-  resize: none;
-  background-color: inherit;
+#SelectContainer {
+  margin-top: 13.45px;
 }
 
 .css-2b097c-container {
-  width: 646.89px;
-  height: 50px;
-  margin-top: 8.5px;
+  width: 365.137px;
+  height: 58.606px;
+  background-color: rgba(242,242,242,1)!important;
 }
 
 .css-yk16xz-control {
+  width: 365.137px;
+  height: 58.606px;
   border: none!important;
   border-bottom: 1px solid rgba(255,222,23,1)!important;
+  background-color: rgba(242,242,242,1)!important;
   border-radius: 0px!important;
 }
 
-#DescriptionInput {
-  width: 769.686px;
-  height: 254.452px;
-  line-height: 18px;    
-  margin-top: -1.5px;
+.css-1pahdxg-control {
+  width: 365.137px!important;
+  height: 58.606px!important;
+  background-color: rgba(242,242,242,1)!important;
+  border: none!important;
+  border-bottom: 1px solid #2684ff!important;
+  border-radius: 0px!important;
+}
+
+.css-1pahdxg-control:hover {
+  border: none!important;
+  border-bottom: 1px solid #2684ff!important;
+  border-radius: 0px!important;
+}
+
+.css-14jk2my-container {
+  width: 365.137px;
+  height: 58.606px;
+  background-color: rgba(242,242,242,1)!important;
+}
+
+.css-1fhf3k1-control {
+  width: 365.137px;
+  height: 58.606px;
+  border: none!important;
+  border-bottom: 1px solid rgba(255,222,23,1)!important;
+  background-color: rgb(228, 228, 228)!important;
+  border-radius: 0px!important;
+}
+
+.react-select {
+  font-family: RobotoSlab-Light!important;
+  font-style: normal;
+  font-weight: normal;
+  text-align: left;
+  font-size: 19px!important;
+}
+
+textarea {
+  background-color: inherit;
+  margin-top: 13.45px;
+  overflow: hidden;
   text-align: left;
   font-family: RobotoSlab-Light;
   font-style: normal;
@@ -87,6 +122,23 @@ textarea {
   font-size: 15px;
   border-bottom: 1px solid rgba(255,222,23,1);
   border-radius: 0px!important;
+}
+
+#DescriptionInput {
+  width: 769.686px;
+  min-height: 58.606px;
+  max-height: 254.452px;
+  line-height: 18px;    
+  margin-top: -1.5px;
+  vertical-align: bottom;
+  text-align: left;
+  font-family: RobotoSlab-Light;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(255,222,23,1);
+  border-radius: 0px!important;
+  resize: vertical;
 }
 
 #ADD {
@@ -200,11 +252,6 @@ textarea {
   font-weight: normal;
   font-size: 11px;
   color: rgba(255,222,23,1);
-}
-
-.UseSelect {
-  width: 365.137px;
-  height: 58.606px;
 }
 
 #CostumeUseName {
@@ -407,6 +454,22 @@ textarea {
   font-size: 11px;
   color: rgba(255,222,23,1);
 }
+#TextArea {
+  position: absolute;
+  left: 0px;
+  width: 646.89px;
+  height: 50px;
+  margin-top: 13.45px;
+  text-align: left;
+  font-family: RobotoSlab-Light;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 19px;
+  color: rgba(88,89,91,1);
+  background-color: inherit;
+  border-bottom: 1px solid rgba(255,222,23,1);
+  border-radius: 0px!important;
+}
 
 #Geosuggest {
   position: absolute;
@@ -472,4 +535,27 @@ textarea {
   font-weight: normal;
   font-size: 11px;
   color: rgba(255,222,23,1);
+}
+
+#Form {
+  width: 1838.827px;
+  height: 908.067px;
+}
+
+#ButtonSave {
+  position: absolute;
+  width: 104.628px;
+  height: 37.787px;
+  left: 933.514px;
+  top: 850.279px;
+  overflow: visible;
+}
+
+#ButtonCancel{
+  position: absolute;
+  width: 104.628px;
+  height: 37.787px;
+  left: 798.899px;
+  top: 850.279px;
+  overflow: visible;
 }

@@ -62,8 +62,6 @@ class TpForm extends Component{
             else{
                 d_arr = [this.props.tp.date];
             }
-            
-            console.log("darr", d_arr)
             let arrDates=[];
             for(var i=0; i < d_arr.length; i++){
                 arrDates.push({value: d_arr[i], label: d_arr[i]})

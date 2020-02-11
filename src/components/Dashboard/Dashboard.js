@@ -374,6 +374,10 @@ class Dashboard extends Component{
     }
 
     handleTabChange = (value) => {
+        //If screen is on a Form close it.
+        if(this.state.isCostumeFormOpen || this.state.isUseDialogOpen || this.state.isTPDialogOpen || this.state.isAccessoryDialogOpen){
+            this.handleCloseDialog();
+        }
         //Refresh Tables
         if(value===0){
             this.getCostumes();
@@ -737,16 +741,19 @@ class Dashboard extends Component{
                 </Header>
                 {/*Filters and right sidebar*/}
                 <div>
+                    
                     <Sidebar
                         sidebar={<b>Sidebar content</b>}
                         open={this.state.filterDrawerOpen}
                         onSetOpen={this.handleDrawerOpen}
-                        styles={{ sidebar: { background: "white" } }}
+                        contentClassName="Sidebar"
                     >
                         <div className="Filters" onClick={this.handleDrawerOpen}>
                         <FilterButtons/>
                         </div>
                     </Sidebar>
+                    
+                    
                     <Drawer
                         variant="persistent"
                         anchor="left"
@@ -832,7 +839,7 @@ class Dashboard extends Component{
                         
                         
                     </Tab>
-                    <Tab className="react-tabs__tab">
+                    <Tab>
                         {this.state.current_tab===1?
                             <div className="react-tabs__tab--selected">
                             <span>Συνοδευτικό</span>
@@ -848,7 +855,7 @@ class Dashboard extends Component{
                             </div>
                         }
                     </Tab>
-                    <Tab className="react-tabs__tab">
+                    <Tab>
                         {this.state.current_tab===2?
                             <div className="react-tabs__tab--selected">
                             <span>Χρήση</span>
@@ -969,7 +976,7 @@ class Dashboard extends Component{
                
                 {this.state.isCostumeFormOpen ?(
                     console.log("Form should be called"),
-                    <CostumeForm isOpen={this.state.isCostumeDialogOpen}
+                    <CostumeForm
                     handleClose={this.handleCloseDialog.bind(this)}
                     user={this.state.user.user_id}
                     costumes={this.state.costume_data}
