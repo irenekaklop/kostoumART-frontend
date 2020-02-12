@@ -61,7 +61,7 @@
 .css-2b097c-container {
   width: 365.137px;
   height: 58.606px;
-  background-color: rgba(242,242,242,1)!important;
+  background-color: inherit;
 }
 
 .css-yk16xz-control {
@@ -69,14 +69,14 @@
   height: 58.606px;
   border: none!important;
   border-bottom: 1px solid rgba(255,222,23,1)!important;
-  background-color: rgba(242,242,242,1)!important;
+  background-color: inherit;
   border-radius: 0px!important;
 }
 
 .css-1pahdxg-control {
   width: 365.137px!important;
   height: 58.606px!important;
-  background-color: rgba(242,242,242,1)!important;
+  background-color: inherit;
   border: none!important;
   border-bottom: 1px solid #2684ff!important;
   border-radius: 0px!important;
@@ -212,7 +212,7 @@ textarea {
   overflow: visible;
 }
 
-#CostumeDescriptionArea {
+#DescriptionArea {
   position: absolute;
   width: 193px;
   height: 13px;
@@ -540,6 +540,7 @@ textarea {
 #Form {
   width: 1838.827px;
   height: 908.067px;
+  background-color: rgba(255,255,255,1);
 }
 
 #ButtonSave {
@@ -558,4 +559,209 @@ textarea {
   left: 798.899px;
   top: 850.279px;
   overflow: visible;
+}
+
+#Name {
+  position: absolute;
+  width: 801.891px;
+  height: 58.608px;
+  left: 72.872px;
+  top: 143.551px;
+  overflow: visible;
+}
+#NameArea {
+  position: absolute;
+  width: 143px;
+  height: 13px;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+
+#NameLabel {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  width: 144px;
+  white-space: nowrap;
+  line-height: 13.200000762939453px;
+  margin-top: -1.1000003814697266px;
+  text-align: left;
+  font-family: Roboto-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  color: rgba(255,222,23,1);
+}
+
+#UseCategory {
+  position: absolute;
+  width: 801.891px;
+  height: 58.608px;
+  left: 72.872px;
+  top: 246.781px;
+  overflow: visible;
+}
+#UseCategoryArea {
+  position: absolute;
+  width: 111px;
+  height: 13px;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+#UseNameLabel {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  width: 112px;
+  white-space: nowrap;
+  line-height: 13.200000762939453px;
+  margin-top: -1.1000003814697266px;
+  text-align: left;
+  font-family: Roboto-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  color: rgba(255,222,23,1);
+}
+#UseDescription {
+  position: absolute;
+  width: 799.06px;
+  height: 297.81px;
+  left: 76.271px;
+  top: 349.688px;
+  overflow: visible;
+}
+#UseCustoms {
+  position: absolute;
+  width: 802.891px;
+  height: 58.609px;
+  left: 71.872px;
+  top: 707.49px;
+  overflow: visible;
+}
+#UseCustomsArea {
+  position: absolute;
+  width: 62px;
+  height: 39px;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+#UseCustomsLabel {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  width: 63px;
+  white-space: nowrap;
+  line-height: 13.200000762939453px;
+  margin-top: -1.1000003814697266px;
+  text-align: left;
+  font-family: Roboto-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  color: rgba(255,222,23,1);
+}
+
+#Director {
+  position: absolute;
+  width: 801.891px;
+  height: 58.608px;
+  left: 72.872px;
+  top: 246.781px;
+  overflow: visible;
+}
+#DirectorArea {
+  position: absolute;
+  width: 143px;
+  height: 13px;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+#DirectorLabel {
+  position: absolute;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+    width: 144px;
+    white-space: nowrap;
+    line-height: 13.200000762939453px;
+    margin-top: -1.1000003814697266px;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    color: rgba(255,222,23,1);
+}
+#Theater {
+  position: absolute;
+  width: 646.89px;
+  height: 58.608px;
+  left: 72.872px;
+  top: 402.87px;
+  overflow: visible;
+}
+#TheaterArea {
+  position: absolute;
+  width: 42px;
+  height: 13px;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+#TheaterLabel {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  width: 43px;
+  white-space: nowrap;
+  line-height: 13.200000762939453px;
+  margin-top: -1.1000003814697266px;
+  text-align: left;
+  font-family: Roboto-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  color: rgba(255,222,23,1);
+}
+
+#TPDate {
+  position: absolute;
+  width: 646.89px;
+  height: 58.608px;
+  left: 72.872px;
+  top: 550.779px;
+  overflow: visible;
+}
+#TPDateArea {
+  position: absolute;
+  width: 75px;
+  height: 26px;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+#TPDateLabel {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  width: 76px;
+  white-space: nowrap;
+  line-height: 13.200000762939453px;
+  margin-top: -1.1000003814697266px;
+  text-align: left;
+  font-family: Roboto-Regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  color: rgba(255,222,23,1);
 }

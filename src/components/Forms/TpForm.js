@@ -1,18 +1,9 @@
 import React, {Component} from 'react';
-
-import { Paper, TextField, Button, Snackbar, SnackbarContent } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-
 import Select from 'react-select';
-
-import CloseIcon from '@material-ui/icons/Close';
-
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-
 import "./Forms.css";
-
+import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 import axios from 'axios';
 
 class TpForm extends Component{
@@ -28,7 +19,7 @@ class TpForm extends Component{
             actors: '',
             director: '',
             years: [],
-            user_id: '',
+            user_id: this.props.user,
             submit: false,
             redirectToReferrer: false,
             ////////////////////////
@@ -40,18 +31,14 @@ class TpForm extends Component{
         this.onChange = this.onChange.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState){
-        if(prevState.years!=[]){
-            var startYear=1800;
-            for(var i=0; i < 100; i++){
-                this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
-            }
+    componentDidMount(){
+        var startYear=1800;
+        for(var i=0; i < 100; i++){
+            this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
         }
-        if(prevState.insert){
-            this.resetForm();
-        }
-        if(this.props.editing && !prevProps.editing){
-            let d_arr;
+        if(this.props.editing){
+            let d_arr=[];
+            if(this.props.tp.date){
             if(this.props.tp.date.includes(",")){
                 d_arr = this.props.tp.date.split(",");
 
@@ -61,7 +48,7 @@ class TpForm extends Component{
             }
             else{
                 d_arr = [this.props.tp.date];
-            }
+            }}
             let arrDates=[];
             for(var i=0; i < d_arr.length; i++){
                 arrDates.push({value: d_arr[i], label: d_arr[i]})
@@ -76,10 +63,6 @@ class TpForm extends Component{
                 theatrical_play_id: this.props.tp.theatrical_play_id,
                 tp_data: this.props.theatrical_plays
                 })
-        }
-        if(this.props.user && !prevState.user_id){
-            this.setState({user_id: this.props.user});
-            
         }
         console.log("TP state", this.state)
         console.log("TP props", this.props)
@@ -112,11 +95,14 @@ class TpForm extends Component{
     }
 
     handleUpdate(){
-        let data = { theatrical_play_id: this.state.theatrical_play_id, title: this.state.name, date: this.state.date, actors: this.state.actors, director: this.state.director, theater: this.state.theater, userId: this.state.user_id};
-        console.log(this.state);
-        if(this.state.date.length===0){
-            data.date='';
+        let dates='';
+        for(var i=0; i < this.state.date.length; i++){
+            dates = dates+this.state.date[i].value;
+            if(i != this.state.date.length-1){
+                dates=dates+','
+            }
         }
+        let data ={theatrical_play_id: this.state.theatrical_play_id, title: this.state.name, date: dates, actors: this.state.actors, director: this.state.director, theater: this.state.theater, userId: this.state.user_id};
         //axios.post('http://88.197.53.80/kostoumart-api//edit_tp', data)
         axios.post('http://localhost:8108/edit_tp', data)
         .then(res => {
@@ -235,89 +221,83 @@ class TpForm extends Component{
         console.log(this.state)
         
         return(
-            <div>
-                <NotificationContainer>{this.createNotification()}</NotificationContainer>
-                <Dialog
-                open={this.props.isOpen}
-                onClose={() => this.handleClose(false)}                
-                aria-labelledby="input-dialog"
-                aria-describedby="input-dialog"
-                maxWidth={'lg'}
-                fullWidth={true}>
-                    <DialogContent>
-                        <CloseIcon
-                        style={{ float: 'right', cursor: 'pointer' }}
-                        onClick={() => this.handleClose(false)}/>
-                        <form onSubmit={this.handleSubmit}>
-                            <div className="FormContent">
-                                <div className="FormTitle">Θεατρική παράσταση</div>
-                                <br/>
-                                <div id='InputArea'>
-                                    <div id='Label'>
-                                        <span>ONOMA ΠΑΡΑΣΤΑΣΗΣ *</span>
-                                    </div>
-                                    <input
-                                        id="TextArea"
-                                        type='text'
-                                        name="name" 
-                                        value={name} 
-                                        onChange={this.onChange}
-                                        required={true}
-                                    />
+            <React.Fragment>
+                <div id="ADD">
+                    <div id="FormTitle">Θεατρική παράσταση</div><br/>
+                    <NotificationContainer>{this.createNotification()}</NotificationContainer>
+                    <form id="Form" onSubmit={this.handleSubmit}>
+                        <div id='Name'>
+                            <div id='NameArea'>
+                                <div id="NameLabel">
+                                    <span>ONOMA ΠΑΡΑΣΤΑΣΗΣ *</span>
                                 </div>
-                                <br/>
-                                <div id='InputArea'>
-                                    <div id='Label'>
-                                        <span>XΡΟΝΟΛΟΓΙΑ</span>
-                                    </div>
-                                    <Select
-                                        isMulti
-                                        name="date"
-                                        options={this.state.years}
-                                        value={date}
-                                        onChange={this.handleDateSelect}
-                                        closeMenuOnSelect={true} 
-                                    />
+                                <input
+                                id="TextArea"
+                                type='text'
+                                name="name" 
+                                value={name} 
+                                onChange={this.onChange}
+                                required={true}
+                                />
+                            </div>    
+                        </div>
+                        <br/>
+                        <div id='Director'>
+                            <div id='DirectorArea'>
+                                <div id='DirectorLabel'>
+                                <span>ΣΚΗΝΟΘΕΤΗΣ *</span>
                                 </div>
-                                <br/>
-                                <div id='InputArea'>
-                                    <div id='Label'>
-                                        <span>ΣΚΗΝΟΘΕΤΗΣ *</span>
-                                    </div>
-                                    <input
-                                        id="TextArea"
-                                        type='text'
-                                        name="director"
-                                        value={director} 
-                                        onChange={this.onChange}
-                                        required={true}
-                                    />
-                                </div>
-                                <br/>
-                                <div id='InputArea'>
-                                    <div id='Label'>
-                                        <span>ΘΕΑΤΡΟ</span>
-                                    </div>
-                                    <input
-                                        id="TextArea"
-                                        type='text'
-                                        name="theater"
-                                        value={theater} 
-                                        onChange={this.onChange}
-                                        required={false}
-                                    />
-                                </div>
-                                <br/>
-                               
-                            <br/><br/><br/>
-                                <div className="button-submit">
-                                    <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
-                                </div>
+                            <input
+                            id="TextArea"
+                            type='text'
+                            name="director"
+                            value={director} 
+                            onChange={this.onChange}
+                            required={true}
+                            />
                             </div>
-                        </form>
-                    </DialogContent>
-            </Dialog>
-            </div>
+                        </div>
+                        <br/>
+                        <div id='Theater'>
+                            <div id='TheaterArea'>
+                                <div id='TheaterLabel'>
+                                    <span>ΘΕΑΤΡΟ</span>
+                                </div>  
+                                <input
+                                id="TextArea"
+                                type='text'
+                                name="theater"
+                                value={theater} 
+                                onChange={this.onChange}
+                                required={false}
+                                />
+                            </div>
+                        </div>
+                        <br/>
+                        <div id='TPDate'>
+                            <div id='TPDateArea'>
+                                <div id='TPDateLabel'>
+                                <span>XΡΟΝΟΛΟΓΙΑ</span>
+                                </div>
+                                <Select
+                                id="SelectContainer"
+                                className="react-select"
+                                placeholder={''}
+                                isMulti
+                                name="date"
+                                options={this.state.years}
+                                value={date}
+                                onChange={this.handleDateSelect}
+                                closeMenuOnSelect={true} 
+                                />
+                            </div>
+                        </div>
+                        <br/><br/><br/>   
+                        <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>
+                        <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
+                    </form>
+                </div>            
+            </React.Fragment>
         )
     }
 }

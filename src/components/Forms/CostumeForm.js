@@ -106,7 +106,7 @@ class  CostumeForm extends Component{
                 }
             }
         }
-        console.log('state', this.state);
+        console.log('costume form state', this.state);
     }
 
     handleClose(){
@@ -204,6 +204,7 @@ class  CostumeForm extends Component{
 
     handleUpdate = () => {
         let data = this.state;
+        console.log("updating costume....", data);
         //axios.post('http://88.197.53.80/kostoumart-api/edit_costume', data)
         axios.post('http://localhost:8108/edit_costume', data)
         .then(res => {
@@ -394,7 +395,7 @@ class  CostumeForm extends Component{
                             </div>
                             <br/>
                             <div id='CostumeDescription'>
-                                <div id="CostumeDescriptionArea">
+                                <div id="DescriptionArea">
                                     <div id="LabelWithSubtitle">
                                     <div className="Title">
                                             <span>ΠΕΡΙΓΡΑΦΗ</span>

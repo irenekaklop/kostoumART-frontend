@@ -53,10 +53,10 @@ class Dashboard extends Component{
             accessories: [],
             //For Insert Form
             isCostumeFormOpen: false,
-            isUseDialogOpen: false,
-            isTPDialogOpen: false,
+            isUseFormOpen: false,
+            isTPFormOpen: false,
             isConfirmationDialogOpen: false,
-            isAccessoryDialogOpen: false,
+            isAccessoryFormOpen: false,
             //For Editing
             editing: false,
             costume: null,
@@ -83,7 +83,6 @@ class Dashboard extends Component{
             use_data: [],
 
         }
-
         this.logOut = this.logOut.bind(this);
         this.resetTimeout = this.resetTimeout.bind(this);
         this.handleCostumeEditing = this.handleCostumeEditing.bind(this)
@@ -109,7 +108,7 @@ class Dashboard extends Component{
             this.get_uses();
             this.get_theatrical_plays();
             this.getCostumes(decoded);
-            this.getAccessories();
+            this.getAccessories(decoded);
         }
         else{
             this.setState({redirectToReferrer: true})
@@ -240,7 +239,7 @@ class Dashboard extends Component{
     getCostumes = (decoded) => {
         if(decoded){
             //axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: decoded.role}})
-            axios.get("http://localhost:8108/costumes",{params: {user: decoded.role}})
+            axios.get("http://localhost:8108/costumes", {params: {user: decoded.role}})
             .then(res => {
                 const costume_data = res.data.response;
                 this.setState({ costume_data });
@@ -290,15 +289,27 @@ class Dashboard extends Component{
         )
     }
 
-    getAccessories = () => {
-        //axios.get("http://88.197.53.80/kostoumart-api/accessories")
-        axios.get("http://localhost:8108/accessories")
-         .then(res => {
-             const accessories = res.data.response;
-             this.setState({ accessories });
-             console.log(this.state);
-         }
-         )
+    getAccessories = (decoded) => {
+        if(decoded){
+            //axios.get("http://88.197.53.80/kostoumart-api/accessories", {params: {user: decoded.role}})
+            axios.get("http://localhost:8108/accessories", {params: {user: decoded.role}})
+            .then(res => {
+                const accessories = res.data.response;
+                this.setState({ accessories });
+                console.log(this.state);
+            }
+            )
+        }
+        else{
+            //axios.get("http://88.197.53.80/kostoumart-api/accessories", {params: {user: this.state.user.role}})
+            axios.get("http://localhost:8108/accessories", {params: {user: this.state.user.role}})
+            .then(res => {
+            const accessories = res.data.response;
+            this.setState({ accessories });
+            console.log(this.state);
+            })
+        }
+       
     }
 
     get_costume(index){
@@ -331,17 +342,17 @@ class Dashboard extends Component{
         if(this.state.isCostumeFormOpen){
             this.getCostumes();
             this.setState({isCostumeFormOpen: false});}
-        else if(this.state.isUseDialogOpen){
+        else if(this.state.isUseFormOpen){
             this.get_uses();
-            this.setState({isUseDialogOpen: false});
+            this.setState({isUseFormOpen: false});
         }
-        else if(this.state.isTPDialogOpen){
+        else if(this.state.isTPFormOpen){
             this.get_theatrical_plays();
-            this.setState({isTPDialogOpen: false});
+            this.setState({isTPFormOpen: false});
         }
-        else if(this.state.isAccessoryDialogOpen){
+        else if(this.state.isAccessoryFormOpen){
             this.getAccessories();
-            this.setState({isAccessoryDialogOpen: false})
+            this.setState({isAccessoryFormOpen: false})
         }
     }
 
@@ -375,7 +386,7 @@ class Dashboard extends Component{
 
     handleTabChange = (value) => {
         //If screen is on a Form close it.
-        if(this.state.isCostumeFormOpen || this.state.isUseDialogOpen || this.state.isTPDialogOpen || this.state.isAccessoryDialogOpen){
+        if(this.state.isCostumeFormOpen || this.state.isUseFormOpen || this.state.isTPFormOpen || this.state.isAccessoryFormOpen){
             this.handleCloseDialog();
         }
         //Refresh Tables
@@ -406,19 +417,19 @@ class Dashboard extends Component{
 
     handleAddUse = () => {
         this.setState({
-            isUseDialogOpen: true,
+            isUseFormOpen: true,
         })
     }
 
     handleAddTP = () => {
         this.setState({
-            isTPDialogOpen: true,
+            isTPFormOpen: true,
         })
     }
 
     handleAddAccessory = () => {
         this.setState({
-            isAccessoryDialogOpen: true,
+            isAccessoryFormOpen: true,
         })
     }
 
@@ -440,7 +451,7 @@ class Dashboard extends Component{
     handleUseEditing (index) {
         this.setState({
             editing: true,
-            isUseDialogOpen: true,
+            isUseFormOpen: true,
         });
         for(var i=0; i<this.state.use_data.length; i++){
             if(this.state.use_data[i].useID === index){
@@ -452,7 +463,7 @@ class Dashboard extends Component{
     handleTPEditing (index) {
         this.setState({
             editing: true,
-            isTPDialogOpen: true,
+            isTPFormOpen: true,
         });
         for(var i=0; i<this.state.tp_data.length; i++){
             if(this.state.tp_data[i].theatrical_play_id === index){
@@ -469,7 +480,7 @@ class Dashboard extends Component{
                 .then(res => {
                     const accessory = res.data.response;
                     this.setState({ accessory: accessory, editing: true,
-                        isAccessoryDialogOpen: true,});
+                        isAccessoryFormOpen: true,});
                 }
                 )
             }
@@ -988,7 +999,20 @@ class Dashboard extends Component{
                     <div></div>
                 }
 
-                {this.state.current_tab===1 &&
+                {this.state.isAccessoryFormOpen ?(    
+                    <AccessoryForm
+                    handleClose={this.handleCloseDialog.bind(this)}
+                    user={this.state.user.user_id}
+                    accessories={this.state.accessories}
+                    editing={this.state.editing}
+                    accessory={this.state.accessory}
+                    uses={this.state.use_data}
+                    costumes={this.state.costume_data}
+                    />)
+                    :
+                    <div></div>
+                }
+                {this.state.current_tab===1 && !this.state.isAccessoryFormOpen&&
                     <div>
                         <table className="Table">
                             <thead className="TableHead">    
@@ -1010,18 +1034,7 @@ class Dashboard extends Component{
                             </thead>
                             <tbody className="TableBody">{this.renderTableAccessoriesData()} </tbody>
                         </table>
-                        
-                        <AccessoryForm
-                            isOpen={this.state.isAccessoryDialogOpen}
-                            handleClose={this.handleCloseDialog.bind(this)}
-                            user={this.state.user.user_id}
-                            accessories={this.state.accessories}
-                            editing={this.state.editing}
-                            accessory={this.state.accessory}
-                            uses={this.state.use_data}
-                            costumes={this.state.costume_data}
-                        />
-
+                                               
                         <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
                             <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
                             </path>
@@ -1035,8 +1048,19 @@ class Dashboard extends Component{
                             </button>
                     </div>
                 }
-            
-                {this.state.current_tab===2 &&
+                {this.state.isUseFormOpen ? (
+                    <UseForm 
+                    handleClose={this.handleCloseDialog.bind(this)}
+                    user={this.state.user.user_id}
+                    costumes={this.state.costume_data}
+                    uses={this.state.use_data}
+                    theatrical_plays={this.state.tp_data}
+                    editing={this.state.editing}
+                    use={this.state.use}></UseForm>
+                )
+                :
+                <div></div>}
+                {this.state.current_tab===2 && !this.state.isUseFormOpen &&
                         <div>
                             <table className="Table">
                             <thead className="TableHead">
@@ -1075,18 +1099,21 @@ class Dashboard extends Component{
                                 </svg>
                                 <span id="ButtonAddText">προσθήκη</span>
                         </button>
-                        <UseForm 
-                                isOpen={this.state.isUseDialogOpen}
-                                handleClose={this.handleCloseDialog.bind(this)}
-                                user={this.state.user.user_id}
-                                costumes={this.state.costume_data}
-                                uses={this.state.use_data}
-                                theatrical_plays={this.state.tp_data}
-                                editing={this.state.editing}
-                                use={this.state.use}></UseForm>
+                        
                         </div>
-                    }
-                {this.state.current_tab===3 &&
+                }
+                {this.state.isTPFormOpen ? (
+                    <TpForm
+                    isOpen={this.state.isTPFormOpen}
+                    handleClose={this.handleCloseDialog.bind(this)}
+                    user={this.state.user.user_id}
+                    theatrical_plays={this.state.tp_data}
+                    editing={this.state.editing}
+                    tp={this.state.tp}
+                    />
+                )
+                : <div></div>   }
+                {this.state.current_tab===3 && !this.state.isTPFormOpen &&
                         <div>
                             <table className="Table">
                             <thead className="TableHead">
@@ -1118,23 +1145,15 @@ class Dashboard extends Component{
                                 </svg>
                                 <span id="ButtonAddText">προσθήκη</span>
                             </button>
-                            <TpForm
-                                isOpen={this.state.isTPDialogOpen}
-                                handleClose={this.handleCloseDialog.bind(this)}
-                                user={this.state.user.user_id}
-                                theatrical_plays={this.state.tp_data}
-                                editing={this.state.editing}
-                                tp={this.state.tp}
-                                />
                         </div>
                 }
 
                     
-                    <ConfirmationDialog 
-                    isOpen={this.state.isConfirmationDialogOpen}
-                    index = {this.state.index}
-                    handleClose={this.handleCloseConfirmationDialog.bind(this)}
-                    handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
+                <ConfirmationDialog 
+                isOpen={this.state.isConfirmationDialogOpen}
+                index = {this.state.index}
+                handleClose={this.handleCloseConfirmationDialog.bind(this)}
+                handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
                            
                 </div>
 

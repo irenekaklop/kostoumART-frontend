@@ -1,15 +1,10 @@
 import React, {Component} from 'react';
 
-import { Paper, TextField, Button, Snackbar, SnackbarContent } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-
-import CloseIcon from '@material-ui/icons/Close';
-
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import Select from 'react-select';
-
+import {SaveButton, CancelButton} from "../Shared/Buttons.js";
+import TextareaAutosize from 'react-textarea-autosize';
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import "./Forms.css";
 
@@ -20,10 +15,12 @@ class UseForm extends Component{
     constructor(props){
         super(props);
         this.state = { 
+            user:{
+                id: this.props.user
+            },
             u_data: null,
             use: null,
             id: '',
-            use_category: '',
             name: '',
             description: '',
             customs: '',
@@ -46,21 +43,16 @@ class UseForm extends Component{
         this.onChange = this.onChange.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState){
+    componentDidMount(){
         console.log("Props", this.props);
         console.log("Use Form:", this.state);
-        if(prevState.insert){
-            this.resetForm();
-            this.handleClose(false);
-        }
-        if(this.props.editing && !prevProps.editing){
+        if(this.props.editing){
             this.setState({
                 use: this.props.use,
                 name: this.props.use.name,
                 description: this.props.use.description,
                 customs: this.props.use.customs,
-                use_category: this.props.use.use_category,
-                selectedCategoryOption: this.props.use.use_category,
+                selectedCategoryOption: {value: this.props.use.use_category, label: this.props.use.use_category},
                 id: this.props.use.useID
             })
         }
@@ -107,10 +99,10 @@ class UseForm extends Component{
     }
 
     handleUpdate(){
-        console.log("update", this.state)
-        const data = { id: this.state.id, name: this.state.name, category: this.state.selectedCategoryOption, description: this.state.description, customs: this.state.customs }
-        axios.post('http://88.197.53.80/kostoumart-api/edit_use', data)
-        //axios.post('http://localhost:8108/edit_use', data)
+        const data = { id: this.state.id, name: this.state.name, category: this.state.selectedCategoryOption.value, description: this.state.description, customs: this.state.customs }
+        console.log("updating...", data)
+        //axios.post('http://88.197.53.80/kostoumart-api/edit_use', data)
+        axios.post('http://localhost:8108/edit_use', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -119,9 +111,9 @@ class UseForm extends Component{
     }
 
     handleInsert(){
-        const data = { name: this.state.name, category: this.state.selectedCategoryOption, description: this.state.description, customs: this.state.customs }
-        axios.post("http://88.197.53.80/kostoumart-api/uses", data)
-        //axios.post('http://localhost:8108/uses', data)
+        const data = { name: this.state.name, category: this.state.selectedCategoryOption.value, description: this.state.description, customs: this.state.customs }
+        //axios.post("http://88.197.53.80/kostoumart-api/uses", data)
+        axios.post('http://localhost:8108/uses', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('insert')
@@ -161,7 +153,7 @@ class UseForm extends Component{
         const uses_list = this.props.uses;
         //check this name and use category already exist
         for(var i=0; i < uses_list.length; i++){
-            if(uses_list[i].name === this.state.name && uses_list[i].use_category === this.state.selectedCategoryOption){
+            if(uses_list[i].name === this.state.name && uses_list[i].use_category=== this.state.selectedCategoryOption){
                 if(this.props.editing){
                     if(this.state.name===this.props.use.name){
                         return false;
@@ -179,7 +171,6 @@ class UseForm extends Component{
         this.setState({
             use: '',
             id: '',
-            use_category: '',
             name: '',
             description: '',
             customs: '',
@@ -236,90 +227,85 @@ class UseForm extends Component{
         const {selectedCategoryOption}= this.state;
         const {name, description, customs} =this.state;
         return(
-            <div>
-                <NotificationContainer>{this.createNotification()}</NotificationContainer>
-                <Dialog
-                    open={this.props.isOpen}
-                    onClose={() => this.handleClose(false)}
-                    aria-labelledby="input-dialog"
-                    aria-describedby="input-dialog"
-                    maxWidth={'lg'}
-                    fullWidth={true}>
-                        <DialogContent>
-                            <CloseIcon
-                            style={{ float: 'right', cursor: 'pointer' }}
-                            onClick={() => this.handleClose(false)}/>
-                            <form onSubmit={this.handleSubmit}>
-                                <div className="FormContent">
-                                    <div className="FormTitle">Χρήση</div>
-                                    <br/>
-                                    <div id='InputArea'>
-                                        <div id="Label">
-                                            <span>ONOMA ΔΡΑΣΤΗΡΙΟΤΗΤΑΣ</span>
-                                        </div>
-                                        <input
-                                            id="TextArea"
-                                            value={name}
-                                            name="name"
-                                            onChange={this.onChange}
-                                            required={true}
-                                        />
-                                    </div>
-                                <br/>
-                                <div id='InputArea'>
-                                    <div id="Label">
-                                            <span>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</span>
-                                        </div>
-                                    <Select
-                                        name="selectedCategoryOption"
-                                        value={selectedCategoryOption}
-                                        onChange={this.handleCategorySelect}
-                                        required={true}
-                                        options={use_categories}
-                                        closeMenuOnSelect={true} 
-                                    />
+            <React.Fragment>
+                <div id="ADD">
+                    <NotificationContainer>{this.createNotification()}</NotificationContainer>
+                    <div id="FormTitle">Χρήση</div><br/>
+                    <form id="Form" onSubmit={this.submit}>
+                        <div id="Name">
+                            <div id="NameArea">
+                                <div id="NameLabel">
+                                    <span>ONOMA ΔΡΑΣΤΗΡΙΟΤΗΤΑΣ</span>
                                 </div>
-                                <br/>
-                                <div id='InputArea'>
-                                    <div id="LabelWithSubtitle">
-                                        <div className="Title">
+                                <input
+                                id="TextArea"
+                                value={name}
+                                name="name"
+                                onChange={this.onChange}
+                                required={true}
+                                />
+                            </div>
+                        </div>
+                        <br/>
+                        <div id="UseCategory">
+                            <div id="UseCategoryArea">
+                                <div id="UseNameLabel">
+                                    <span>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</span>
+                                </div>
+                                <Select
+                                id="SelectContainer"
+                                className="react-select"
+                                placeholder={''}
+                                name="selectedCategoryOption"
+                                value={selectedCategoryOption}
+                                onChange={this.handleCategorySelect}
+                                required={true}
+                                options={use_categories}
+                                closeMenuOnSelect={true} 
+                                />
+                            </div>
+                        </div>
+                        <br/>
+                        <div id='UseDescription'>
+                            <div id="DescriptionArea">
+                                <div id="LabelWithSubtitle">
+                                    <div className="Title">
                                             <span>ΠΕΡΙΓΡΑΦΗ</span>
-                                        </div>
-                                        <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
                                     </div>
-                                        
-                                        <textarea
-                                            id="TextArea"
-                                            name="description"
-                                            value={description}
-                                            onChange={this.onChange}
-                                            multiline
-                                            rowsMax="4"
-                                            required={true}
-                                        />
-                                    </div>
-                                <br/>
-                                <div id='InputArea'>
-                                        <div id="Label">
-                                            <span>ΗΘΗ/ΕΘΙΜΑ</span>
-                                        </div>
-                                        <input
-                                            id="TextArea"
-                                            name="customs"
-                                            value={customs}
-                                            onChange={this.onChange}
-                                            required={false}
-                                        />
-                                    </div>
-                                <br/><br/><br/>
-                                    <div className="button-submit">
-                                        <Button  variant="contained" color="primary" onClick={this.handleSubmit}>Submit</Button>
-                                    </div>
+                                    <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
                                 </div>
-                            </form>
-                        </DialogContent>
-                </Dialog>
-            </div>
+                                <TextareaAutosize
+                                id="DescriptionInput"
+                                type='text'
+                                name="description"
+                                value={description}
+                                onChange={this.onChange}
+                                required={true}
+                                />
+                            </div>
+                        </div>
+                        <br/>
+                        <div id="UseCustoms">
+                            <div id="UseCustomsArea">
+                                <div id="UseCustomsLabel">
+                                <span>ΗΘΗ/ΕΘΙΜΑ</span>
+                                </div>
+                                <input
+                                id="TextArea"
+                                name="customs"
+                                value={customs}
+                                onChange={this.onChange}
+                                required={false}
+                                />
+                            </div>
+                        </div>
+                        <br/><br/><br/>
+                        <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>
+                        <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
+                    </form>
+                </div>
+                
+            </React.Fragment>
         )
     }
 }
