@@ -21,7 +21,7 @@ class  AccessoryForm extends Component{
             description: '',
             usesData: '',
             costumesData: '',
-            //For backend insert
+            accessory_id: '',
             actors: '',
             designer: '',
             parts: '',
@@ -80,7 +80,7 @@ class  AccessoryForm extends Component{
             }
             this.setState({
                 accessory: this.props.accessory[0],
-                costume_id: this.props.accessory[0].costume_id,
+                accessory_id: this.props.accessory[0].accessory_id,
                 name: this.props.accessory[0].name,
                 description: this.props.accessory[0].description,
                 actors: this.props.accessory[0].actors,
@@ -130,7 +130,7 @@ class  AccessoryForm extends Component{
 
      /*For selection of theatrical plays*/
      handleCostumeSelect = (selectedCostumeOption) => {
-        this.setState({selectedCostumeOption });
+        this.setState({selectedCostumeOption});
     }
 
     /*For mutli-selection of sex categories*/
@@ -196,8 +196,8 @@ class  AccessoryForm extends Component{
 
     handleUpdate = () => {
         let data = this.state;
-        //axios.post('http://88.197.53.80/kostoumart-api/edit_costume', data)
-        axios.post('http://localhost:8108/edit_costume', data)
+        //axios.post('http://88.197.53.80/kostoumart-api/editAccessory', data)
+        axios.post('http://localhost:8108/editAccessory', data)
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")

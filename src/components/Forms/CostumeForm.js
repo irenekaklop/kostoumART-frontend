@@ -114,8 +114,9 @@ class  CostumeForm extends Component{
         this.setState(() => {this.props.handleClose()});
     }
 
-    onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); 
-    console.log("state", this.state)};
+    onChange = ( evt ) => { 
+        this.setState({ [evt.target.name]: evt.target.value }); 
+    };
 
     handleUseCategorySelect = (selectedUseCategoryOption) => {
         this.setState({selectedUseCategoryOption});
@@ -360,7 +361,7 @@ class  CostumeForm extends Component{
             for (var key in this.props.uses){
             u_options.forEach(element => {
                 if(element.label === this.props.uses[key].use_category){
-                    element.options.push({label: this.props.uses[key].name, value: this.props.uses[key].name});
+                    element.options.push({label: this.props.uses[key].name, value: this.props.uses[key].name, category: element.label});
                 }
             });
         }}
@@ -423,8 +424,8 @@ class  CostumeForm extends Component{
                                         className="react-select"
                                         name="selectedUseOption"
                                         required={true}
-                                        onChange={this.handleUseSelect}
                                         value={selectedUseOption}
+                                        onChange={this.handleUseSelect}
                                         options={u_options}
                                         closeMenuOnSelect={true}
                                         placeholder={''} />        
