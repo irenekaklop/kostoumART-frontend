@@ -376,6 +376,9 @@ class Dashboard extends Component{
         if(this.state.current_tab===0){
             this.handleCostumeDelete(index);
         }
+        else if(this.state.current_tab===1){
+            this.handleAccessoryDelete(index);
+        }
         else if(this.state.current_tab===2){
             this.handleUseDelete(index);
         }
@@ -670,7 +673,6 @@ class Dashboard extends Component{
                 <td>{date}</td>
                 <td>{use_name}</td>
                 <td>{sex}</td>
-                <td>{material}</td>
                 <td>{technique}</td>
                 <td>{location}</td>
                 <td>{designer}</td>
@@ -683,7 +685,7 @@ class Dashboard extends Component{
                         <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
                         </path>
                     </svg>
-                    <div onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}><DeleteButton/></div>
+                    <div onClick={()=>{this.handleAccessoryDelete(accessory_id);}}><DeleteButton/></div>
                 </td>
                 </tr>
             )
@@ -1008,6 +1010,7 @@ class Dashboard extends Component{
                     accessory={this.state.accessory}
                     uses={this.state.use_data}
                     costumes={this.state.costume_data}
+                    theatrical_plays={this.state.tp_data}
                     />)
                     :
                     <div></div>

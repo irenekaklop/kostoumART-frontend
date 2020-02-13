@@ -95,9 +95,9 @@ class  AccessoryForm extends Component{
             })
             if(this.props.uses){
                 for(var i=0; i<this.props.uses.length; i++){
-                    if(this.props.uses[i].useID===this.props.accessory.useId){
+                    if(this.props.uses[i].useID===this.props.accessory[0].useId){
                         this.setState({
-                            selectedUseOption: {value: this.props.uses[i].use_name, label:this.props.uses[i].use_name }
+                            selectedUseOption: {value: this.props.uses[i].name, label:this.props.uses[i].name, category: this.props.uses[i].use_category }
                         })
                     }
                 }
@@ -119,8 +119,8 @@ class  AccessoryForm extends Component{
     }
 
     /*For selection of date*/
-    handleDateSelect = (evt) => {
-        this.setState({ selectedDateOption: evt.target.value});
+    handleDateSelect = (selectedDateOption) => {
+        this.setState({ selectedDateOption });
     }
 
     /*For selection of use categories*/
@@ -128,9 +128,13 @@ class  AccessoryForm extends Component{
         this.setState({ selectedUseOption });
     }
 
-     /*For selection of theatrical plays*/
-     handleCostumeSelect = (selectedCostumeOption) => {
+    /*For selection of theatrical plays*/
+    handleCostumeSelect = (selectedCostumeOption) => {
         this.setState({selectedCostumeOption});
+    }
+
+    handleTPSelect = (selectedTPOption) => {
+        this.setState({selectedTPOption});
     }
 
     /*For mutli-selection of sex categories*/
@@ -185,7 +189,7 @@ class  AccessoryForm extends Component{
         if(this.handleDuplicate()){
             return false;
         }
-        if(!this.state.location || !this.state.name || !this.state.description|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
+        if(!this.state.name || !this.state.description|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption){
             console.log("something is missing");
             this.createNotification("error-missing-value")
             return false;
@@ -208,8 +212,8 @@ class  AccessoryForm extends Component{
     handleInsert = () => {
         console.log("inserting", this.state);
         let data = this.state;
-        //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
-        axios.post('http://localhost:8108/costumes', data)
+        //axios.post('http://88.197.53.80/kostoumart-api/accessory', data)
+        axios.post('http://localhost:8108/accessory', data)
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){
@@ -257,15 +261,13 @@ class  AccessoryForm extends Component{
     }
 
     handleDuplicate() {
-        const c_list = this.props.costumes;
+        const a_list = this.props.accessories;
         //check if new name already exist
-        for(var i=0; i < c_list.length; i++){
+        for(var i=0; i < a_list.length; i++){
             if(this.state.name){
-            if(c_list[i].costume_name === this.state.name){
+            if(a_list[i].name === this.state.name){
                 if(this.props.editing){
-                    if(this.props.accessory.costume_name === this.state.name){
-                        return false;
-                    }
+                    return false;
                 }
                 this.createNotification('error-duplicate');
                 return true;
@@ -351,7 +353,7 @@ class  AccessoryForm extends Component{
             for (var key in this.props.uses){
             u_options.forEach(element => {
                 if(element.label === this.props.uses[key].use_category){
-                    element.options.push({label: this.props.uses[key].name, value: this.props.uses[key].name});
+                    element.options.push({label: this.props.uses[key].name, value: this.props.uses[key].name, category: element.label});
                 }
             });
         }}
@@ -366,7 +368,7 @@ class  AccessoryForm extends Component{
             c_options.push({label: this.props.costumes[key].costume_name, value:  this.props.costumes[key].costume_name}); 
         }
 
-        console.log(u_options);
+        console.log(u_options, p_options, c_options);
 
         return(
             <React.Fragment>
@@ -377,7 +379,7 @@ class  AccessoryForm extends Component{
                         <div id="CostumeName">
                             <div id="CostumeNameArea">
                                 <div id="CostumeNameLabel">
-                                    <span>ONOMA</span>
+                                    <span>ONOMA *</span>
                                 </div>
                                 <input
                                 id='TextArea'
@@ -393,7 +395,7 @@ class  AccessoryForm extends Component{
                                 <div id="DescriptionArea">
                                     <div id="LabelWithSubtitle">
                                     <div className="Title">
-                                            <span>ΠΕΡΙΓΡΑΦΗ</span>
+                                            <span>ΠΕΡΙΓΡΑΦΗ *</span>
                                     </div>
                                     <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
                                 </div>
@@ -411,7 +413,7 @@ class  AccessoryForm extends Component{
                         <div id='CostumeUseCategory'>
                                 <div id='CostumeUseCategoryArea'>
                                     <div id="CostumeNameLabel">
-                                        <span>ΟΝΟΜΑ ΧΡΗΣΗΣ</span>
+                                        <span>ΟΝΟΜΑ ΧΡΗΣΗΣ *</span>
                                     </div>
                                     <Select
                                         id="SelectContainer"
@@ -421,7 +423,6 @@ class  AccessoryForm extends Component{
                                         onChange={this.handleUseSelect}
                                         value={selectedUseOption}
                                         options={u_options}
-                                        closeMenuOnSelect={true}
                                         placeholder={''} />        
                                 </div>
                         </div>
@@ -429,7 +430,7 @@ class  AccessoryForm extends Component{
                         <div id='CostumeDate'>
                                 <div id="CostumeDateArea">
                                     <div id='CostumeDateLabel'>
-                                        <span>ΧΡΟΝΟΛΟΓΙΑ</span>
+                                        <span>ΧΡΟΝΟΛΟΓΙΑ *</span>
                                     </div>
                                 </div>
                                 <Select
@@ -445,7 +446,7 @@ class  AccessoryForm extends Component{
                         <div id='CostumeSex'>
                                 <div id='CostumeSexArea'>
                                     <div id='CostumeSexLabel'>
-                                        <span>ΦΥΛΟ</span>
+                                        <span>ΦΥΛΟ *</span>
                                     </div>
                                 </div>
                                 <Select
@@ -462,7 +463,7 @@ class  AccessoryForm extends Component{
                         <div id='CostumeTechnique'>
                             <div id='CostumeTechniqueArea'>
                                 <div id='CostumeTechniqueLabel'>
-                                   <span>TEXNIKH</span>
+                                   <span>TEXNIKH *</span>
                                 </div>
                             </div>
                             <Select
@@ -471,7 +472,8 @@ class  AccessoryForm extends Component{
                             required={true}
                             name="selectedTechniqueOption"
                             value={selectedTechniqueOption}
-                            onChange={this.handleTechniqueSelect}                                options={techniques}
+                            onChange={this.handleTechniqueSelect}                                
+                            options={techniques}
                             placeholder={''}
                             />       
                         </div>
@@ -549,7 +551,7 @@ class  AccessoryForm extends Component{
                             className="react-select"
                             value={selectedCostumeOption}
                             onChange={this.handleCostumeSelect}
-                            name='selectedTPOption'
+                            name='selectedCostumeOption'
                             options={c_options}
                             placeholder={''}/>
                         </div>
