@@ -162,7 +162,7 @@ class  CostumeForm extends Component{
         this.setState({ location_select });
         console.log("HandleLocationChange:", this.state);
     };
-    
+
     handleLocationSelect = (location_select) => {
         this.setState({ location_select });
         console.log(`Option selected:`, location_select);
@@ -171,7 +171,7 @@ class  CostumeForm extends Component{
     handleLocation(){
         if(this.state.location_select){
             this.state.location = this.state.location_select.description;
-            console.log(this.state);
+            console.log("HandleLocation:", this.state);
         }
     }
 
@@ -194,7 +194,7 @@ class  CostumeForm extends Component{
         if(this.handleDuplicate()){
             return false;
         }
-        if(!this.state.location || !this.state.name || !this.state.descr|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
+        if(!this.state.name || !this.state.descr|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
             console.log("something is missing");
             this.createNotification("error-missing-value")
             return false;
@@ -382,7 +382,7 @@ class  CostumeForm extends Component{
                             <div id='CostumeName'>
                                 <div id='CostumeNameArea'>   
                                     <div id="CostumeNameLabel">
-                                        <span>ΟΝΟΜΑ</span> 
+                                        <span>ΟΝΟΜΑ *</span> 
                                     </div>
                                     <input
                                         id="TextArea"
@@ -399,7 +399,7 @@ class  CostumeForm extends Component{
                                 <div id="DescriptionArea">
                                     <div id="LabelWithSubtitle">
                                     <div className="Title">
-                                            <span>ΠΕΡΙΓΡΑΦΗ</span>
+                                            <span>ΠΕΡΙΓΡΑΦΗ *</span>
                                     </div>
                                     <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
                                 </div>
@@ -417,7 +417,7 @@ class  CostumeForm extends Component{
                             <div id='CostumeUseCategory'>
                                 <div id='CostumeUseCategoryArea'>
                                     <div id="CostumeNameLabel">
-                                        <span>ΟΝΟΜΑ ΧΡΗΣΗΣ</span>
+                                        <span>ΟΝΟΜΑ ΧΡΗΣΗΣ *</span>
                                     </div>
                                     <Select
                                         id="SelectContainer"
@@ -435,7 +435,7 @@ class  CostumeForm extends Component{
                             <div id='CostumeUseName'>
                                 <div id='CostumeUseNameArea'>
                                     <div id="CostumeNameLabel">
-                                        <span>YΛΙΚΟ ΚΑΤΑΣΚΕΥΗΣ</span>
+                                        <span>YΛΙΚΟ ΚΑΤΑΣΚΕΥΗΣ *</span>
                                     </div>
                                     
                                     <Select
@@ -454,7 +454,7 @@ class  CostumeForm extends Component{
                             <div id='CostumeDate'>
                                 <div id="CostumeDateArea">
                                     <div id='CostumeDateLabel'>
-                                        <span>ΧΡΟΝΟΛΟΓΙΑ</span>
+                                        <span>ΧΡΟΝΟΛΟΓΙΑ *</span>
                                     </div>
                                 </div>
                                 <Select
@@ -470,7 +470,7 @@ class  CostumeForm extends Component{
                             <div id='CostumeSex'>
                                 <div id='CostumeSexArea'>
                                     <div id='CostumeSexLabel'>
-                                        <span>ΦΥΛΟ</span>
+                                        <span>ΦΥΛΟ *</span>
                                     </div>
                                 </div>
                                 <Select
@@ -487,7 +487,7 @@ class  CostumeForm extends Component{
                             <div id='CostumeTechnique'>
                                 <div id='CostumeTechniqueArea'>
                                     <div id='CostumeTechniqueLabel'>
-                                        <span>TEXNIKH</span>
+                                        <span>TEXNIKH *</span>
                                     </div>
                                 </div>
                                 <Select
@@ -540,14 +540,14 @@ class  CostumeForm extends Component{
                                     </div>
                                 </div>
                                 <Geosuggest
-                                    className="geosuggest"
-                                    placeholder="Αναζήτηση"
-                                    initialValue={this.state.location}
-                                    required={true}
-                                    ref={el=>this._geoSuggest=el}
-                                    onSuggestSelect={this.handleLocationSelect}
+                                className="geosuggest"
+                                placeholder="Αναζήτηση"
+                                initialValue={this.state.location}
+                                required={true}
+                                ref={el=>this._geoSuggest=el}
+                                onSuggestSelect={this.handleLocationSelect}
                                     />
-                                    {this.handleLocation()}
+                                  {this.handleLocation()}
                             </div>
                             <br/>
                             <div id='Actors'>
@@ -564,7 +564,6 @@ class  CostumeForm extends Component{
                                 onChange={this.onChange}/>
                             </div>        
                             <br/><br/><br/>
-                            
                             <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>
                             <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
                         

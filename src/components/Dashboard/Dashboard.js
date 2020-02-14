@@ -669,14 +669,13 @@ class Dashboard extends Component{
                 <tr key={accessory_id}>
                 <td>{name}</td>
                 <td>{description}</td>
+                <td>{use_name}</td>
                 <td>{costume_name}</td>
                 <td>{date}</td>
-                <td>{use_name}</td>
-                <td>{sex}</td>
                 <td>{technique}</td>
-                <td>{location}</td>
+                <td>{sex}</td>
                 <td>{designer}</td>
-                <td>{parts}</td>
+                <td>{location}</td>
                 <td>{actors}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleAccessoryEditing(accessory_id)}><EditButton/></div>
@@ -1022,15 +1021,13 @@ class Dashboard extends Component{
                                 <tr>
                                     <th><sthong>ONOMA</sthong></th>
                                     <th><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
-                                    <th><sthong>ΚΟΣΤΟΥΜΙ</sthong></th>
-                                    <th><sthong>ΕΠΟΧΗ</sthong></th>
                                     <th><sthong>ΧΡΗΣΗ</sthong></th>
-                                    <th><sthong>ΦΥΛΟ</sthong></th>
-                                    <th><sthong>ΥΛΙΚΟ</sthong></th>
+                                    <th><sthong>ΚΟΣΤΟΥΜΙ</sthong></th>
+                                    <th><sthong>XΡΟΝΟΛΟΓΙΑ</sthong></th>
                                     <th><sthong>ΤΕΧΝΙΚΗ</sthong></th>
-                                    <th><sthong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</sthong></th>
+                                    <th><sthong>ΦΥΛΟ</sthong></th>
                                     <th><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
-                                    <th><sthong>ΡΟΛΟΙ</sthong></th>
+                                    <th><sthong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</sthong></th>
                                     <th><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
                                     <th id="th_actions"></th>
                                 </tr>

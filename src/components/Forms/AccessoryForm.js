@@ -33,6 +33,7 @@ class  AccessoryForm extends Component{
             selectedTechniqueOption: '',
             selectedCostumeOption: '',
             selectedDateOption: '',
+            selectedTPOption: '',
             //Geosuggest
             location: '',
             location_select: '',
@@ -84,14 +85,14 @@ class  AccessoryForm extends Component{
                 name: this.props.accessory[0].name,
                 description: this.props.accessory[0].description,
                 actors: this.props.accessory[0].actors,
-                designer: this.props.accessory.designer,
-                parts: this.props.accessory.parts,
+                designer: this.props.accessory[0].designer,
+                parts: this.props.accessory[0].parts,
                 selectedDateOption: {value: this.props.accessory[0].date, label: this.props.accessory[0].date },
                 selectedSexOption: arrSexs,
                 selectedMaterialOption: {value: this.props.accessory[0].material, label: this.props.accessory[0].material},
                 selectedTechniqueOption: {value: this.props.accessory[0].technique, label: this.props.accessory[0].technique},
                 selectedCostumeOption: {value: this.props.accessory[0].costume_name, label: this.props.accessory[0].costume_name},
-                location: this.props.accessory.location,
+                location: this.props.accessory[0].location,
             })
             if(this.props.uses){
                 for(var i=0; i<this.props.uses.length; i++){
@@ -156,8 +157,9 @@ class  AccessoryForm extends Component{
     /*Geosuggest functions*/
     handleLocationChange = location_select => {
         this.setState({ location_select });
+        console.log("HandleLocationChange:", this.state);
     };
-    
+
     handleLocationSelect = (location_select) => {
         this.setState({ location_select });
         console.log(`Option selected:`, location_select);
@@ -166,7 +168,7 @@ class  AccessoryForm extends Component{
     handleLocation(){
         if(this.state.location_select){
             this.state.location = this.state.location_select.description;
-            console.log(this.state);
+            console.log("HandleLocation:", this.state);
         }
     }
 
@@ -189,7 +191,7 @@ class  AccessoryForm extends Component{
         if(this.handleDuplicate()){
             return false;
         }
-        if(!this.state.name || !this.state.description|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption){
+        if(!this.state.name || !this.state.description|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedDateOption || !this.state.selectedSexOption){
             console.log("something is missing");
             this.createNotification("error-missing-value")
             return false;
