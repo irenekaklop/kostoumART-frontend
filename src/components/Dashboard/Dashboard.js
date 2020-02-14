@@ -28,6 +28,7 @@ import Footer from '../Shared/Footer.js';
 import {EditButton, DeleteButton, FilterButtons} from '../Shared/Buttons.js'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Sidebar from 'react-sidebar';
+import SidebarContent from '../Filters/SidebarContent.js'
 
 class Dashboard extends Component{
 
@@ -752,80 +753,32 @@ class Dashboard extends Component{
                     logOut={this.logOut.bind(this)}>
                 </Header>
                 {/*Filters and right sidebar*/}
-                <div>
-                    
-                    <Sidebar
-                        sidebar={<b>Sidebar content</b>}
-                        open={this.state.filterDrawerOpen}
-                        onSetOpen={this.handleDrawerOpen}
-                        contentClassName="Sidebar"
-                    >
-                        <div className="Filters" onClick={this.handleDrawerOpen}>
-                        <FilterButtons/>
-                        </div>
-                    </Sidebar>
-                    
-                    
-                    <Drawer
-                        variant="persistent"
-                        anchor="left"
-                        open={filterDrawerOpen}
-                    >
-                            <div>
-                                <IconButton onClick={this.handleDrawerClose}>
-                                    {this.state.filterDrawerOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                                </IconButton>
-                            </div>
-                            <Divider/>
-                            <p>Filters</p>
-                            <Divider/>
-                            <br/>
-                            <InputLabel>Τεχνική</InputLabel>
-                                <Select
-                                    className="SelectContainer"
-                                    required={true}
-                                    onChange={this.handleTechniqueSelect}
-                                    value={techniqueOption}
-                                    >
-                                        {techniques.map( technique => (
-                                            <MenuItem key={technique.label} value={technique.label}>
-                                                {technique.label}
-                                            </MenuItem>
-                                        ))} 
-                                </Select>
-                            <br/>
-                            <Divider/>
-                            <br/>
-                            <InputLabel>Φύλο</InputLabel>
-                                <Select
-                                    className="SelectContainer"
-                                    required={true}
-                                    onChange={this.handleSexSelect}
-                                    value={sexOption}
-                                    >
-                                        {sexs.map( sex => (
-                                            <MenuItem key={sex.label} value={sex.label}>
-                                                {sex.label}
-                                            </MenuItem>
-                                        ))} 
-                                </Select>
-                            <br/><br/>
-                        <Divider/>
-                        <Button onClick={this.applyCostumeFilters}>Eφαρμογή</Button>                            
-                        <Button onClick={this.resetCostumeFilters}>Επαναφορα</Button>
-                    </Drawer>
-                    
-                    <svg class="Rectangle_8">
-                        <rect fill="rgba(255,222,23,1)" id="Rectangle_8" rx="0" ry="0" x="0" y="0" width="21.327" height="411.419">
-                        </rect>
-                    </svg>
-                    <div id="Tailoring_Times">
-                        <span>Tailoring Times</span>
-                    </div>
-                    <div id="costumART-Dashboard">
-                        <span>costumART</span>
-                    </div>
+                <Sidebar
+                rootClassName="FiltersSidebar"
+                
+                sidebar={<SidebarContent/>}
+                open={this.state.filterDrawerOpen}
+                onSetOpen={this.handleDrawerOpen}
+                
+                >
+                    <IconButton onClick={this.handleDrawerClose}>
+                    {this.state.filterDrawerOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                </Sidebar>
+                <div className="Filters" onClick={this.handleDrawerOpen}>
+                    <FilterButtons/>
                 </div>
+                <svg class="Rectangle_8">
+                    <rect fill="rgba(255,222,23,1)" id="Rectangle_8" rx="0" ry="0" x="0" y="0" width="21.327" height="411.419">
+                    </rect>
+                </svg>
+                <div id="Tailoring_Times">
+                    <span>Tailoring Times</span>
+                </div>
+                <div id="costumART-Dashboard">
+                    <span>costumART</span>
+                </div>
+                
 
                 {/*Tabs*/}
                 <Tabs 

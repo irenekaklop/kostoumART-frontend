@@ -1799,3 +1799,13 @@ th:hover{
   overflow-y: hidden!important;
   overflow-x: hidden!important;
 }
+
+.FiltersSidebar {
+  position: absolute;
+  overflow: visible;
+  width: 411.859px;
+  height: 1079.057px;
+  left: 74.302px!important;
+  top: 0.487px!important;
+  z-index: auto!important;
+}

@@ -32,8 +32,8 @@ class TpForm extends Component{
     }
 
     componentDidMount(){
-        var startYear=1800;
-        for(var i=0; i < 100; i++){
+        var startYear=1900;
+        for(var i=0; i < 200; i++){
             this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
         }
         if(this.props.editing){
@@ -261,7 +261,7 @@ class TpForm extends Component{
                         <div id='Theater'>
                             <div id='TheaterArea'>
                                 <div id='TheaterLabel'>
-                                    <span>ΘΕΑΤΡΟ</span>
+                                    <span>ΘΕΑΤΡΟ *</span>
                                 </div>  
                                 <input
                                 id="TextArea"
@@ -277,7 +277,7 @@ class TpForm extends Component{
                         <div id='TPDate'>
                             <div id='TPDateArea'>
                                 <div id='TPDateLabel'>
-                                <span>XΡΟΝΟΛΟΓΙΑ</span>
+                                <span>XΡΟΝΟΛΟΓΙΑ *</span>
                                 </div>
                                 <Select
                                 id="SelectContainer"
