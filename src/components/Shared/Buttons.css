@@ -349,20 +349,30 @@
 		top: 0px;
 		transform: matrix(1,0,0,1,0,0);
 	}
-	#CANCEL {
-		position: absolute;
-		left: 31.111px;
-		top: 11.732px;
-		overflow: visible;
-		width: 49px;
-		white-space: nowrap;
-		line-height: 18px;
-		margin-top: -3px;
-		text-align: left;
-		font-family: InputMono-Regular;
-		font-style: normal;
-		font-weight: normal;
-		font-size: 12px;
-		color: rgba(119,119,119,1);
-		letter-spacing: 0.4px;
-	}
+#CANCEL {
+	position: absolute;
+	left: 31.111px;
+	top: 11.732px;
+	overflow: visible;
+	width: 49px;
+	white-space: nowrap;
+	line-height: 18px;
+	margin-top: -3px;
+	text-align: left;
+	font-family: InputMono-Regular;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	color: rgba(119,119,119,1);
+	letter-spacing: 0.4px;
+}
+
+#CloseButton {
+    position: absolute;
+    right: 0px;   
+}
+
+.Checkbox-Button{
+    width: 25.167px;
+    height: 25.167px;
+}

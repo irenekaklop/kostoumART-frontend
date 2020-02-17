@@ -2,9 +2,6 @@ import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 
 import { Paper, Button, TextField, Drawer, Divider, MenuItem, InputLabel, Select} from '@material-ui/core';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import IconButton from '@material-ui/core/IconButton';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
@@ -70,6 +67,7 @@ class Dashboard extends Component{
             useCategoryOption: '',
             techniqueOption: '',
             sexOption: '',
+            filters: '',
             //Confirmation Dialog answer
             index: null,
             user: {
@@ -87,7 +85,7 @@ class Dashboard extends Component{
         this.logOut = this.logOut.bind(this);
         this.resetTimeout = this.resetTimeout.bind(this);
         this.handleCostumeEditing = this.handleCostumeEditing.bind(this)
-
+        this.handleDrawerClose = this.handleDrawerClose.bind(this);
         //Set Timeout in case of inactivity 
         for (var i in this.events) {
             window.addEventListener(this.events[i], this.resetTimeout);
@@ -335,6 +333,12 @@ class Dashboard extends Component{
         })
     };
     
+    handleFilterSubmit = (filters) => {
+        console.log("Handle Filters", filters[0])
+        this.setState({
+            filterDrawerOpen: false
+        })
+    }
     
     handleCloseDialog = () => {
         if(this.state.editing){
@@ -753,21 +757,21 @@ class Dashboard extends Component{
                     logOut={this.logOut.bind(this)}>
                 </Header>
                 {/*Filters and right sidebar*/}
+                <div onClick={this.handleDrawerOpen}>
+                    <FilterButtons/>
+                </div>
                 <Sidebar
-                rootClassName="FiltersSidebar"
-                
-                sidebar={<SidebarContent/>}
+                rootClassName="FiltersSidebarRoot"
+                sidebarClassName="FiltersSidebar"
+                overlayClassName = "Overlay"
+                sidebar={<SidebarContent
+                    handleFilterSubmit = {this.handleFilterSubmit.bind(this)}
+                    handleDrawerClose = {this.handleDrawerClose.bind(this)}
+                    open={this.state.filterDrawerOpen}/>}
                 open={this.state.filterDrawerOpen}
                 onSetOpen={this.handleDrawerOpen}
                 
-                >
-                    <IconButton onClick={this.handleDrawerClose}>
-                    {this.state.filterDrawerOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    </IconButton>
-                </Sidebar>
-                <div className="Filters" onClick={this.handleDrawerOpen}>
-                    <FilterButtons/>
-                </div>
+                />
                 <svg class="Rectangle_8">
                     <rect fill="rgba(255,222,23,1)" id="Rectangle_8" rx="0" ry="0" x="0" y="0" width="21.327" height="411.419">
                     </rect>

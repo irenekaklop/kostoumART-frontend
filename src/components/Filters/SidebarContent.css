@@ -1,3 +1,61 @@
 #SidebarContent {
-    background-color: wheat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch !important;
+    transition: left .3s ease-out right .3s ease-out;
+    width: inherit;
+    height: inherit;
+}
+
+.description {
+    left: 118.352px;
+    top: 69.874px;
+    padding: 30px;
+}
+
+.Separator{
+    width: 288.753px;
+    height: 0.5px;
+    border: 1px dashed rgba(56,56,56,1);
+    margin: auto;
+}
+
+#TechniqueLabel {
+    position: absolute;
+    left: 152.636px;
+    top: 187.171px;
+    overflow: visible;
+    width: 57px;
+    white-space: nowrap;
+    line-height: 30px;
+    margin-top: -9px;
+    text-align: left;
+    font-family: InputMono-Medium;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(56,56,56,1);
+    letter-spacing: 0.4px;
+}
+
+#TechniqueOptions {
+    position: absolute;
+    left: 152.636px;
+    top: 226.694px;
+    overflow: visible;
+    width: 67px;
+    white-space: nowrap;
+    line-height: 30px;
+    margin-top: -7px;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color: rgba(56,56,56,1);
+    letter-spacing: 0.43px;
 }
