@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import "../Shared/Buttons.css"
+import IconButton from '@material-ui/core/IconButton';
 
 class EditButton extends Component {
     
@@ -79,45 +80,8 @@ class FilterButtons extends Component {
     render(){
         return(
                 <button class="FilterButton">
-                    <svg class="Ellipse_1">
-                        <ellipse fill="rgba(255,222,23,1)" id="Ellipse_1" rx="29.06102180480957" ry="29.06102180480957" cx="29.06102180480957" cy="29.06102180480957">
-                        </ellipse>
-                    </svg>
-                    <svg class="Ellipse_2">
-                        <ellipse fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_2" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
-                        </ellipse>
-                    </svg>
-                    <svg class="Line_1" viewBox="0 0 8.377 0">
-                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_1" d="M 8.377081871032715 0 L 0 1.079570211004466e-09">
-                        </path>
-                    </svg>
-                    <svg class="Ellipse_3">
-                        <ellipse fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_3" rx="2.6867401599884033" ry="2.6867401599884033" cx="2.6867401599884033" cy="2.6867401599884033">
-                        </ellipse>
-                    </svg>
-                    <svg class="Line_2" viewBox="0 0 8.377 0">
-                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_2" d="M 8.377081871032715 0 L 0 1.079570211004466e-09">
-                        </path>
-                    </svg>
-                    <svg class="Path_3" viewBox="2136.044 -1141.338 10.654 5.373">
-                        <path fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_3" d="M 2144.010986328125 -1135.964965820312 C 2145.4951171875 -1135.964965820312 2146.697998046875 -1137.16796875 2146.697998046875 -1138.651000976562 C 2146.697998046875 -1140.135009765625 2145.4951171875 -1141.338012695312 2144.010986328125 -1141.338012695312 L 2138.73095703125 -1141.338012695312 C 2137.2470703125 -1141.338012695312 2136.0439453125 -1140.135009765625 2136.0439453125 -1138.651000976562 C 2136.0439453125 -1137.16796875 2137.2470703125 -1135.964965820312 2138.73095703125 -1135.964965820312 L 2144.010986328125 -1135.964965820312 Z">
-                        </path>
-                    </svg>
-                    <svg class="Line_3" viewBox="0 0 18.854 0">
-                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_3" d="M 18.85396003723145 0 L 0 1.080479705706239e-09">
-                        </path>
-                    </svg>
-                    <svg class="Path_4" viewBox="2117.19 -1157.051 10.654 5.374">
-                        <path fill="rgba(0,0,0,0)" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_4" d="M 2119.876953125 -1151.677001953125 C 2118.39306640625 -1151.677001953125 2117.18994140625 -1152.880004882812 2117.18994140625 -1154.364013671875 C 2117.18994140625 -1155.848022460938 2118.39306640625 -1157.051025390625 2119.876953125 -1157.051025390625 L 2125.156982421875 -1157.051025390625 C 2126.64111328125 -1157.051025390625 2127.843994140625 -1155.848022460938 2127.843994140625 -1154.364013671875 C 2127.843994140625 -1152.880004882812 2126.64111328125 -1151.677001953125 2125.156982421875 -1151.677001953125 L 2119.876953125 -1151.677001953125 Z">
-                        </path>
-                    </svg>
-                    <svg class="Line_4" viewBox="0 0 18.854 0">
-                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.5398867130279541px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_4" d="M 0 0 L 18.85396003723145 2.401066012680531e-10">
-                        </path>
-                    </svg>
-                    <div id="FILTERS">
-                        <span>FILTERS</span>
-                    </div>
+                    <img src={require('../../styles/images/FILTER_MENU_ICON@2x.png')}></img>
+                    <span className="FILTERS">FILTERS</span>
                 </button>
         );
     }
@@ -155,10 +119,49 @@ class CancelButton extends Component {
     }
 }
 
+class ApplyButton extends Component {
+    render(){
+        return(
+            <IconButton>
+                <svg class="Path_28" viewBox="2213.628 737.769 104.628 37.786">
+                    <path fill="rgba(0,0,0,0)" stroke="rgba(255,222,23,1)" stroke-width="0.7817211747169495px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_28" d="M 2299.363037109375 775.5549926757812 C 2309.797119140625 775.5549926757812 2318.256103515625 767.0969848632812 2318.256103515625 756.6630249023438 C 2318.256103515625 746.22802734375 2309.797119140625 737.656982421875 2299.363037109375 737.77001953125 L 2232.52099609375 737.77001953125 C 2222.0869140625 737.656982421875 2213.6279296875 746.22802734375 2213.6279296875 756.6630249023438 C 2213.6279296875 767.0969848632812 2222.0859375 775.5549926757812 2232.52099609375 775.5549926757812 L 2299.363037109375 775.5549926757812 Z">
+                    </path>
+                    
+                </svg>
+                <div id="_________gh">
+                    <span>ΕΦΑΡΜΟΓΗ</span>
+                </div>
+            </IconButton>
+            
+        )
+
+    }
+}
+
+class ResetButton extends Component {
+    render(){
+        return(
+            <IconButton>
+                <svg class="Path_29" viewBox="2406.15 737.769 104.629 37.786">
+                    <path fill="rgba(0,0,0,0)" stroke="rgba(199,199,199,1)" stroke-width="0.7817211747169495px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_29" d="M 2491.885986328125 775.5549926757812 C 2502.320068359375 775.5549926757812 2510.779052734375 767.0969848632812 2510.779052734375 756.6630249023438 C 2510.779052734375 746.22802734375 2502.319091796875 737.656982421875 2491.885986328125 737.77001953125 L 2425.04296875 737.77001953125 C 2414.610107421875 737.656982421875 2406.14990234375 746.22802734375 2406.14990234375 756.6630249023438 C 2406.14990234375 767.0969848632812 2414.60888671875 775.5549926757812 2425.04296875 775.5549926757812 L 2491.885986328125 775.5549926757812 Z">
+                    </path>
+                </svg>
+                <div id="__________gj">
+                    <span>ΕΠΑΝΑΦΟΡΑ</span>
+                </div>
+            </IconButton>
+            
+        )
+
+    }
+}
+
 export {
     EditButton,
     DeleteButton,
     FilterButtons,
     SaveButton,
-    CancelButton
+    CancelButton,
+    ApplyButton,
+    ResetButton
 }

@@ -27,6 +27,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Sidebar from 'react-sidebar';
 import SidebarContent from '../Filters/SidebarContent.js'
 
+
 class Dashboard extends Component{
 
     constructor(props) {
@@ -63,10 +64,10 @@ class Dashboard extends Component{
             accessory: null,
             //Filters
             current_costumes: [],
+            current_accessories: [],
+            current_uses: [],
+            current_tps: [],
             filterDrawerOpen: false,
-            useCategoryOption: '',
-            techniqueOption: '',
-            sexOption: '',
             filters: '',
             //Confirmation Dialog answer
             index: null,
@@ -86,6 +87,7 @@ class Dashboard extends Component{
         this.resetTimeout = this.resetTimeout.bind(this);
         this.handleCostumeEditing = this.handleCostumeEditing.bind(this)
         this.handleDrawerClose = this.handleDrawerClose.bind(this);
+        this.applyFilters = this.applyFilters.bind(this);
         //Set Timeout in case of inactivity 
         for (var i in this.events) {
             window.addEventListener(this.events[i], this.resetTimeout);
@@ -157,7 +159,7 @@ class Dashboard extends Component{
     }
 
     handleSort = (clickedColumn) => () => {
-        const { column, use_data, current_costumes, tp_data, accessories, direction } = this.state
+        const { column, use_data, current_costumes, current_accessories, tp_data, accessories, direction } = this.state
     
         if (column !== clickedColumn) {
             switch(this.state.current_tab){
@@ -170,7 +172,7 @@ class Dashboard extends Component{
                 case 1:
                     this.setState({
                         column: clickedColumn,
-                        accessories: _.sortBy(accessories, [clickedColumn]),
+                        current_accessories: _.sortBy(current_accessories, [clickedColumn]),
                         direction: 'ascending',
                       })
                 case 2:
@@ -198,7 +200,7 @@ class Dashboard extends Component{
                 })
             case 1:
                 this.setState({
-                    accessories: accessories.reverse(),
+                    current_accessories: current_accessories.reverse(),
                     direction: direction === 'ascending' ? 'descending' : 'ascending',
                   })
             case 2:
@@ -295,6 +297,9 @@ class Dashboard extends Component{
             .then(res => {
                 const accessories = res.data.response;
                 this.setState({ accessories });
+                this.setState({
+                    current_accessories: accessories
+                })
                 console.log(this.state);
             }
             )
@@ -305,6 +310,9 @@ class Dashboard extends Component{
             .then(res => {
             const accessories = res.data.response;
             this.setState({ accessories });
+            this.setState({
+                current_accessories: accessories
+            })
             console.log(this.state);
             })
         }
@@ -334,10 +342,12 @@ class Dashboard extends Component{
     };
     
     handleFilterSubmit = (filters) => {
-        console.log("Handle Filters", filters[0])
+        console.log("Handle Filters", filters)
         this.setState({
+            filters: filters,
             filterDrawerOpen: false
         })
+        this.setState(this.applyFilters(filters))
     }
     
     handleCloseDialog = () => {
@@ -596,7 +606,6 @@ class Dashboard extends Component{
                 <td>{location}</td>
                 <td>{designer}</td>
                 <td>{tp_title}</td>
-                <td>{parts}</td>
                 <td>{actors}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleCostumeEditing(costume_id)}><EditButton/></div>
@@ -668,7 +677,7 @@ class Dashboard extends Component{
     }
 
     renderTableAccessoriesData() {
-        return this.state.accessories.map((accessory, index) => {
+        return this.state.current_accessories.map((accessory, index) => {
             const {accessory_id, name, description, date, sex, material, technique, location, designer, parts, actors, costume_name, use_name, user} = accessory;
             return (
                 <tr key={accessory_id}>
@@ -696,38 +705,27 @@ class Dashboard extends Component{
         })
     }
 
-    applyCostumeFilters = () => {
-        if(!this.state.current_costumes){
+    applyFilters = (filters) => {
+        console.log("Filters", filters);
+        var qs = require('qs');
+        //Costumes
+        //axios.get("http://88.197.53.80/kostoumart-api/filteredCostumes", { params: { filters: filters }, paramsSerializer: params => { return qs.stringify(params) } })
+        axios.get("http://localhost:8108/filteredCostumes", { params: { filters: filters, user: this.state.user.role }, paramsSerializer: params => { return qs.stringify(params) } })
+        .then(res => {
+            const costume_data = res.data.response;
             this.setState({
-                current_costumes: this.state.costume_data
+                current_costumes: costume_data
             })
         }
-        var currentCostumeArray;
-        if(this.state.techniqueOption){
-            currentCostumeArray = this.state.costume_data.filter((costume)=>{
-                return costume.technique === this.state.techniqueOption;
-            })
-        }
-        if(this.state.sexOption){
-            currentCostumeArray = this.state.costume_data.filter((costume)=>{
-                return costume.sex.includes(this.state.sexOption);
-                
-            })
-        }
-        console.log(currentCostumeArray);
-        if(currentCostumeArray){
-            this.setState({
-                current_costumes: currentCostumeArray
-            })
-        }
+        )
     }
 
-    resetCostumeFilters = () => {
+    resetFilters = () => {
         this.setState({
             current_costumes: this.state.costume_data,
-            useCategoryOption: '',
-            techniqueOption: '',
-            sexOption: '',
+            current_accessories: this.state.accessories,
+            current_tps: this.state.tp_data,
+            current_uses: this.state.use_data
         })
     }
 
@@ -765,6 +763,7 @@ class Dashboard extends Component{
                 sidebarClassName="FiltersSidebar"
                 overlayClassName = "Overlay"
                 sidebar={<SidebarContent
+                    resetFilters = {this.resetFilters.bind(this)}
                     handleFilterSubmit = {this.handleFilterSubmit.bind(this)}
                     handleDrawerClose = {this.handleDrawerClose.bind(this)}
                     open={this.state.filterDrawerOpen}/>}
@@ -914,10 +913,6 @@ class Dashboard extends Component{
                                     sorted={column === 'tp_title' ? direction : null}
                                     onClick={this.handleSort('tp_title')}><sthong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</sthong></th>
                                     <th
-                                    id="ColumnPartsCostume"
-                                    sorted={column === 'parts' ? direction : null}
-                                    onClick={this.handleSort('parts')}><sthong>ΡΟΛΟΣ</sthong></th>
-                                    <th
                                     id="ColumnActors"
                                     sorted={column === 'actors' ? direction : null}
                                     onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
@@ -976,16 +971,26 @@ class Dashboard extends Component{
                         <table className="Table">
                             <thead className="TableHead">    
                                 <tr>
-                                    <th><sthong>ONOMA</sthong></th>
-                                    <th><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
-                                    <th><sthong>ΧΡΗΣΗ</sthong></th>
-                                    <th><sthong>ΚΟΣΤΟΥΜΙ</sthong></th>
-                                    <th><sthong>XΡΟΝΟΛΟΓΙΑ</sthong></th>
-                                    <th><sthong>ΤΕΧΝΙΚΗ</sthong></th>
-                                    <th><sthong>ΦΥΛΟ</sthong></th>
-                                    <th><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
-                                    <th><sthong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</sthong></th>
-                                    <th><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
+                                    <th sorted={column === 'name' ? direction : null}
+                                    onClick={this.handleSort('name')}><sthong>ONOMA</sthong></th>
+                                    <th sorted={column === 'description' ? direction : null}
+                                    onClick={this.handleSort('description')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
+                                    <th sorted={column === 'use_name' ? direction : null}
+                                    onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
+                                    <th sorted={column === 'costume_name' ? direction : null}
+                                    onClick={this.handleSort('costume_name')}><sthong>ΚΟΣΤΟΥΜΙ</sthong></th>
+                                    <th sorted={column === 'date' ? direction : null}
+                                    onClick={this.handleSort('date')}><sthong>XΡΟΝΟΛΟΓΙΑ</sthong></th>
+                                    <th sorted={column === 'technique' ? direction : null}
+                                    onClick={this.handleSort('technique')}><sthong>ΤΕΧΝΙΚΗ</sthong></th>
+                                    <th sorted={column === 'sex' ? direction : null}
+                                    onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
+                                    <th sorted={column === 'designer' ? direction : null}
+                                    onClick={this.handleSort('designer')}><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
+                                    <th sorted={column === 'location' ? direction : null}
+                                    onClick={this.handleSort('location')}><sthong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</sthong></th>
+                                    <th sorted={column === 'actors' ? direction : null}
+                                    onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
                                     <th id="th_actions"></th>
                                 </tr>
                             </thead>
@@ -1105,7 +1110,6 @@ class Dashboard extends Component{
                         </div>
                 }
 
-                    
                 <ConfirmationDialog 
                 isOpen={this.state.isConfirmationDialogOpen}
                 index = {this.state.index}

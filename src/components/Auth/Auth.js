@@ -98,14 +98,7 @@ class Auth extends Component{
         return(
             <div id="Web_1920___1">
                 <NotificationContainer></NotificationContainer>
-                <svg class="Rectangle_3_k">
-                    <linearGradient id="Rectangle_3_k" spreadMethod="pad" x1="0.636" x2="0.466" y1="-0.182" y2="0.673">
-                        <stop offset="0" stop-color="#fff" stop-opacity="1"></stop>
-                        <stop offset="1" stop-color="#395d59" stop-opacity="1"></stop>
-                    </linearGradient>
-                    <rect fill="url(#Rectangle_3_k)" id="Rectangle_3_k" rx="0" ry="0" x="0" y="0" width="1920" height="834.399">
-                    </rect>
-                </svg>
+                <img src={require("../../styles/images/INTRO-IMAGE-3.png")}/>
                 <div id="WELCOME">
                     <span>WELCOME</span>
                 </div>

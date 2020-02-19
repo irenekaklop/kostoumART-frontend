@@ -173,10 +173,9 @@
 .FilterButton {
     position: absolute;
     overflow: visible;
-    width: 58.10982131958008px;
-    height: 200px;
-    left: 10px;
-    top: 0px;
+    width: 58.122px;
+    left: 5px;
+    top: 56.5px;
     cursor: pointer;
     background-color: rgba(255, 255, 255, 1);
 }
@@ -184,6 +183,24 @@
 .FilterButton:hover {
     background-color: rgba(0, 0, 0, 0.04);
 }
+
+.FILTERS {
+    transform: matrix(1,0,0,1,11.2625,122.8705) rotate(-90deg);
+    transform-origin: center;
+    position: absolute;
+    left: 0px;
+    top: -45px;
+    white-space: nowrap;
+    line-height: 12px;
+    text-align: left;
+    font-family: InputMono-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    color: rgba(56,56,56,1);
+}
+
+  
 
 .Ellipse_1 {
     position: absolute;
@@ -272,24 +289,6 @@
     left: 18.631‬px;
     top: 255.749px;
 }
-  #FILTERS {
-    transform: matrix(1,0,0,1,11.2625,122.8705) rotate(-90deg);
-    transform-origin: center;
-    position: absolute;
-    left: 0px;
-    top: 5px;
-    overflow: visible;
-    white-space: nowrap;
-    line-height: 12px;
-    text-align: left;
-    font-family: InputMono-Regular;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 10px;
-    color: rgba(56,56,56,1);
-  }
-
-  
     #Group_83 {
         cursor: pointer;
 		position: absolute;
@@ -369,10 +368,58 @@
 
 #CloseButton {
     position: absolute;
-    right: 0px;   
+    right: 0px;  
+    top: 18.79px;
+    background-color:inherit; 
 }
 
 .Checkbox-Button{
     width: 25.167px;
     height: 25.167px;
+}
+
+.Path_28 {
+    position: absolute;
+    overflow: visible;
+    width: 105.41px;
+    height: 38.568px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#_________gh {
+    position: absolute;
+    overflow: visible;
+    align-self:center;
+    width: 65px;
+    white-space: nowrap;
+    line-height: 18px;
+    margin-top: -3px;
+    text-align: left;
+    font-family: InputMono-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(56,56,56,1);
+    letter-spacing: 0.4px;
+}
+.Path_29 {
+    overflow: visible;
+    position: absolute;
+    width: 105.411px;
+    height: 38.568px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#__________gj {
+    position: absolute;
+    overflow: visible;
+    width: 74px;
+    white-space: nowrap;
+    line-height: 18px;
+    margin-top: -3px;
+    text-align: left;
+    font-family: InputMono-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(56,56,56,1);
+    letter-spacing: 0.4px;
 }
