@@ -709,7 +709,7 @@ class Dashboard extends Component{
         console.log("Filters", filters);
         var qs = require('qs');
         //Costumes
-        //axios.get("http://88.197.53.80/kostoumart-api/filteredCostumes", { params: { filters: filters }, paramsSerializer: params => { return qs.stringify(params) } })
+        //axios.get("http://88.197.53.80/kostoumart-api/filteredCostumes", { params: { filters: filters, user: this.state.user.role}, paramsSerializer: params => { return qs.stringify(params) } })
         axios.get("http://localhost:8108/filteredCostumes", { params: { filters: filters, user: this.state.user.role }, paramsSerializer: params => { return qs.stringify(params) } })
         .then(res => {
             const costume_data = res.data.response;
