@@ -538,6 +538,9 @@
 
 td { 
   line-height: 17px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
 } 
 
 th {
@@ -553,6 +556,7 @@ th:hover{
 
 .td_actions {
   border-left: 2px solid rgba(88,89,91,1);
+  padding: 10px;
 }
 
 #th_actions{

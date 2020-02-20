@@ -39,7 +39,7 @@
     margin: auto;
 }
 
-#TechniqueLabel {
+#TechniqueLabel {   
     position: absolute;
     left: 78.338px;
     top: 187.171px;
@@ -59,10 +59,10 @@
 
 #TechniqueOptions {
     position: absolute;
-    left: 78.338px;
-    top: 226.694px;
+    left: 44.338px;
+    top: 224.327px;
     overflow: visible;
-    width: 67px;
+    width: 92.167px;
     white-space: nowrap;
     line-height: 30px;
     margin-top: -7px;
@@ -95,7 +95,7 @@
 
 #SexOptions {
     position: absolute;
-    left: 78.338px;
+    left: 44.338px;
     top: 462.492px;
     overflow: visible;
     width: 188px;
