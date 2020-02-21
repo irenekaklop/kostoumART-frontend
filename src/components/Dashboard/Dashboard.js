@@ -740,7 +740,7 @@ class Dashboard extends Component{
 
     renderTableAccessoriesData() {
         return this.state.current_accessories.map((accessory, index) => {
-            const {accessory_id, name, description, date, sex, material, technique, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
+            const {accessory_id, name, description, date, sex, material, technique, tp_title, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
             console.log(accessory)
             return (
                 <tr key={accessory_id}>
@@ -751,6 +751,7 @@ class Dashboard extends Component{
                     </p>
                 </td>
                 <td>{use_name}</td>
+                <td>{tp_title}</td>
                 <td>{costume_name}</td>
                 <td>{date}</td>
                 <td>{technique}</td>
@@ -1057,6 +1058,10 @@ class Dashboard extends Component{
                                     onClick={this.handleSort('description')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
                                     <th id="ColumnUseCostume" sorted={column === 'use_name' ? direction : null}
                                     onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
+                                    <th
+                                    id="ColumnTPCostume"
+                                    sorted={column === 'tp_title' ? direction : null}
+                                    onClick={this.handleSort('tp_title')}><sthong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</sthong></th>
                                     <th id="ColumnUseCostume" sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}><sthong>ΚΟΣΤΟΥΜΙ</sthong></th>
                                     <th sorted={column === 'date' ? direction : null}

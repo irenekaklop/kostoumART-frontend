@@ -92,6 +92,7 @@ class  AccessoryForm extends Component{
                 selectedMaterialOption: {value: this.props.accessory[0].material, label: this.props.accessory[0].material},
                 selectedTechniqueOption: {value: this.props.accessory[0].technique, label: this.props.accessory[0].technique},
                 selectedCostumeOption: {value: this.props.accessory[0].costume_name, label: this.props.accessory[0].costume_name},
+                selectedTPOption: {value: this.props.accessory[0].tp_title, label: this.props.accessory[0].tp_title},
                 location: this.props.accessory[0].location,
             })
             if(this.props.uses){
