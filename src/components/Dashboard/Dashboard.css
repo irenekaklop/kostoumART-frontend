@@ -138,11 +138,8 @@
 .ButtonAdd {
   overflow: visible;
   position: absolute;
-  left: 916.555px;
-  top: 1032.311px;
-  overflow: visible;
-  line-height: 18px;
-  margin-top: -3px;
+  left: 910.555px;
+  top: 1021.311px;
   text-align: left;
 	font-family: InputMono-Light;
 	font-style: normal;
@@ -159,14 +156,11 @@
 }
 
 #ButtonAddIcon {
-  overflow: visible;
-  width: 19.692px;
-  height: 2px;
+  vertical-align:middle;
 }
 
 #ButtonAddText {
   margin-left: 16.34px;
-  width: 65px;
 }
 .Rectangle_6 {
   position: absolute;
@@ -547,6 +541,8 @@ td {
 
 th {
   padding-bottom:12px;
+  padding-right:24px;
+  padding-top:10px;
   border-bottom: 2px solid rgba(88,89,91,1);
   cursor: pointer;
   line-height: 12px!important;
@@ -1890,6 +1886,13 @@ th:hover{
   content: '';
   position: absolute;
   right: 0;
-  margin-top: 0.2em;
-  background: inherit;
+  bottom: 0;
+  background: white!important;
+}
+
+.multi-line-truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }

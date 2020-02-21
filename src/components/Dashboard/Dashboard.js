@@ -604,7 +604,8 @@ class Dashboard extends Component{
 
     renderTableCostumesData() {
         return this.state.current_costumes.map((costume, index) => {
-            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, parts } = costume //desthucturing
+            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, parts, createdBy} = costume //desthucturing
+            console.log(costume)
             for (var element in costume){
                 if (!element || element===''){
                     element='/t';
@@ -617,7 +618,7 @@ class Dashboard extends Component{
                     </td>
                 <td>{costume_name}</td>
                 <td className="DescriptionColumn">
-                    <p className="block-with-text">
+                    <p className="multi-line-truncate">
                         {description}
                     </p>
                 </td>
@@ -625,20 +626,36 @@ class Dashboard extends Component{
                 <td>{use_name}</td>
                 {sex==="Άνδρας" || sex==="Αγόρι" ? 
                 <td id="TextWithIconCell">
-                    <MaleIcon/>
+                    <img src={require('../../styles/images/icons/Male.png')}/><br/>
                     {sex}
                 </td>
                 :
-                <td>
+                <td id="TextWithIconCell">
+                    <img src={require('../../styles/images/icons/Female.png')}/><br/>
                     {sex}
                 </td>
                 }
-                {material==='Βαμβάκι'? 
+                {   (material==='Βαμβάκι') ?
                     <td id="TextWithIconCell">
-                    <CottonIcon/>
-                    <span>{material}</span>
+                        <img src={require('../../styles/images/icons/cotton.png')}/><br/>
+                        {material}
                     </td>
-                :
+                    : (material==='Μετάξι') ?
+                    <td id="TextWithIconCell">
+                        <img src={require('../../styles/images/icons/kasmir.png')}/><br/>
+                        {material}
+                    </td>
+                    : (material==='Μαλλί') ?
+                    <td id="TextWithIconCell">
+                        <img src={require('../../styles/images/icons/wool.png')}/><br/>
+                        {material}
+                    </td>
+                    : (material==='Δέρμα') ?
+                     <td id="TextWithIconCell">
+                         <img src={require('../../styles/images/icons/leather.png')}/><br/>
+                         {material}
+                     </td>
+                    :
                     <td>
                     <span>{material}</span>
                     </td>
@@ -648,7 +665,7 @@ class Dashboard extends Component{
                 <td>{designer}</td>
                 <td>{tp_title}</td>
                 <td>{actors}</td>
-                <td>{this.state.user.username}</td>
+                <td>{createdBy}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleCostumeEditing(costume_id)}><EditButton/></div>
                     <br/>
@@ -665,7 +682,7 @@ class Dashboard extends Component{
 
     renderTableUsesData() {
         return this.state.use_data.map((use, index) => {
-            const { useID, name, use_category,description, customs } = use //desthucturing
+            const { useID, name, use_category,description, customs, createdBy } = use //desthucturing
             return (
                 <tr key={useID}>
                     <td>
@@ -674,13 +691,15 @@ class Dashboard extends Component{
                     <td>
                         {use_category}
                     </td>
-                    <td>
-                        {description}
+                    <td className="DescriptionColumn">
+                        <p className="multi-line-truncate">
+                            {description}
+                        </p>
                     </td>
                     <td>
                         {customs}
                     </td>
-                    <td>{this.state.user.username}</td>
+                    <td>{createdBy}</td>
                     <td className="td_actions">
                         <div onClick={() => {this.handleUseEditing(useID);}}><EditButton/></div>
                         <br/>
@@ -697,14 +716,14 @@ class Dashboard extends Component{
 
     renderTableTPsData() {
         return this.state.tp_data.map((tp, index) => {
-            const { theatrical_play_id, title, date, actors, director, theater } = tp //desthucturing
+            const { theatrical_play_id, title, date, actors, director, theater, createdBy } = tp //desthucturing
             return (
                 <tr key={theatrical_play_id}>
                 <td>{title}</td>
                 <td>{director}</td>
                 <td>{theater}</td>
                 <td>{date}</td>
-                <td>{this.state.user.username}</td>
+                <td>{createdBy}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleTPEditing(theatrical_play_id)}><EditButton/></div>
                     <br/>
@@ -721,29 +740,34 @@ class Dashboard extends Component{
 
     renderTableAccessoriesData() {
         return this.state.current_accessories.map((accessory, index) => {
-            const {accessory_id, name, description, date, sex, material, technique, location, designer, parts, actors, costume_name, use_name, user} = accessory;
+            const {accessory_id, name, description, date, sex, material, technique, location, designer, parts, actors, costume_name, use_name, createdBy} = accessory;
             return (
                 <tr key={accessory_id}>
                 <td>{name}</td>
-                <td>{description}</td>
+                <td className="DescriptionColumn">
+                    <p className="multi-line-truncate">
+                        {description}
+                    </p>
+                </td>
                 <td>{use_name}</td>
                 <td>{costume_name}</td>
                 <td>{date}</td>
                 <td>{technique}</td>
                 {sex==="Άνδρας" || sex==="Αγόρι" ? 
                 <td id="TextWithIconCell">
-                    <MaleIcon/>
+                    <img src={require('../../styles/images/icons/Male.png')}/><br/>
                     {sex}
                 </td>
                 :
-                <td>
+                <td id="TextWithIconCell">
+                    <img src={require('../../styles/images/icons/Female.png')}/><br/>
                     {sex}
                 </td>
                 }
                 <td>{designer}</td>
                 <td>{location}</td>
                 <td>{actors}</td>
-                <td>{this.state.user.username}</td>
+                <td>{createdBy}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleAccessoryEditing(accessory_id)}><EditButton/></div>
                     <br/>
@@ -981,14 +1005,12 @@ class Dashboard extends Component{
                                 </tbody>
                             </table>
                             <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
-                                <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
-                                </path>
+                                    <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
+                                    </path>
                             </svg>
                             <button className="ButtonAdd" onClick={()=>this.handleAddCostume()}>
-                                <svg id="ButtonAddIcon">
-                                    <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.7254922986030579px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" d="M 19.69155883789062 0 L 0 0">
-                                    </path>
-                                </svg>
+                                
+                                <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
                                 <span id="ButtonAddText">προσθήκη</span>
                             </button>
                         </div>
@@ -1062,12 +1084,9 @@ class Dashboard extends Component{
                             </path>
                         </svg>
                         <button className="ButtonAdd" onClick={() => this.handleAddAccessory()}>
-                                <svg id="ButtonAddIcon">
-                                    <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.7254922986030579px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" d="M 19.69155883789062 0 L 0 0">
-                                    </path>
-                                </svg>
-                                <span id="ButtonAddText">προσθήκη</span>
-                            </button>
+                            <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
+                            <span id="ButtonAddText">προσθήκη</span>
+                        </button>
                     </div>
                 }
                 {this.state.isUseFormOpen ? (
@@ -1122,11 +1141,8 @@ class Dashboard extends Component{
                                 </path>
                         </svg>
                         <button className="ButtonAdd" onClick={() => this.handleAddUse()}>
-                                <svg id="ButtonAddIcon">
-                                    <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.7254922986030579px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" d="M 19.69155883789062 0 L 0 0">
-                                    </path>
-                                </svg>
-                                <span id="ButtonAddText">προσθήκη</span>
+                            <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
+                            <span id="ButtonAddText">προσθήκη</span>
                         </button>
                         
                         </div>
@@ -1173,10 +1189,7 @@ class Dashboard extends Component{
                                 </path>
                             </svg>
                             <button className="ButtonAdd" onClick={() => this.handleAddTP()}>
-                                <svg id="ButtonAddIcon">
-                                    <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="0.7254922986030579px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" d="M 19.69155883789062 0 L 0 0">
-                                    </path>
-                                </svg>
+                                <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
                                 <span id="ButtonAddText">προσθήκη</span>
                             </button>
                         </div>
