@@ -185,7 +185,7 @@ class TpForm extends Component{
         if(type === "error-description"){
             return(
                 <div>
-                    <NotificationContainer>{ NotificationManager.error("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
+                    <NotificationContainer>{ NotificationManager.error("Text should be under 2080 characters",'Too big description!', 2000) }</NotificationContainer>
                 </div>
             )
         }

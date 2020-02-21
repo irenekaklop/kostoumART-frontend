@@ -3,15 +3,36 @@
     position: absolute;
     width: 15.962px;
     height: 34.35px;
-    left: 727.935px;
-    top: 247.409px;
+    left: 0px;
+    top: 0px;
     transform: matrix(1,0,0,1,0,0);
 }
+#MaleIcon {
+    position: relative;
+    width: 15.962px;
+    height: 34.35px;
+    overflow: visible;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3.47px;
+    display: block;
+}
 #Group_9 {
+    position: relative;
+    width: 25.413px;
+    height: 23.992px;
+    overflow: visible;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    display: block;
+}
+.Path_10 {
+    overflow: visible;
     position: absolute;
     width: 25.413px;
     height: 23.992px;
-    left: 894.869px;
-    top: 251.436px;
-    overflow: visible;
+    left: 0px;
+    top: 0px;
+    transform: matrix(1,0,0,1,0,0);
 }

@@ -1,26 +1,15 @@
 import React from 'react'
-import { render } from 'react-dom'
-import Checkbox from '../Shared/Checkbox.js'
 
 class test extends React.Component {
-  state = { checked: false }
-
-  handleCheckboxChange = event => {
-    this.setState({ checked: event.target.checked })
-  }
 
   render() {
     return (
-      <div>
-        <label>
-          <Checkbox
-            checked={this.state.checked}
-            onChange={this.handleCheckboxChange}
-            name="Name"
-          />
-          
-        </label>
-      </div>
+      <div class="parent">
+      <h2>Multiple Line Ellipsis</h2>
+      <div class="block-ellipsis">
+          This is an example of a multi-line ellipsis. We just set the number of lines we want to display before the ellipsis takes into effect and make some changes to the CSS and the ellipsis should take into effect once we reach the number of lines we want.
+        </div>
+    </div>
     )
   }
 }

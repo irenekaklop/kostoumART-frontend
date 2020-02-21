@@ -1,11 +1,14 @@
 export const years = [{
   value: '1800',
+  label: '1800'
 },
 {
   value: '2021',
+  label: '2021'
 },
 {
   value: '1802',
+  label: '1802'
 }];
 
 export const sexs = [{
@@ -13,8 +16,8 @@ export const sexs = [{
     value: 'Γυναίκα'
   },
   {
-    label: 'Άντρας',
-    value: 'Άντρας'
+    label: 'Άνδρας',
+    value: 'Άνδρας'
   },
   {
     label: 'Κορίτσι',

@@ -16,7 +16,11 @@ class ConfirmationDialog extends Component{
                     onClose={() => {this.props.handleClose(false)}}>
                     <DialogTitle id="confirmation-dialog-title">Διαγραφή</DialogTitle>
                         <DialogContent dividers>
-                        <p>Είστε σίγουροι ότι επιθυμείτε να διαγράψετε αυτή την εγγραφή;</p>
+                            {this.props.dependency ? 
+                                 <p>Άλλες εγγραφές χρησιμοποιούν αυτή την εγγραφή. Είστε σίγουροι ότι θέλετε να συνεχίσετε με την διαγραφή;</p>
+                            :
+                                <p>Είστε σίγουροι ότι επιθυμείτε να διαγράψετε αυτή την εγγραφή;</p>
+                            }
                         </DialogContent>
                         
                         <DialogActions>

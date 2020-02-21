@@ -26,7 +26,7 @@ class UseForm extends Component{
             customs: '',
             other_use: '',
             exists: '',
-            description_MAXlegnth: 300,
+            description_MAXlegnth: 2080,
             description_status: false,
             submit: false,
             redirectToReferrer: false,
@@ -139,7 +139,7 @@ class UseForm extends Component{
     }
 
     validateInputLength(){
-        if(this.state.description && this.state.description.length>300){
+        if(this.state.description && this.state.description.length>this.state.description_MAXlegnth){
             console.log("too big or too small description");
             // Snackbar error for too big description
             this.createNotification('error-description')
@@ -193,7 +193,7 @@ class UseForm extends Component{
         if(type === "error-description"){
             return(
                 <div>
-                    <NotificationContainer>{ NotificationManager.error("Text should be under 300 characters",'Too big description!', 2000) }</NotificationContainer>
+                    <NotificationContainer>{ NotificationManager.error("Text should be under 2080 characters",'Too big description!', 2000) }</NotificationContainer>
                 </div>
             )
         }

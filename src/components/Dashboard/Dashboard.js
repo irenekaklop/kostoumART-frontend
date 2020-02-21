@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 
-import { Paper, Button, TextField, Drawer, Divider, MenuItem, InputLabel, Select} from '@material-ui/core';
-
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
@@ -23,6 +21,7 @@ import _ from 'lodash'
 import Header from '../Shared/Header.js';
 import Footer from '../Shared/Footer.js';
 import {EditButton, DeleteButton, FilterButtons} from '../Shared/Buttons.js'
+import { CottonIcon, MaleIcon } from "../Shared/Icons.js";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Sidebar from 'react-sidebar';
 import SidebarContent from '../Filters/SidebarContent.js'
@@ -71,9 +70,11 @@ class Dashboard extends Component{
             filters: '',
             //Confirmation Dialog answer
             index: null,
+            dependency: false,
             user: {
                 user_id: null,
                 email: '',
+                username: '',
                 role: null,
             },
             redirectToReferrer: false,     
@@ -104,6 +105,7 @@ class Dashboard extends Component{
                 user_id: decoded.user_id,
                 email: decoded.email,
                 role: decoded.role,
+                username: decoded.username,
             } });
             console.log("decoded", decoded);
             this.get_uses();
@@ -374,6 +376,7 @@ class Dashboard extends Component{
     handleCloseConfirmationDialog = () => {
         this.setState({
             isConfirmationDialogOpen:false,
+            dependency: false,
         });
     }
     
@@ -506,12 +509,13 @@ class Dashboard extends Component{
     }
 
     handleCostumeDelete(index){
-        //axios.delete("http://88.197.53.80/kostoumart-api/costumes/", {params: { name: index }})
-        axios.delete("http://localhost:8108/costumes/", {params: { name: index }})
+        //axios.delete("http://88.197.53.80/kostoumart-api/costumes/", {params: { costume_id: index }})
+        axios.delete("http://localhost:8108/costumes/", {params: { costume_id: index }})
         .then(res=> {
             if(res.statusText ==="OK"){
                 let ret=this.createNotification("delete-success");
                 this.getCostumes();
+                this.getAccessories();
                 return ret;
             }
         })
@@ -557,28 +561,43 @@ class Dashboard extends Component{
 
     handleConfirmationForDelete(index){
         console.log("Index", index);
+        if(this.state.current_tab===0){
+            //axios.get("http://88.197.53.80/kostoumart-api/dependency/",{params: { index: index, column: 'costume' }} )
+            axios.get("http://localhost:8108/dependency/",{params: { index: index, column: 'costume' }} )
+            .then(res=>{
+                console.log(res.data.response[0].result)
+                if (res.data.response[0].result===1) {
+                    this.setState({dependency: true});
+                }
+                this.handleOpenConfirmationDialog(index);
+            })
+        }
+        if(this.state.current_tab===1){
+            this.handleOpenConfirmationDialog(index);
+            this.setState({dependency: false});
+        }
         //Check if this index is a foreign key in costumes' list before delete
         if(this.state.current_tab===2){
-            for(var i=0; i<this.state.costume_data.length; i++){
-                if(this.state.costume_data[i].useID){
-                    if(this.state.costume_data[i].useID===index){
-                    this.handleOpenConfirmationDialog(index);
-                    return;
-                    }
+            //axios.get("http://88.197.53.80/kostoumart-api/dependency/",{params: { index: index, column: 'use' }} )
+            axios.get("http://localhost:8108/dependency/",{params: { index: index, column: 'use' }} )
+            .then(res=>{
+                console.log(res.data.response[0].result)
+                if (res.data.response[0].result===1) {
+                    this.setState({dependency: true});
                 }
-            }
-            this.handleUseDelete(index);
+                this.handleOpenConfirmationDialog(index);
+            })
         }
         else if(this.state.current_tab===3){
-            for(var i=0; i<this.state.costume_data.length; i++){
-                if(this.state.costume_data[i].theatrical_play_id){
-                    if(this.state.costume_data[i].theatrical_play_id===index){
-                    this.handleOpenConfirmationDialog(index);
-                    return;
-                    }
+            //axios.get("http://88.197.53.80/kostoumart-api/dependency/",{params: { index: index, column: 'theatrical_play' }} )
+            axios.get("http://localhost:8108/dependency/",{params: { index: index, column: 'theatrical_play' }} )
+            .then(res=>{
+                console.log(res.data.response[0].result)
+                if (res.data.response[0].result===1) {
+                    this.setState({dependency: true});
                 }
-            }
-            this.handleTPDelete(index);
+                this.handleOpenConfirmationDialog(index);
+            })
         }
         
     }
@@ -596,17 +615,40 @@ class Dashboard extends Component{
                     <td>
 	                   <img id="Image" src={require("../../styles/images/Rectangle_20.png")}/>  
                     </td>
-                <td >{costume_name}</td>
-                <td>{description}</td>
+                <td>{costume_name}</td>
+                <td className="DescriptionColumn">
+                    <p className="block-with-text">
+                        {description}
+                    </p>
+                </td>
                 <td>{date}</td>
-                <td>{sex}</td>
                 <td>{use_name}</td>
-                <td>{material}</td>
+                {sex==="Άνδρας" || sex==="Αγόρι" ? 
+                <td id="TextWithIconCell">
+                    <MaleIcon/>
+                    {sex}
+                </td>
+                :
+                <td>
+                    {sex}
+                </td>
+                }
+                {material==='Βαμβάκι'? 
+                    <td id="TextWithIconCell">
+                    <CottonIcon/>
+                    <span>{material}</span>
+                    </td>
+                :
+                    <td>
+                    <span>{material}</span>
+                    </td>
+                }
                 <td>{technique}</td>
                 <td>{location}</td>
                 <td>{designer}</td>
                 <td>{tp_title}</td>
                 <td>{actors}</td>
+                <td>{this.state.user.username}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleCostumeEditing(costume_id)}><EditButton/></div>
                     <br/>
@@ -614,7 +656,7 @@ class Dashboard extends Component{
                         <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
                         </path>
                     </svg>
-                    <div onClick={()=> this.handleCostumeDelete(costume_name)}><DeleteButton/></div>
+                    <div onClick={()=> this.handleConfirmationForDelete(costume_id)}><DeleteButton/></div>
                 </td>
                 </tr>
             )
@@ -638,6 +680,7 @@ class Dashboard extends Component{
                     <td>
                         {customs}
                     </td>
+                    <td>{this.state.user.username}</td>
                     <td className="td_actions">
                         <div onClick={() => {this.handleUseEditing(useID);}}><EditButton/></div>
                         <br/>
@@ -658,10 +701,10 @@ class Dashboard extends Component{
             return (
                 <tr key={theatrical_play_id}>
                 <td>{title}</td>
-                <td>{date}</td>
-                <td >{actors}</td>
                 <td>{director}</td>
                 <td>{theater}</td>
+                <td>{date}</td>
+                <td>{this.state.user.username}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleTPEditing(theatrical_play_id)}><EditButton/></div>
                     <br/>
@@ -687,10 +730,20 @@ class Dashboard extends Component{
                 <td>{costume_name}</td>
                 <td>{date}</td>
                 <td>{technique}</td>
-                <td>{sex}</td>
+                {sex==="Άνδρας" || sex==="Αγόρι" ? 
+                <td id="TextWithIconCell">
+                    <MaleIcon/>
+                    {sex}
+                </td>
+                :
+                <td>
+                    {sex}
+                </td>
+                }
                 <td>{designer}</td>
                 <td>{location}</td>
                 <td>{actors}</td>
+                <td>{this.state.user.username}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleAccessoryEditing(accessory_id)}><EditButton/></div>
                     <br/>
@@ -698,7 +751,7 @@ class Dashboard extends Component{
                         <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
                         </path>
                     </svg>
-                    <div onClick={()=>{this.handleAccessoryDelete(accessory_id);}}><DeleteButton/></div>
+                    <div onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}><DeleteButton/></div>
                 </td>
                 </tr>
             )
@@ -871,13 +924,13 @@ class Dashboard extends Component{
                                         <span><sthong>EIKONA</sthong></span>
                                     </th>
                                     <th
-                                    id="ColumnNameCostume"
+                                    id="ColumnTitle"
                                     sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}>
                                     <sthong>ΤΙΤΛΟΣ</sthong> 
                                     </th>
                                     <th
-                                    id="ColumnDescrCostume"
+                                    id="DescriptionColumn"
                                     sorted={column === 'descr' ? direction : null}
                                     onClick={this.handleSort('descr')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
                                     <th
@@ -916,6 +969,9 @@ class Dashboard extends Component{
                                     id="ColumnActors"
                                     sorted={column === 'actors' ? direction : null}
                                     onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
+                                    <th id="ColumnEditor">
+                                    <sthong>EDITOR</sthong>
+                                    </th>
                                     <th
                                     id="th_actions"></th>
                                     </tr> 
@@ -973,11 +1029,12 @@ class Dashboard extends Component{
                                 <tr>
                                     <th sorted={column === 'name' ? direction : null}
                                     onClick={this.handleSort('name')}><sthong>ONOMA</sthong></th>
-                                    <th sorted={column === 'description' ? direction : null}
+                                    <th id="DescriptionColumn" 
+                                    sorted={column === 'description' ? direction : null}
                                     onClick={this.handleSort('description')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
-                                    <th sorted={column === 'use_name' ? direction : null}
+                                    <th id="ColumnUseCostume" sorted={column === 'use_name' ? direction : null}
                                     onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
-                                    <th sorted={column === 'costume_name' ? direction : null}
+                                    <th id="ColumnUseCostume" sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}><sthong>ΚΟΣΤΟΥΜΙ</sthong></th>
                                     <th sorted={column === 'date' ? direction : null}
                                     onClick={this.handleSort('date')}><sthong>XΡΟΝΟΛΟΓΙΑ</sthong></th>
@@ -985,12 +1042,15 @@ class Dashboard extends Component{
                                     onClick={this.handleSort('technique')}><sthong>ΤΕΧΝΙΚΗ</sthong></th>
                                     <th sorted={column === 'sex' ? direction : null}
                                     onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
-                                    <th sorted={column === 'designer' ? direction : null}
+                                    <th id="ColumnDesigner" sorted={column === 'designer' ? direction : null}
                                     onClick={this.handleSort('designer')}><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
-                                    <th sorted={column === 'location' ? direction : null}
+                                    <th id="ColumnLocation" sorted={column === 'location' ? direction : null}
                                     onClick={this.handleSort('location')}><sthong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</sthong></th>
-                                    <th sorted={column === 'actors' ? direction : null}
+                                    <th id="ColumnActors" sorted={column === 'actors' ? direction : null}
                                     onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
+                                    <th id="ColumnEditor">
+                                    <sthong>EDITOR</sthong>
+                                    </th>
                                     <th id="th_actions"></th>
                                 </tr>
                             </thead>
@@ -1028,22 +1088,29 @@ class Dashboard extends Component{
                             <thead className="TableHead">
                                 <tr>
                                 <th
+                                id="ColumnName"
                                 sorted={column === 'name' ? direction : null}
                                 onClick={this.handleSort('name')}>
                                 <sthong>ΟΝΟΜΑ</sthong> 
                                 </th>
                                 <th
+                                id="ColumnName"
                                 sorted={column === 'use_category' ? direction : null}
                                 onClick={this.handleSort('use_category')}>
                                 <sthong>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</sthong></th>
                                 <th
+                                id="DescriptionColumn"                                                                                     
                                 sorted={column === 'description' ? direction : null}
                                 onClick={this.handleSort('description')}>
                                 <sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
                                 <th
+                                id="DescriptionColumn" 
                                 sorted={column === 'customs' ? direction : null}
                                 onClick={this.handleSort('customs')}>
                                 <sthong>ΕΘΙΜΑ</sthong>
+                                </th>
+                                <th id="ColumnEditor">
+                                    <sthong>EDITOR</sthong>
                                 </th>
                                 <th id="th_actions"></th>
                                 </tr>
@@ -1080,17 +1147,22 @@ class Dashboard extends Component{
                             <table className="Table">
                             <thead className="TableHead">
                                 <tr>
-                                    <th sorted={column === 'title' ? direction : null}
+                                    <th 
+                                    id="ColumnName"
+                                    sorted={column === 'title' ? direction : null}
                                     onClick={this.handleSort('title')}><sthong>ΟΝΟΜΑ ΠΑΡΑΣΤΑΣΗΣ</sthong></th>
-                                    <th sorted={column === 'date' ? direction : null}
-                                    onClick={this.handleSort('date')}><sthong>ΧΡΟΝΟΛΟΓΙΑ</sthong></th>
-                                    <th sorted={column === 'actors' ? direction : null}
-                                    onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
-                                    <th sorted={column === 'director' ? direction : null}
+                                    <th id="ColumnActors" sorted={column === 'director' ? direction : null}
                                     onClick={this.handleSort('director')}><sthong>ΣΚΗΝΟΘΕΤΗΣ</sthong></th>
                                     <th
+                                    id="ColumnActors"
                                     sorted={column === 'theater' ? direction : null}
                                     onClick={this.handleSort('theater')}><sthong>ΘΕΑΤΡΟ</sthong></th>
+                                    <th id="ColumnDate"
+                                    sorted={column === 'date' ? direction : null}
+                                    onClick={this.handleSort('date')}><sthong>ΧΡΟΝΟΛΟΓΙΑ</sthong></th>
+                                    <th id="ColumnEditor">
+                                    <sthong>EDITOR</sthong>
+                                    </th>
                                     <th id="th_actions"></th>
                                 </tr>
                             </thead>
@@ -1113,6 +1185,7 @@ class Dashboard extends Component{
                 <ConfirmationDialog 
                 isOpen={this.state.isConfirmationDialogOpen}
                 index = {this.state.index}
+                dependency = {this.state.dependency}
                 handleClose={this.handleCloseConfirmationDialog.bind(this)}
                 handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
                            
