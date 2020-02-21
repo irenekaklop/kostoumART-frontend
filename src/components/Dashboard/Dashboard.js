@@ -938,13 +938,13 @@ class Dashboard extends Component{
                                     sorted={column === 'date' ? direction : null}
                                     onClick={this.handleSort('date')}><sthong>ΕΠΟΧΗ</sthong></th>
                                     <th
-                                    id="ColumnSexCostume"
-                                    sorted={column === 'sex' ? direction : null}
-                                    onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
-                                    <th
                                     id="ColumnUseCostume"
                                     sorted={column === 'use_name' ? direction : null}
                                     onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
+                                    <th
+                                    id="ColumnSexCostume"
+                                    sorted={column === 'sex' ? direction : null}
+                                    onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
                                     <th 
                                     id="ColumnMaterial"
                                     sorted={column === 'material' ? direction : null}
