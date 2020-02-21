@@ -740,7 +740,8 @@ class Dashboard extends Component{
 
     renderTableAccessoriesData() {
         return this.state.current_accessories.map((accessory, index) => {
-            const {accessory_id, name, description, date, sex, material, technique, location, designer, parts, actors, costume_name, use_name, createdBy} = accessory;
+            const {accessory_id, name, description, date, sex, material, technique, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
+            console.log(accessory)
             return (
                 <tr key={accessory_id}>
                 <td>{name}</td>
@@ -767,7 +768,7 @@ class Dashboard extends Component{
                 <td>{designer}</td>
                 <td>{location}</td>
                 <td>{actors}</td>
-                <td>{createdBy}</td>
+                <td>{CreatedBy}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleAccessoryEditing(accessory_id)}><EditButton/></div>
                     <br/>
