@@ -1,4 +1,4 @@
-export const years = [{
+export const eras = [{
   value: '1800',
   label: '1800'
 },

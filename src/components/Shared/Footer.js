@@ -19,10 +19,13 @@ const styles = theme => ({
 function Footer(props) {
   const { classes } = props;
   return (
-    
-      <div id="COPYRIGHT_2019___KOSTOUMART">
-          <span>COPYRIGHT 2019 | <a href="http://88.197.53.80/eirini/"> KOSTOUMART</a></span>
-        </div>
+    <div>
+      <div id="Divider"></div>
+      <div id="Footer">
+        <span id="COPYRIGHT_2019___KOSTOUMART">COPYRIGHT 2019 | <a href="http://88.197.53.80/eirini/"> KOSTOUMART</a></span>
+      </div>
+    </div>
+      
   
   );
 }

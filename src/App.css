@@ -1,30 +1,6 @@
-.mediaViewInfo {
-  --web-view-name: Web 1920 – 1;
-  --web-view-id: Web_1920___1;
-  --web-scale-on-resize: true;
-  --web-enable-deep-linking: true;
+.App {
+  position: relative;
+  text-align: center;
+  padding: 0 10%;
+  display: contents;
 }
-
-.root {
-  --web-view-ids: Web_1920___1;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  border: none;
-}
-
-#Web_1920___1 {
-  position: absolute;
-  width: 1920px;
-  height: 1080px;
-  background-color: rgba(255,255,255,1);
-  overflow: hidden;
-  --web-view-name: Web 1920 – 1;
-  --web-view-id: Web_1920___1;
-  --web-scale-on-resize: true;
-  --web-enable-deep-linking: true;
-}
-

@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import './App.css'
-import Header from './components/Shared/Header';
-import Footer from './components/Shared/Footer';
 import Routes from './routes';
 
 class App extends Component{
@@ -15,9 +13,7 @@ class App extends Component{
 
   render(){
     return(
-      <div id="Web_1920___1" className="App">
-          <Routes name={this.state.appName}/>
-      </div>
+      <Routes name={this.state.appName}/>
     );
   }
 }

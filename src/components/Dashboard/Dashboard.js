@@ -817,16 +817,8 @@ class Dashboard extends Component{
             return <Redirect to="/auth" />
         }
 
-        const {filterDrawerOpen, useCategoryOption, techniqueOption, sexOption} = this.state;
-        const {columnToSort, sortDirection} = this.state;
-
         return (
             <React.Fragment>
-                <svg class="Rectangle_1">
-                    <rect fill="rgba(242,242,242,1)" id="Rectangle_1" rx="0" ry="0" x="0" y="0" width="1843.697" height="1041.044">
-                    </rect>
-                </svg>
-                <img id="Background" src={require('../../styles/images/Background.png')} srcset="Background.png 1x, Background@2x.png 2x"></img>
                 <NotificationContainer/>
                 <Header 
                     name={this.state.appName}
@@ -938,11 +930,10 @@ class Dashboard extends Component{
                 </Tabs>
 
                 {/*Tab panels*/}
-                <div>
                 {this.state.current_tab===0 && !this.state.isCostumeFormOpen &&
-                    <div>
+                    <div className="TableContainer">
                         <table className="Table">
-                            <thead className="TableHead">
+                                <thead className="TableHead">
                                 <tr>
                                     <th
                                     id="ColumnImageCostume"
@@ -1006,16 +997,13 @@ class Dashboard extends Component{
                                     {this.renderTableCostumesData()} 
                                 </tbody>
                             </table>
-                            <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
-                                    <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
-                                    </path>
-                            </svg>
-                            <button className="ButtonAdd" onClick={()=>this.handleAddCostume()}>
-                                
-                                <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
-                                <span id="ButtonAddText">προσθήκη</span>
-                            </button>
-                        </div>
+                        
+                        <button className="ButtonAdd" onClick={()=>this.handleAddCostume()}>                                
+                            <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
+                            <span id="ButtonAddText">προσθήκη</span>
+                        </button>
+                        <Footer/>
+                    </div>
                 }
                
                 {this.state.isCostumeFormOpen ?(
@@ -1030,6 +1018,7 @@ class Dashboard extends Component{
                     editing={this.state.editing}></CostumeForm>)
                     :
                     <div></div>
+                    
                 }
 
                 {this.state.isAccessoryFormOpen ?(    
@@ -1047,7 +1036,7 @@ class Dashboard extends Component{
                     <div></div>
                 }
                 {this.state.current_tab===1 && !this.state.isAccessoryFormOpen&&
-                    <div>
+                    <div className="TableContainer">
                         <table className="Table">
                             <thead className="TableHead">    
                                 <tr>
@@ -1085,14 +1074,11 @@ class Dashboard extends Component{
                             <tbody className="TableBody">{this.renderTableAccessoriesData()} </tbody>
                         </table>
                                                
-                        <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
-                            <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
-                            </path>
-                        </svg>
                         <button className="ButtonAdd" onClick={() => this.handleAddAccessory()}>
                             <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
                             <span id="ButtonAddText">προσθήκη</span>
                         </button>
+                        <Footer/>
                     </div>
                 }
                 {this.state.isUseFormOpen ? (
@@ -1108,7 +1094,7 @@ class Dashboard extends Component{
                 :
                 <div></div>}
                 {this.state.current_tab===2 && !this.state.isUseFormOpen &&
-                        <div>
+                        <div className="TableContainer">
                             <table className="Table">
                             <thead className="TableHead">
                                 <tr>
@@ -1141,16 +1127,12 @@ class Dashboard extends Component{
                                 </tr>
                             </thead>
                             <tbody className="TableBody">{this.renderTableUsesData()}</tbody>
-                        </table>
-                        <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
-                                <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
-                                </path>
-                        </svg>
+                            </table>
                         <button className="ButtonAdd" onClick={() => this.handleAddUse()}>
                             <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
                             <span id="ButtonAddText">προσθήκη</span>
                         </button>
-                        
+                        <Footer/>
                         </div>
                 }
                 {this.state.isTPFormOpen ? (
@@ -1165,7 +1147,7 @@ class Dashboard extends Component{
                 )
                 : <div></div>   }
                 {this.state.current_tab===3 && !this.state.isTPFormOpen &&
-                        <div>
+                        <div className="TableContainer">
                             <table className="Table">
                             <thead className="TableHead">
                                 <tr>
@@ -1190,14 +1172,11 @@ class Dashboard extends Component{
                             </thead>
                             <tbody className="TableBody">{this.renderTableTPsData()} </tbody>
                             </table>
-                            <svg class="PanelCurve" viewBox="2982.425 -216.026 162.096 25.428">
-                                <path fill="rgba(255,255,255,1)" id="PanelCurve" d="M 3144.52099609375 -190.5980072021484 C 3144.52099609375 -204.6419982910156 3133.136962890625 -216.0260009765625 3119.093017578125 -216.0260009765625 L 3007.85400390625 -216.0260009765625 C 2993.81005859375 -216.0260009765625 2982.425048828125 -204.6419982910156 2982.425048828125 -190.5980072021484">
-                                </path>
-                            </svg>
                             <button className="ButtonAdd" onClick={() => this.handleAddTP()}>
                                 <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
                                 <span id="ButtonAddText">προσθήκη</span>
                             </button>
+                            <Footer/>
                         </div>
                 }
 
@@ -1207,9 +1186,9 @@ class Dashboard extends Component{
                 dependency = {this.state.dependency}
                 handleClose={this.handleCloseConfirmationDialog.bind(this)}
                 handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
-                           
-                </div>
 
+               
+                
                 {/*logout action*/}
                 <div>
                     <svg class="Rectangle_9">
@@ -1231,7 +1210,6 @@ class Dashboard extends Component{
                     </svg>
                 </div>
                 
-                <Footer/>
             </React.Fragment>
           );
     
