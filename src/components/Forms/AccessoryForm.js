@@ -6,7 +6,7 @@ import Geosuggest from 'react-geosuggest';
 import "../Geosuggest/Geosuggest.css";
 import Select from 'react-select';
 import TextareaAutosize from 'react-textarea-autosize';
-import {sexs, materials, techniques, use_categories} from "../../utils/options";
+import {sexs, materials, techniques, use_categories, eras} from "../../utils/options";
 import "./Forms.css";
 import axios from 'axios';
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
@@ -55,18 +55,13 @@ class  AccessoryForm extends Component{
             insert: false,
             isNotificationOpen: false,
             //////////////////////////////
-            years: [],
+            years: eras,
         }
         this.onChange = this.onChange.bind(this);
     }
 
     componentDidMount(){
         console.log("props accessory form", this.props);
-        var startYear=1800;
-        for(var i=0; i < 100; i++){
-            this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
-        }
-
         if(this.props.editing){
             let sex;
             let arrSexs=[];

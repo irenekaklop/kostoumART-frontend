@@ -5,12 +5,14 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import Geosuggest from 'react-geosuggest';
 import "../Geosuggest/Geosuggest.css"
-import {sexs, materials, techniques, use_categories} from "../../utils/options";
+import {sexs, materials, techniques, use_categories, eras} from "../../utils/options";
 import "./Forms.css";
 
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 
 import axios from 'axios';
+import { IconButton } from '@material-ui/core';
+import TextEditorDialog from '../Shared/TextEditorDialog';
 
 class  CostumeForm extends Component{
     constructor(props) {
@@ -35,7 +37,8 @@ class  CostumeForm extends Component{
             //Geosuggest
             location: '',
             location_select: '',
-
+            //Text Editor
+            isTextEditorOpen: false,
             //For validation reasons
             description_MAXlegnth: 2080,
             description_status: false,
@@ -55,19 +58,13 @@ class  CostumeForm extends Component{
             insert: false,
             isNotificationOpen: false,
             //////////////////////////////
-            years: [],
+            years: eras,
         }
         this.onChange = this.onChange.bind(this);
         this.handleUseSelect = this.handleUseSelect.bind(this);
     }
 
     componentDidMount(){
-        console.log("props costume form", this.props);
-        var startYear=1800;
-        for(var i=0; i < 100; i++){
-            this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
-        }
-
         if(this.props.editing){
             let sex;
             let arrSexs = [];
@@ -107,6 +104,18 @@ class  CostumeForm extends Component{
             }
         }
         console.log('costume form state', this.state);
+    }
+
+    handleCloseEditor = () => {
+        this.setState({
+            isTextEditorOpen: false,
+        })
+    }
+
+    handleOpenEditor = () => {
+        this.setState({
+            isTextEditorOpen: true,
+        })
     }
 
     handleClose(){
@@ -403,6 +412,7 @@ class  CostumeForm extends Component{
                                     </div>
                                     <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
                                 </div>
+                                <IconButton onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></IconButton>
                                 <TextareaAutosize
                                 id="DescriptionInput"
                                 type='text'
@@ -569,7 +579,9 @@ class  CostumeForm extends Component{
                         
                         </form>
                 </div>
-                
+                <TextEditorDialog
+                isOpen={this.state.isTextEditorOpen}
+                handleClose={this.handleCloseEditor.bind(this)}/>
            </React.Fragment>
            
         )  

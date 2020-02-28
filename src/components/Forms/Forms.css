@@ -142,12 +142,15 @@ textarea {
 }
 
 #ADD {
-  position: absolute;
-  width: 1838.827px;
-  height: 908.067px;
-  left: 69.302px;
-  top: 143.698px;
-  overflow: visible;  
+  margin-top: 39px;
+  width: 1843.697px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow:hidden;
+  position:relative; 
+  background-color: rgba(255,255,255,1);
 }
 
 #FormTitle {
@@ -540,7 +543,6 @@ textarea {
 #Form {
   width: 1838.827px;
   height: 908.067px;
-  background-color: rgba(255,255,255,1);
 }
 
 #ButtonSave {
