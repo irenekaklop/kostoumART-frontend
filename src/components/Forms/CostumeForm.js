@@ -5,69 +5,100 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import Geosuggest from 'react-geosuggest';
 import "../Geosuggest/Geosuggest.css"
-import {sexs, materials, techniques, use_categories} from "../../utils/options";
+import {sexs, materials, techniques, use_categories, eras} from "../../utils/options";
 import "./Forms.css";
 
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 
 import axios from 'axios';
 
-class  CostumeForm extends Component{
+function getCleanItem () {
+    return {
+        name: {
+            value: '',
+            valid: false,
+        },
+        description: {
+            value: '',
+            valid: false,
+        },
+        actors: {
+            value: '',
+            valid: true,
+        },
+        designer: {
+            value: '',
+            valid: true,
+        },
+        parts: {
+            value: '',
+            valid: true,
+        },
+        selectedSexOption: {
+            value: [],
+            valid: false,
+        },
+        selectedUseOption: {
+            value: '',
+            label: '',
+            category: '',
+            valid: false,
+        },
+        selectedMaterialOption: {
+            value: '',
+            valid: false,
+        },
+        selectedTechniqueOption: {
+            value: '',
+            label: '',
+            valid: false,
+        },
+        selectedTPOption: {
+            value: '',
+            label: '',
+            valid: true,
+        },
+        selectedDateOption: {
+            value: '',
+            label: '',
+            valid: false,
+        },
+        //Geosuggest
+        location: {
+            value: '',
+            valid: true,
+        },
+        location_select: {
+            value: '',
+            valid: true,
+        },
+    };
+}
+
+function getCleanState() {
+    return {
+        costume: getCleanItem(),
+        isFormValid: false,
+        enableSelectUse: true,
+        error_description: false,
+        error_duplicate: false,
+        error_missing_value: false,
+    };
+}
+
+class CostumeForm extends Component{
     constructor(props) {
         super(props);
-        this.state = {
-            user_id: this.props.user,
-            costume: null,
-            name: '',
-            descr: '',
-            //For backend insert
-            actors: '',
-            designer: '',
-            parts: '',
-            //Select
-            selectedSexOption: [],
-            selectedUseOption: '',
-            selectedUseCategoryOption: '',
-            selectedMaterialOption: '',
-            selectedTechniqueOption: '',
-            selectedTPOption: '',
-            selectedDateOption: '',
-            //Geosuggest
-            location: '',
-            location_select: '',
-
-            //For validation reasons
-            description_MAXlegnth: 2080,
-            description_status: false,
-            submit: false,
-            redirectToReferrer: false,
-
-            /////////////////////////
-            cond1: false,
-            cond2: true,
-            cond3: false,
-            ////////////////////////
-            enableSelectUse: true,
-            ///////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false,
-            isNotificationOpen: false,
-            //////////////////////////////
-            years: [],
-        }
-        this.onChange = this.onChange.bind(this);
-        this.handleUseSelect = this.handleUseSelect.bind(this);
+        this.state = getCleanState();
+        this.user_id = this.props.user;
+        this.maxLegnth= 2080;
+        this.years= eras;
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
         console.log("props costume form", this.props);
-        var startYear=1800;
-        for(var i=0; i < 100; i++){
-            this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
-        }
-
+        console.log('costume form state', this.state);
         if(this.props.editing){
             let sex;
             let arrSexs = [];
@@ -80,31 +111,78 @@ class  CostumeForm extends Component{
             for(var i=0; i < sex.length; i++){
                 arrSexs.push({value: sex[i], label: sex[i]})
             }
-            this.setState({
-                costume: this.props.costume[0],
-                costume_id: this.props.costume[0].costume_id,
-                name: this.props.costume[0].costume_name,
-                descr: this.props.costume[0].description,
-                actors: this.props.costume[0].actors,
-                designer: this.props.costume[0].designer,
-                parts: this.props.costume[0].parts,
-                selectedDateOption:{value: this.props.costume[0].date, label: this.props.costume[0].date},
-                selectedSexOption: arrSexs,
-                selectedMaterialOption: {value: this.props.costume[0].material, label: this.props.costume[0].material},
-                selectedTechniqueOption: {value: this.props.costume[0].technique, label:  this.props.costume[0].technique},
-                selectedTPOption: {value: this.props.costume[0].tp_title, label:  this.props.costume[0].tp_title},
-                location: this.props.costume[0].location,
-            })
-            if(this.props.uses){
-                for(var i=0; i<this.props.uses.length; i++){
-                    if(this.props.uses[i].useID===this.props.costume[0].useID){
-                        this.setState({
-                            selectedUseCategoryOption: {value: this.props.uses[i].use_category, label: this.props.uses[i].use_category},
-                            selectedUseOption: {value: this.props.uses[i].name, label: this.props.uses[i].name}
-                        })
-                    }
-                }
+            let materials;
+            let arrMaterials = [];
+            if(this.props.costume[0].material.includes(",")){
+                materials = this.props.costume[0].material.split(",");
             }
+            else{
+                materials = [this.props.costume[0].material];
+            }
+            for(var i=0; i < materials.length; i++){
+                arrMaterials.push({value: materials[i], label: materials[i]})
+            }
+            const costumeInfo = {
+                name: {
+                    value: this.props.costume[0].costume_name,
+                    valid: true,
+                },
+                description: {
+                    value: this.props.costume[0].description,
+                    valid: true,
+                },
+                actors: {
+                    value: this.props.costume[0].actors,
+                    valid: true,
+                },
+                designer: {
+                    value: this.props.costume[0].designer,
+                    valid: true,
+                },
+                parts: {
+                    value: this.props.costume[0].parts,
+                    valid: true,
+                },
+                selectedSexOption: {
+                    value: arrSexs,
+                    valid: true,
+                },
+                selectedUseOption: {
+                    value: this.props.costume[0].use_name,
+                    label: this.props.costume[0].use_name,
+                    category: this.props.costume[0].use_category,
+                    valid: true,
+                },
+                selectedMaterialOption: {
+                    value: arrMaterials,
+                    valid: true,
+                },
+                selectedTechniqueOption: {
+                    value: this.props.costume[0].technique,
+                    label: this.props.costume[0].technique,
+                    valid: true,
+                },
+                selectedTPOption: {
+                    value: this.props.costume[0].tp_title,
+                    label: this.props.costume[0].tp_title,
+                    valid: true,
+                },
+                selectedDateOption: {
+                    value: this.props.costume[0].date,
+                    label: this.props.costume[0].date,
+                    valid: true,
+                },
+                //Geosuggest
+                location: {
+                    value: this.props.costume[0].location,
+                    valid: true,
+                },
+                location_select: {
+                    value: this.props.costume[0].location,
+                    valid: true,
+                },
+            }
+            this.setState({costume: costumeInfo})
         }
         console.log('costume form state', this.state);
     }
@@ -114,58 +192,63 @@ class  CostumeForm extends Component{
         this.setState(() => {this.props.handleClose()});
     }
 
-    onChange = ( evt ) => { 
-        this.setState({ [evt.target.name]: evt.target.value }); 
-    };
-
-    handleUseCategorySelect = (selectedUseCategoryOption) => {
-        this.setState({selectedUseCategoryOption});
-        this.setState({enableSelectUse: false});
-    }
-
-    /*For selection of date*/
-    handleDateSelect = (selectedDateOption) => {
-        this.setState({ selectedDateOption});
-        console.log(`Option selected:`, this.state.selectedDateOption);
-    }
-
-    /*For selection of use categories*/
-    handleUseSelect = (selectedUseOption) => {
-        this.setState({ selectedUseOption});
-        console.log(`Option selected:`, this.state.selectedUseOption);
-    }
-
-     /*For selection of theatrical plays*/
-     handleTPSelect = (selectedTPOption) => {
-        this.setState({selectedTPOption});
-        console.log(`Option selected:`, this.state.selectedTPOption);
-    }
-
-    /*For mutli-selection of sex categories*/
-    handleSexSelect = (selectedSexOption) => {
-        this.setState({ selectedSexOption });
-        console.log(`Option selected:`, this.state.selectedSexOption);
-    }
-
-    handleMaterialSelect = (selectedMaterialOption) => {
-        this.setState({ selectedMaterialOption });
-        console.log(`Option selected:`, this.state.selectedMaterialOption);
-    }
-
-    handleTechniqueSelect = (selectedTechniqueOption) => {
-        this.setState({ selectedTechniqueOption });
-        console.log(`Option selected:`, this.state.selectedTechniqueOption);
-    }
-
-    /*Geosuggest functions*/
-    handleLocationChange = location_select => {
-        this.setState({ location_select });
-        console.log("HandleLocationChange:", this.state);
-    };
-
-    handleLocationSelect = (location_select) => {
-        this.setState({ location_select });
-        console.log(`Option selected:`, location_select);
+    handleChange = (field) => (evt) => {
+        let updated = {...this.state.costume};
+        if(field === 'name'){
+            //axios.get('http://88.197.53.80/kostoumart-api/checkDuplicate', {params: {item: 'costume', name: evt.target.value}})
+            axios.get('http://localhost:8108/checkDuplicate', {params: {item: 'costume', name: evt.target.value}})
+            .then(name => {
+                console.log("result from costume", name.data.response);
+                if(name.data.response.length !== 0){
+                    this.createNotification('error-duplicate');
+                    updated[field].valid = false;
+                    return;
+                }
+            })
+            updated[field].value = evt.target.value;
+            updated[field].valid = evt.target.value ? true : false ;
+        }
+        else if(field === 'description'){
+            if(evt.target.value.length > this.maxLegnth){
+                if(!this.state.error_description){
+                    this.setState({error_description: true})
+                    this.createNotification("error-description")
+                }
+                return;
+            }
+            updated[field].value = evt.target.value;
+            updated[field].valid = evt.target.value ? true : false ;
+        }
+        else if(field === 'selectedUseOption'){
+            this.setState({
+                enableSelectUse: false,
+            })
+            updated[field].label = evt.value;
+            updated[field].value = evt.value;
+            updated[field].category = evt.category;
+            updated[field].valid = true;
+        }
+        else if (field === 'selectedDateOption' || field === 'selectedTPOption' || field === 'selectedTechniqueOption'){
+            updated[field].label = evt.value;
+            updated[field].value = evt.value;
+            updated[field].valid = true;
+        }
+        else if (field === 'selectedMaterialOption' || field === 'selectedSexOption'){
+            updated[field].label = evt;
+            updated[field].value = evt;
+            updated[field].valid = (!evt || evt.length===0 ) ? false : true ;
+        }
+        else if (field === 'location_select'){
+            updated[field].value = evt;
+            updated[field].valid = evt ? true : false ;
+        }
+        else{
+            updated[field].value = evt.target.value;
+        }
+        this.setState({
+            costume: updated
+        })
+        console.log(this.state.costume)
     }
         
     handleLocation(){
@@ -188,26 +271,22 @@ class  CostumeForm extends Component{
     
     formValidation () {
         console.log("formValidation", this.state)
-        if(!this.validateInputLength()){
-            return false;
+        let isFormValid = true;
+        for (let formElement in this.state.costume) {
+            isFormValid = isFormValid && this.state.costume[formElement].valid;
         }
-        if(this.handleDuplicate()){
-            return false;
+        if(!isFormValid){
+            this.createNotification('error-missing-value')
         }
-        if(!this.state.name || !this.state.descr|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedMaterialOption){
-            console.log("something is missing");
-            this.createNotification("error-missing-value")
-            return false;
-        }
-        console.log("everything is ok")
-        return true;
+        this.setState({isFormValid})
+        return isFormValid;
     }
 
     handleUpdate = () => {
-        let data = this.state;
+        let data = this.state.costume;
         console.log("updating costume....", data);
-        //axios.post('http://88.197.53.80/kostoumart-api/edit_costume', data)
-        axios.post('http://localhost:8108/edit_costume', data)
+        //axios.post('http://88.197.53.80/kostoumart-api/edit_costume', { data: data, user: this.user_id, _id: this.props.costume[0].costume_id })
+        axios.post('http://localhost:8108/edit_costume', { data: data, user: this.user_id, _id: this.props.costume[0].costume_id})
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")
@@ -216,10 +295,11 @@ class  CostumeForm extends Component{
     }
 
     handleInsert = () => {
-        console.log("inserting", this.state);
-        let data = this.state;
-        //axios.post('http://88.197.53.80/kostoumart-api/costumes', data)
-        axios.post('http://localhost:8108/costumes', data)
+        console.log("inserting", this.state.costume);
+        let data = this.state.costume;
+        console.log(data)
+        //axios.post('http://88.197.53.80/kostoumart-api/costumes', { data: data, user: this.user_id })
+        axios.post('http://localhost:8108/costumes', { data: data, user: this.user_id } )
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){
@@ -229,78 +309,18 @@ class  CostumeForm extends Component{
     }
 
     resetForm () {
-        this.setState({
-            costume: null,
-            name: '',
-            descr: '',
-            //For backend insert
-            actors: '',
-            designer: '',
-            parts: '',
-            //Select
-            selectedSexOption: [],
-            selectedUseOption: '',
-            selectedUseCategoryOption: '',
-            selectedMaterialOption: '',
-            selectedTechniqueOption: '',
-            selectedTPOption: '',
-            selectedDateOption: '',
-            //Geosuggest
-            location: '',
-            location_select: '',
-
-            description_status: false,
-            submit: false,
-            redirectToReferrer: false,
-
-            /////////////////////////
-            cond1: false,
-            cond2: false,
-            cond3: false,
-            ////////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false
-        })
-    }
-
-    /*Functions for description legnth and validation*/
-    decription_legnth(){
-        return this.state.descr.length;
-    }
-
-    handleDuplicate() {
-        const c_list = this.props.costumes;
-        //check if new name already exist
-        for(var i=0; i < c_list.length; i++){
-            if(this.state.name){
-            if(c_list[i].costume_name === this.state.name){
-                if(this.props.editing){
-                    if(this.props.costume[0].costume_name === this.state.name){
-                        return false;
-                    }
-                }
-                this.createNotification('error-duplicate');
-                return true;
-            }
-        }}
-        return false;
-        
-    }
-
-    validateInputLength(){
-        if(this.state.descr && this.state.descr.length>this.state.description_MAXlegnth){
-            console.log("too big or too small description");
-            // Snackbar error for too big description
-            this.createNotification("error-description")
-            return false;
-        }
-        else return true;
+        this.state = getCleanState();
     }
 
     createNotification(type){
         if(type === "error-description"){
+            setTimeout(
+                function() {
+                    this.setState({error_description: false})
+                }
+                .bind(this),
+                2000
+            );
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error("Text should be under 2080 characters",'Too big description!', 2000) }</NotificationContainer>
@@ -334,20 +354,6 @@ class  CostumeForm extends Component{
     }
 
     render(){
-        //For selection of Date
-        const {selectedDateOption} = this.state;
-        //For selection of Sex: 
-        const {selectedSexOption} = this.state;
-        //For selection of Use:
-        const {selectedUseOption, selectedUseCategoryOption} = this.state;
-        //For selection of Material
-        const {selectedMaterialOption} = this.state;
-        //For selection of Technique
-        const {selectedTechniqueOption} = this.state;
-        //For selection of Theatrical Plays
-        const {selectedTPOption} = this.state;
-
-        const {name, descr, designer, actors, parts} = this.state;
 
         const u_options = [];
         const p_options = [];
@@ -378,7 +384,7 @@ class  CostumeForm extends Component{
                 <div id="ADD">
                 <NotificationContainer>{this.createNotification()}</NotificationContainer>
                 <div id="FormTitle">Kουστούμι</div>
-                    <form id="Form" onSubmit={this.submit}><br/>
+                    <form id="Form"><br/>
                             <div id='CostumeName'>
                                 <div id='CostumeNameArea'>   
                                     <div id="CostumeNameLabel">
@@ -387,10 +393,8 @@ class  CostumeForm extends Component{
                                     <input
                                         id="TextArea"
                                         type='text'
-                                        name="name" 
-                                        value={name} 
-                                        onChange={this.onChange}
-                                        required={true}
+                                        value={this.state.costume.name.value} 
+                                        onChange={this.handleChange('name')}
                                         />    
                                 </div>
                             </div>
@@ -401,14 +405,14 @@ class  CostumeForm extends Component{
                                     <div className="Title">
                                             <span>ΠΕΡΙΓΡΑΦΗ *</span>
                                     </div>
-                                    <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
+                                    <div className="Subtitle">({this.maxLegnth-this.state.costume.description.value.length} CHARACTERS REMAINING)</div>
                                 </div>
                                 <TextareaAutosize
                                 id="DescriptionInput"
                                 type='text'
-                                name="descr"
-                                value={descr}
-                                onChange={this.onChange}
+                                name="description"
+                                value={this.state.costume.description.value}
+                                onChange={this.handleChange('description')}
                                 required={true}
                                 />
                                 </div>
@@ -424,8 +428,8 @@ class  CostumeForm extends Component{
                                         className="react-select"
                                         name="selectedUseOption"
                                         required={true}
-                                        value={selectedUseOption}
-                                        onChange={this.handleUseSelect}
+                                        value={this.state.costume.selectedUseOption}
+                                        onChange={this.handleChange('selectedUseOption')}
                                         options={u_options}
                                         closeMenuOnSelect={true}
                                         placeholder={''} />        
@@ -437,18 +441,17 @@ class  CostumeForm extends Component{
                                     <div id="CostumeNameLabel">
                                         <span>YΛΙΚΟ ΚΑΤΑΣΚΕΥΗΣ *</span>
                                     </div>
-                                    
                                     <Select
                                         id="SelectContainer"
                                         className="react-select"
                                         required={true}
-                                        name="selectedMaterialOption"
-                                        value={selectedMaterialOption}
-                                        onChange={this.handleMaterialSelect}
+                                        isMulti
+                                        value={this.state.costume.selectedMaterialOption.value}
+                                        onChange={this.handleChange('selectedMaterialOption')}
                                         options={materials}
                                         placeholder={''}
                                     />
-                               </div>
+                            </div>
                             </div>
                             <br/>
                             <div id='CostumeDate'>
@@ -461,9 +464,9 @@ class  CostumeForm extends Component{
                                     id="SelectContainer"
                                     className="react-select"
                                     name="selectedDateOption"
-                                    value={selectedDateOption}
-                                    onChange={this.handleDateSelect}
-                                    options={this.state.years}
+                                    value={this.state.costume.selectedDateOption}
+                                    onChange={this.handleChange('selectedDateOption')}
+                                    options={eras}
                                     placeholder={''}/>
                             </div>
                             <br/>
@@ -478,8 +481,8 @@ class  CostumeForm extends Component{
                                     className="react-select"
                                     required={true}
                                     isMulti
-                                    value={selectedSexOption}
-                                    onChange={this.handleSexSelect}
+                                    value={this.state.costume.selectedSexOption.value}
+                                    onChange={this.handleChange('selectedSexOption')}
                                     options={sexs}
                                     placeholder={''}/>
                             </div>
@@ -495,8 +498,8 @@ class  CostumeForm extends Component{
                                 className="react-select"
                                 required={true}
                                 name="selectedTechniqueOption"
-                                value={selectedTechniqueOption}
-                                onChange={this.handleTechniqueSelect}
+                                value={this.state.costume.selectedTechniqueOption}
+                                onChange={this.handleChange('selectedTechniqueOption')}
                                 options={techniques}
                                 placeholder={''}
                                 />       
@@ -511,8 +514,8 @@ class  CostumeForm extends Component{
                                 <Select
                                 id="SelectContainer"
                                 className="react-select"
-                                value={selectedTPOption}
-                                onChange={this.handleTPSelect}
+                                value={this.state.costume.selectedTPOption}
+                                onChange={this.handleChange('selectedTPOption')}
                                 name='selectedTPOption'
                                 options={p_options}
                                 placeholder={''}/>         
@@ -527,11 +530,11 @@ class  CostumeForm extends Component{
                                 id="TextArea"
                                 type='text'
                                 name="designer"
-                                value={this.state.designer}
-                                onChange={this.onChange}
+                                value={this.state.costume.designer.value}
+                                onChange={this.handleChange('designer')}
                                 />
                             </div>
-                           
+
                             <br/>
                             <div id='Geosuggest'>
                                 <div id='GeosuggestArea'>
@@ -542,12 +545,12 @@ class  CostumeForm extends Component{
                                 <Geosuggest
                                 className="geosuggest"
                                 placeholder="Αναζήτηση"
-                                initialValue={this.state.location}
+                                initialValue={this.state.costume.location.value}
                                 required={true}
                                 ref={el=>this._geoSuggest=el}
-                                onSuggestSelect={this.handleLocationSelect}
+                                onSuggestSelect={this.handleChange('location_select')}
                                     />
-                                  {this.handleLocation()}
+                                {this.handleLocation()}
                             </div>
                             <br/>
                             <div id='Actors'>
@@ -560,8 +563,8 @@ class  CostumeForm extends Component{
                                 id="TextArea"
                                 type='text'
                                 name="actors"
-                                value={actors}
-                                onChange={this.onChange}/>
+                                value={this.state.costume.actors.value}
+                                onChange={this.handleChange('actors')}/>
                             </div>        
                             <br/><br/><br/>
                             <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>

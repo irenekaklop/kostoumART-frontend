@@ -1,14 +1,42 @@
 export const eras = [{
-  value: '1800',
-  label: '1800'
+  value: 'Αρχαία Ελλάδα',
+  label: 'Αρχαία Ελλάδα',
 },
 {
-  value: '2021',
-  label: '2021'
+  value: 'Μεσαίωνας',
+  label: 'Μεσαίωνας',
 },
 {
-  value: '1802',
-  label: '1802'
+  value: 'Belle Epoque',
+  label: 'Belle Epoque',
+},
+{
+  value: 'Δεκαετία 1950',
+  label: 'Δεκαετία 1950',
+},
+{
+  value: 'Δεκαετία 1960',
+  label: 'Δεκαετία 1960',
+},
+{
+  value: 'Δεκαετία 1970',
+  label: 'Δεκαετία 1970',
+},
+{
+  value: 'Δεκαετία 1980',
+  label: 'Δεκαετία 1980',
+},
+{
+  value: 'Δεκαετία 1990',
+  label: 'Δεκαετία 1990',
+},
+{
+  value: 'Δεκαετία 2000',
+  label: 'Δεκαετία 2000',
+},
+{
+  value: 'Δεκαετία 2010',
+  label: 'Δεκαετία 2010',
 }];
 
 export const sexs = [{
@@ -35,15 +63,15 @@ export const materials = [{
   {
     label: 'Μαλλί',
     value: 'Μαλλί'
-    },
-    {
-      label: 'Βαμβάκι',
-      value: 'Βαμβάκι'
-    },
-    {
-      label: 'Δέρμα',
-      value: 'Δέρμα'
-    }];
+  },
+  {
+    label: 'Βαμβάκι',
+    value: 'Βαμβάκι'
+  },
+  {
+    label: 'Δέρμα',
+    value: 'Δέρμα'
+  }];
 
 export const techniques = [
 {

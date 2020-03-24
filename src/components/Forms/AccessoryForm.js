@@ -6,70 +6,96 @@ import Geosuggest from 'react-geosuggest';
 import "../Geosuggest/Geosuggest.css";
 import Select from 'react-select';
 import TextareaAutosize from 'react-textarea-autosize';
-import {sexs, materials, techniques, use_categories} from "../../utils/options";
+import {sexs, materials, techniques, use_categories, eras} from "../../utils/options";
 import "./Forms.css";
 import axios from 'axios';
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 
+function getCleanItem () {
+    return {
+        name: {
+            value: '',
+            valid: false,
+        },
+        description: {
+            value: '',
+            valid: false,
+        },
+        actors: {
+            value: '',
+            valid: true,
+        },
+        designer: {
+            value: '',
+            valid: true,
+        },
+        selectedSexOption: {
+            value: [],
+            valid: false,
+        },
+        selectedUseOption: {
+            value: '',
+            label: '',
+            category: '',
+            valid: false,
+        },
+        selectedTechniqueOption: {
+            value: '',
+            label: '',
+            valid: false,
+        },
+        selectedTPOption: {
+            value: '',
+            label: '',
+            valid: true,
+        },
+        selectedDateOption: {
+            value: '',
+            label: '',
+            valid: false,
+        },
+        selectedCostumeOption: {
+            value: '',
+            label: '',
+            valid: true,
+        },
+        //Geosuggest
+        location: {
+            value: '',
+            valid: true,
+        },
+        location_select: {
+            value: '',
+            valid: true,
+        },
+    }
+}
+
+function getCleanState () {
+    return {
+        accessory: getCleanItem(),
+        isFormValid: false,
+        error_description: false,
+        error_duplicate: false,
+        error_missing_value: false,
+    }
+}
+
 class  AccessoryForm extends Component{
     constructor(props) {
         super(props);
-        this.state = {
-            user_id: this.props.user,
-            accessory: null,
-            name: '',
-            description: '',
-            usesData: '',
-            costumesData: '',
-            accessory_id: '',
-            actors: '',
-            designer: '',
-            parts: '',
-            //Select
-            selectedSexOption: [],
-            selectedUseOption: '',
-            selectedUseCategoryOption: '',
-            selectedMaterialOption: '',
-            selectedTechniqueOption: '',
-            selectedCostumeOption: '',
-            selectedDateOption: '',
-            selectedTPOption: '',
-            //Geosuggest
-            location: '',
-            location_select: '',
-            //For validation reasons
-            description_MAXlegnth: 2080,
-            description_status: false,
-            submit: false,
-            redirectToReferrer: false,
-            /////////////////////////
-            cond1: false,
-            cond2: true,
-            cond3: false,
-            ////////////////////////
-            enableSelectUse: true,
-            ///////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false,
-            isNotificationOpen: false,
-            //////////////////////////////
-            years: [],
-        }
-        this.onChange = this.onChange.bind(this);
+        this.state = getCleanState();
+        this.user_id = this.props.user;
+        this.maxLegnth= 2080;
+        this.years= eras;
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
         console.log("props accessory form", this.props);
-        var startYear=1800;
-        for(var i=0; i < 100; i++){
-            this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
-        }
-
         if(this.props.editing){
             let sex;
-            let arrSexs=[];
+            let arrSexs = [];
             if(this.props.accessory[0].sex.includes(",")){
                 sex = this.props.accessory[0].sex.split(",");
             }
@@ -79,34 +105,66 @@ class  AccessoryForm extends Component{
             for(var i=0; i < sex.length; i++){
                 arrSexs.push({value: sex[i], label: sex[i]})
             }
-            this.setState({
-                accessory: this.props.accessory[0],
-                accessory_id: this.props.accessory[0].accessory_id,
-                name: this.props.accessory[0].name,
-                description: this.props.accessory[0].description,
-                actors: this.props.accessory[0].actors,
-                designer: this.props.accessory[0].designer,
-                parts: this.props.accessory[0].parts,
-                selectedDateOption: {value: this.props.accessory[0].date, label: this.props.accessory[0].date },
-                selectedSexOption: arrSexs,
-                selectedMaterialOption: {value: this.props.accessory[0].material, label: this.props.accessory[0].material},
-                selectedTechniqueOption: {value: this.props.accessory[0].technique, label: this.props.accessory[0].technique},
-                selectedCostumeOption: {value: this.props.accessory[0].costume_name, label: this.props.accessory[0].costume_name},
-                selectedTPOption: {value: this.props.accessory[0].tp_title, label: this.props.accessory[0].tp_title},
-                location: this.props.accessory[0].location,
-            })
-            if(this.props.uses){
-                for(var i=0; i<this.props.uses.length; i++){
-                    if(this.props.uses[i].useID===this.props.accessory[0].useId){
-                        this.setState({
-                            selectedUseOption: {value: this.props.uses[i].name, label:this.props.uses[i].name, category: this.props.uses[i].use_category }
-                        })
-                    }
-                }
+            const accessoryInfo = {
+                name: {
+                    value: this.props.accessory[0].name,
+                    valid: true,
+                },
+                description: {
+                    value: this.props.accessory[0].description,
+                    valid: true,
+                },
+                actors: {
+                    value: this.props.accessory[0].actors,
+                    valid: true,
+                },
+                designer: {
+                    value: this.props.accessory[0].designer,
+                    valid: true,
+                },
+                selectedSexOption: {
+                    value: arrSexs,
+                    valid: true,
+                },
+                selectedUseOption: {
+                    value: this.props.accessory[0].use_name,
+                    label: this.props.accessory[0].use_name,
+                    category: this.props.accessory[0].use_category,
+                    valid: true,
+                },
+                selectedTechniqueOption: {
+                    value: this.props.accessory[0].technique,
+                    label: this.props.accessory[0].technique,
+                    valid: true,
+                },
+                selectedTPOption: {
+                    value: this.props.accessory[0].tp_title,
+                    label: this.props.accessory[0].tp_title,
+                    valid: true,
+                },
+                selectedDateOption: {
+                    value: this.props.accessory[0].date,
+                    label: this.props.accessory[0].date,
+                    valid: true,
+                },
+                selectedCostumeOption: {
+                    value: this.props.accessory[0].costume_name,
+                    label: this.props.accessory[0].costume_name,
+                    valid: true,
+                },
+                //Geosuggest
+                location: {
+                    value: this.props.accessory[0].location,
+                    valid: true,
+                },
+                location_select: {
+                    value: this.props.accessory[0].location,
+                    valid: true,
+                },
             }
-           
+            this.setState({accessory: accessoryInfo})
         }
-        console.log('state', this.state);
+        console.log('costume form state', this.state);
     }
 
     handleClose(){
@@ -114,58 +172,67 @@ class  AccessoryForm extends Component{
         this.setState(() => {this.props.handleClose()});
     }
 
-    onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
-
-    handleUseCategorySelect = (selectedUseCategoryOption) => {
-        this.setState({selectedUseCategoryOption})
-    }
-
-    /*For selection of date*/
-    handleDateSelect = (selectedDateOption) => {
-        this.setState({ selectedDateOption });
-    }
-
-    /*For selection of use categories*/
-    handleUseSelect = (selectedUseOption) => {
-        this.setState({ selectedUseOption });
-    }
-
-    /*For selection of theatrical plays*/
-    handleCostumeSelect = (selectedCostumeOption) => {
-        this.setState({selectedCostumeOption});
-    }
-
-    handleTPSelect = (selectedTPOption) => {
-        this.setState({selectedTPOption});
-    }
-
-    /*For mutli-selection of sex categories*/
-    handleSexSelect = (selectedSexOption) => {
-        this.setState({ selectedSexOption });
-        console.log(`Option selected:`, this.state.selectedSexOption);
-    }
-
-    handleMaterialSelect = (selectedMaterialOption) => {
-        this.setState({ selectedMaterialOption });
-        console.log(`Option selected:`, this.state.selectedMaterialOption);
-    }
-
-    handleTechniqueSelect = (selectedTechniqueOption) => {
-        this.setState({ selectedTechniqueOption  });
-        console.log(`Option selected:`, this.state.selectedTechniqueOption);
+    handleChange = (field) => (evt) => {
+        console.log(evt)
+        let updated = {...this.state.accessory};
+        if(field === 'name'){
+            //axios.get('http://88.197.53.80/kostoumart-api/checkDuplicate', {params: {item: "accessory", name: evt.target.value}})
+            axios.get('http://localhost:8108/checkDuplicate', {params: {item: 'accessory', name: evt.target.value}})
+            .then( item => {
+                console.log("result from costume", item.data.response);
+                if(item.data.response.length !== 0){
+                    this.createNotification('error-duplicate');
+                    updated[field].valid = false;
+                    return;
+                }
+            })
+            updated[field].value = evt.target.value;
+            updated[field].valid = evt ? true : false ;
+        }
+        else if(field === 'description'){
+            if(evt.target.value.length > this.maxLegnth){
+                if(!this.state.error_description){
+                    this.setState({error_description: true})
+                    this.createNotification("error-description")
+                }
+                return;
+            }
+            updated[field].value = evt.target.value;
+            updated[field].valid = evt ? true : false ;
+        }
+        else if(field === 'selectedUseOption'){
+            this.setState({
+                enableSelectUse: false,
+            })
+            updated[field].label = evt.value;
+            updated[field].value = evt.value;
+            updated[field].category = evt.category;
+            updated[field].valid = true;
+        }
+        else if (field === 'selectedDateOption' || field === 'selectedCostumeOption' || field === 'selectedTPOption' || field === 'selectedTechniqueOption'){
+            updated[field].label = evt.value;
+            updated[field].value = evt.value;
+            updated[field].valid = true;
+        }
+        else if (field === 'selectedMaterialOption' || field === 'selectedSexOption'){
+            updated[field].label = evt;
+            updated[field].value = evt;
+            updated[field].valid = (!evt || evt.length===0 ) ? false : true ;
+        }
+        else if (field === 'location_select'){
+            updated[field].value = evt;
+            updated[field].valid = evt ? true : false ;
+        }
+        else{
+            updated[field].value = evt.target.value;
+        }
+        this.setState({
+            accessory: updated
+        })
+        console.log(this.state.accessory)
     }
 
     /*Geosuggest functions*/
-    handleLocationChange = location_select => {
-        this.setState({ location_select });
-        console.log("HandleLocationChange:", this.state);
-    };
-
-    handleLocationSelect = (location_select) => {
-        this.setState({ location_select });
-        console.log(`Option selected:`, location_select);
-    }
-        
     handleLocation(){
         if(this.state.location_select){
             this.state.location = this.state.location_select.description;
@@ -186,25 +253,21 @@ class  AccessoryForm extends Component{
     
     formValidation () {
         console.log("formValidation", this.state)
-        if(!this.validateInputLength()){
-            return false;
+        let isFormValid = true;
+        for (let formElement in this.state.accessory) {
+            isFormValid = isFormValid && this.state.accessory[formElement].valid;
         }
-        if(this.handleDuplicate()){
-            return false;
+        if(!isFormValid){
+            this.createNotification('error-missing-value')
         }
-        if(!this.state.name || !this.state.description|| !this.state.selectedUseOption || !this.state.selectedTechniqueOption || !this.state.selectedDateOption || !this.state.selectedSexOption){
-            console.log("something is missing");
-            this.createNotification("error-missing-value")
-            return false;
-        }
-        console.log("everything is ok")
-        return true;
+        this.setState({isFormValid})
+        return isFormValid;
     }
 
     handleUpdate = () => {
-        let data = this.state;
-        //axios.post('http://88.197.53.80/kostoumart-api/editAccessory', data)
-        axios.post('http://localhost:8108/editAccessory', data)
+        let data = this.state.accessory;
+        //axios.post('http://88.197.53.80/kostoumart-api/editAccessory',  { data: data, user: this.user_id, _id: this.props.accessory[0].accessory_id})
+        axios.post('http://localhost:8108/editAccessory',  { data: data, user: this.user_id, _id: this.props.accessory[0].accessory_id})
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")
@@ -214,9 +277,9 @@ class  AccessoryForm extends Component{
 
     handleInsert = () => {
         console.log("inserting", this.state);
-        let data = this.state;
-        //axios.post('http://88.197.53.80/kostoumart-api/accessory', data)
-        axios.post('http://localhost:8108/accessory', data)
+        let data = this.state.accessory;
+        //axios.post('http://88.197.53.80/kostoumart-api/accessory', { data: data, user: this.user_id })
+        axios.post('http://localhost:8108/accessory', { data: data, user: this.user_id })
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){
@@ -226,72 +289,18 @@ class  AccessoryForm extends Component{
     }
 
     resetForm () {
-        this.setState({
-            name: '',
-            description: '',
-            actors: '',
-            designer: '',
-            parts: '',
-            //Select
-            selectedSexOption: [],
-            selectedUseOption: '',
-            selectedUseCategoryOption: '',
-            selectedMaterialOption: '',
-            selectedTechniqueOption: '',
-            selectedCostumeOption: '',
-            selectedDateOption: '',
-            //Geosuggest
-            location: '',
-            location_select: '',
-            description_status: false,
-            submit: false,
-            redirectToReferrer: false,
-            /////////////////////////
-            cond1: false,
-            cond2: false,
-            cond3: false,
-            ////////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false
-        })
-    }
-
-    /*Functions for description legnth and validation*/
-    decription_legnth(){
-        return this.state.description.length;
-    }
-
-    handleDuplicate() {
-        const a_list = this.props.accessories;
-        //check if new name already exist
-        for(var i=0; i < a_list.length; i++){
-            if(this.state.name){
-            if(a_list[i].name === this.state.name){
-                if(this.props.editing){
-                    return false;
-                }
-                this.createNotification('error-duplicate');
-                return true;
-            }
-        }}
-        return false;
-        
-    }
-
-    validateInputLength(){
-        if(this.state.description && this.state.description.length>this.state.description_MAXlegnth){
-            console.log("too big or too small description");
-            // Snackbar error for too big description
-            this.createNotification("error-description")
-            return false;
-        }
-        else return true;
+        this.state = getCleanState();
     }
 
     createNotification(type){
         if(type === "error-description"){
+            setTimeout(
+                function() {
+                    this.setState({error_description: false})
+                }
+                .bind(this),
+                2000
+            );
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error("Text should be under 2080 characters",'Too big description!', 2000) }</NotificationContainer>
@@ -325,23 +334,6 @@ class  AccessoryForm extends Component{
     }
 
     render(){
-        //For selection of Date
-        const {selectedDateOption} = this.state;
-        //For selection of Sex: 
-        const {selectedSexOption} = this.state;
-        //For selection of Use:
-        const {selectedUseOption} = this.state;
-        //For selection of Material
-        const {selectedMaterialOption} = this.state;
-        //For selection of Technique
-        const {selectedTechniqueOption} = this.state;
-        //For selection of Costumes
-        const {selectedCostumeOption} = this.state;
-        ///For selection of TP
-        const {selectedTPOption} = this.state;
-
-        const {name, description, designer, actors, parts} = this.state;
-
         const u_options = [];
         const p_options = [];
         const c_options = [];
@@ -378,7 +370,7 @@ class  AccessoryForm extends Component{
                 <div id="ADD">
                     <NotificationContainer>{this.createNotification()}</NotificationContainer>
                     <div id="FormTitle">Συνοδευτικό</div>
-                    <form id='Form' onSubmit={this.submit}><br/>
+                    <form id='Form'><br/>
                         <div id="CostumeName">
                             <div id="CostumeNameArea">
                                 <div id="CostumeNameLabel">
@@ -387,9 +379,8 @@ class  AccessoryForm extends Component{
                                 <input
                                 id='TextArea'
                                 type='text'
-                                name="name"
-                                value={name}
-                                onChange={this.onChange}
+                                value={this.state.accessory.name.value}
+                                onChange={this.handleChange('name')}
                                 required={true}/>
                             </div>
                         </div>
@@ -400,14 +391,14 @@ class  AccessoryForm extends Component{
                                     <div className="Title">
                                             <span>ΠΕΡΙΓΡΑΦΗ *</span>
                                     </div>
-                                    <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
+                                    <div className="Subtitle">({this.maxLegnth-this.state.accessory.description.value.length} CHARACTERS REMAINING)</div>
                                 </div>
                                 <TextareaAutosize
                                 id="DescriptionInput"
                                 type='text'
                                 name="description"
-                                value={description}
-                                onChange={this.onChange}
+                                value={this.state.accessory.description.value}
+                                onChange={this.handleChange('description')}
                                 required={true}
                                 />
                                 </div>
@@ -423,8 +414,8 @@ class  AccessoryForm extends Component{
                                         className="react-select"
                                         name="selectedUseOption"
                                         required={true}
-                                        onChange={this.handleUseSelect}
-                                        value={selectedUseOption}
+                                        onChange={this.handleChange('selectedUseOption')}
+                                        value={this.state.accessory.selectedUseOption}
                                         options={u_options}
                                         placeholder={''} />        
                                 </div>
@@ -440,9 +431,9 @@ class  AccessoryForm extends Component{
                                     id="SelectContainer"
                                     className="react-select"
                                     name="selectedDateOption"
-                                    value={selectedDateOption}
-                                    onChange={this.handleDateSelect}
-                                    options={this.state.years}
+                                    value={this.state.accessory.selectedDateOption}
+                                    onChange={this.handleChange('selectedDateOption')}
+                                    options={this.years}
                                     placeholder={''}/>
                         </div>
                         <br/>
@@ -457,8 +448,8 @@ class  AccessoryForm extends Component{
                                     className="react-select"
                                     required={true}
                                     isMulti
-                                    value={selectedSexOption}
-                                    onChange={this.handleSexSelect}
+                                    value={this.state.accessory.selectedSexOption.value}
+                                    onChange={this.handleChange('selectedSexOption')}
                                     options={sexs}
                                     placeholder={''}/>
                         </div>
@@ -474,8 +465,8 @@ class  AccessoryForm extends Component{
                             className="react-select"
                             required={true}
                             name="selectedTechniqueOption"
-                            value={selectedTechniqueOption}
-                            onChange={this.handleTechniqueSelect}                                
+                            value={this.state.accessory.selectedTechniqueOption}
+                            onChange={this.handleChange('selectedTechniqueOption')}                                
                             options={techniques}
                             placeholder={''}
                             />       
@@ -490,8 +481,8 @@ class  AccessoryForm extends Component{
                                 <Select
                                 id="SelectContainer"
                                 className="react-select"
-                                value={selectedTPOption}
-                                onChange={this.handleTPSelect}
+                                value={this.state.accessory.selectedTPOption}
+                                onChange={this.handleChange('selectedTPOption')}
                                 name='selectedTPOption'
                                 options={p_options}
                                 placeholder={''}/>         
@@ -506,8 +497,8 @@ class  AccessoryForm extends Component{
                             id="TextArea"
                             type='text'
                             name="designer"
-                            value={this.state.designer}
-                            onChange={this.onChange}
+                            value={this.state.accessory.designer.value}
+                            onChange={this.handleChange('designer')}
                             />
                         </div>
                            
@@ -521,10 +512,10 @@ class  AccessoryForm extends Component{
                             <Geosuggest
                             className="geosuggest"
                             placeholder="Αναζήτηση"
-                            initialValue={this.state.location}
+                            initialValue={this.state.accessory.location.value}
                             required={true}
                             ref={el=>this._geoSuggest=el}
-                            onSuggestSelect={this.handleLocationSelect}
+                            onSuggestSelect={this.handleChange('location_select')}
                             />
                             {this.handleLocation()}
                         </div>
@@ -539,8 +530,8 @@ class  AccessoryForm extends Component{
                             id="TextArea"
                             type='text'
                             name="actors"
-                            value={actors}
-                            onChange={this.onChange}/>
+                            value={this.state.accessory.actors.value}
+                            onChange={this.handleChange('actors')}/>
                         </div>
                         <br/>
                         <div id='CostumeUseName'>
@@ -552,8 +543,8 @@ class  AccessoryForm extends Component{
                             <Select
                             id="SelectContainer"
                             className="react-select"
-                            value={selectedCostumeOption}
-                            onChange={this.handleCostumeSelect}
+                            value={this.state.accessory.selectedCostumeOption}
+                            onChange={this.handleChange('selectedCostumeOption')}
                             name='selectedCostumeOption'
                             options={c_options}
                             placeholder={''}/>

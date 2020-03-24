@@ -14,7 +14,6 @@ import ConfirmationDialog from '../Dashboard/ConfirmationDialog.js';
 import "../Dashboard/Dashboard.css"
 
 import jwt_decode from 'jwt-decode';
-import { use_categories, techniques, sexs, materials } from '../../utils/options.js';
 
 import _ from 'lodash'
 
