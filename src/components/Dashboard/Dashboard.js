@@ -243,23 +243,27 @@ class Dashboard extends Component{
             //axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: decoded.role}})
             axios.get("http://localhost:8108/costumes", {params: {user: decoded.role}})
             .then(res => {
-                const costume_data = res.data.response;
-                this.setState({ costume_data });
-                this.setState({
-                    current_costumes: costume_data
-                })
+                if(res.statusText==='OK'){
+                    const costume_data = res.data;
+                    this.setState({ costume_data });
+                    this.setState({
+                        current_costumes: costume_data
+                    })
+                }
             }
             )
         }
         else{
             //axios.get('http://88.197.53.80/kostoumart-api/costumes/',{params: {user: this.state.user.role}})
-            axios.get("http://localhost:8108/costumes",{params: {user: this.state.user.role}})
+            axios.get("http://localhost:8108/costumes", {params: {user: this.state.user.role}})
             .then(res => {
-                const costume_data = res.data.response;
-                this.setState({ costume_data });
-                this.setState({
-                    current_costumes: costume_data
-                })
+                if(res.statusText==='OK'){
+                    const costume_data = res.data;
+                    this.setState({ costume_data });
+                    this.setState({
+                        current_costumes: costume_data
+                    })
+                }
             }
             )
         }
@@ -459,7 +463,7 @@ class Dashboard extends Component{
                 //axios.get('http://88.197.53.80/kostoumart-api/costumes/'+index)
                 axios.get("http://localhost:8108/costumes/"+index)
                 .then(res => {
-                    const costume = res.data.response;
+                    const costume = res.data;
                     this.setState({ costume: costume, editing: true,
                         isCostumeFormOpen: true,});
                 }
@@ -508,8 +512,8 @@ class Dashboard extends Component{
     }
 
     handleCostumeDelete(index){
-        //axios.delete("http://88.197.53.80/kostoumart-api/costumes/", {params: { costume_id: index }})
-        axios.delete("http://localhost:8108/costumes/", {params: { costume_id: index }})
+        //axios.delete("http://88.197.53.80/kostoumart-api/costumes/",+index)
+        axios.delete("http://localhost:8108/costumes/"+index)
         .then(res=> {
             if(res.statusText ==="OK"){
                 let ret=this.createNotification("delete-success");
@@ -561,8 +565,8 @@ class Dashboard extends Component{
     handleConfirmationForDelete(index){
         console.log("Index", index);
         if(this.state.current_tab===0){
-            //axios.get("http://88.197.53.80/kostoumart-api/dependency/",{params: { index: index, column: 'costume' }} )
-            axios.get("http://localhost:8108/dependency/",{params: { index: index, column: 'costume' }} )
+            //axios.get("http://88.197.53.80/kostoumart-api/dependencies/",{params: { index: index, column: 'costume' }} )
+            axios.get("http://localhost:8108/dependencies/", {params: { index: index, column: 'costume' }} )
             .then(res=>{
                 console.log(res.data.response[0].result)
                 if (res.data.response[0].result===1) {
@@ -577,8 +581,8 @@ class Dashboard extends Component{
         }
         //Check if this index is a foreign key in costumes' list before delete
         if(this.state.current_tab===2){
-            //axios.get("http://88.197.53.80/kostoumart-api/dependency/",{params: { index: index, column: 'use' }} )
-            axios.get("http://localhost:8108/dependency/",{params: { index: index, column: 'use' }} )
+            //axios.get("http://88.197.53.80/kostoumart-api/dependencies/",{params: { index: index, column: 'use' }} )
+            axios.get("http://localhost:8108/dependencies/",{params: { index: index, column: 'use' }} )
             .then(res=>{
                 console.log(res.data.response[0].result)
                 if (res.data.response[0].result===1) {
@@ -588,8 +592,8 @@ class Dashboard extends Component{
             })
         }
         else if(this.state.current_tab===3){
-            //axios.get("http://88.197.53.80/kostoumart-api/dependency/",{params: { index: index, column: 'theatrical_play' }} )
-            axios.get("http://localhost:8108/dependency/",{params: { index: index, column: 'theatrical_play' }} )
+            //axios.get("http://88.197.53.80/kostoumart-api/dependencies/",{params: { index: index, column: 'theatrical_play' }} )
+            axios.get("http://localhost:8108/dependencies/",{params: { index: index, column: 'theatrical_play' }} )
             .then(res=>{
                 console.log(res.data.response[0].result)
                 if (res.data.response[0].result===1) {

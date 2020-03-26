@@ -221,6 +221,23 @@ textarea {
   overflow: visible;
 }
 
+#ImagesArea {
+  position: absolute;
+	left: 73.566px;
+	top: 551.599px;
+	overflow: visible;
+	width: 45px;
+  white-space: nowrap;
+	line-height: 13.200000762939453px;
+	margin-top: -1.1000003814697266px;
+	text-align: left;
+	font-family: Roboto-Regular;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 11px;
+	color: rgba(255,222,23,1);
+}
+
 #CostumeUseCategory {
   position: absolute;
   width: 365.137px;
@@ -237,6 +254,7 @@ textarea {
   top: 0px;
   overflow: visible;
 }
+
 #CostumeUseCategoryLabel {
   position: absolute;
   left: 0px;

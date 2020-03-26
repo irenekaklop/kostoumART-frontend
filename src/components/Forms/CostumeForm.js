@@ -72,6 +72,10 @@ function getCleanItem () {
             value: '',
             valid: true,
         },
+        images: {
+            value: '',
+            valid: true,
+        }
     };
 }
 
@@ -102,45 +106,45 @@ class CostumeForm extends Component{
         if(this.props.editing){
             let sex;
             let arrSexs = [];
-            if(this.props.costume[0].sex.includes(",")){
-                sex = this.props.costume[0].sex.split(",");
+            if(this.props.costume.sex.includes(",")){
+                sex = this.props.costume.sex.split(",");
             }
             else{
-                sex = [this.props.costume[0].sex];
+                sex = [this.props.costume.sex];
             }
             for(var i=0; i < sex.length; i++){
                 arrSexs.push({value: sex[i], label: sex[i]})
             }
             let materials;
             let arrMaterials = [];
-            if(this.props.costume[0].material.includes(",")){
-                materials = this.props.costume[0].material.split(",");
+            if(this.props.costume.material.includes(",")){
+                materials = this.props.costume.material.split(",");
             }
             else{
-                materials = [this.props.costume[0].material];
+                materials = [this.props.costume.material];
             }
             for(var i=0; i < materials.length; i++){
                 arrMaterials.push({value: materials[i], label: materials[i]})
             }
             const costumeInfo = {
                 name: {
-                    value: this.props.costume[0].costume_name,
+                    value: this.props.costume.costume_name,
                     valid: true,
                 },
                 description: {
-                    value: this.props.costume[0].description,
+                    value: this.props.costume.description,
                     valid: true,
                 },
                 actors: {
-                    value: this.props.costume[0].actors,
+                    value: this.props.costume.actors,
                     valid: true,
                 },
                 designer: {
-                    value: this.props.costume[0].designer,
+                    value: this.props.costume.designer,
                     valid: true,
                 },
                 parts: {
-                    value: this.props.costume[0].parts,
+                    value: this.props.costume.parts,
                     valid: true,
                 },
                 selectedSexOption: {
@@ -148,9 +152,9 @@ class CostumeForm extends Component{
                     valid: true,
                 },
                 selectedUseOption: {
-                    value: this.props.costume[0].use_name,
-                    label: this.props.costume[0].use_name,
-                    category: this.props.costume[0].use_category,
+                    value: this.props.costume.use_name,
+                    label: this.props.costume.use_name,
+                    category: this.props.costume.use_category,
                     valid: true,
                 },
                 selectedMaterialOption: {
@@ -158,29 +162,33 @@ class CostumeForm extends Component{
                     valid: true,
                 },
                 selectedTechniqueOption: {
-                    value: this.props.costume[0].technique,
-                    label: this.props.costume[0].technique,
+                    value: this.props.costume.technique,
+                    label: this.props.costume.technique,
                     valid: true,
                 },
                 selectedTPOption: {
-                    value: this.props.costume[0].tp_title,
-                    label: this.props.costume[0].tp_title,
+                    value: this.props.costume.tp_title,
+                    label: this.props.costume.tp_title,
                     valid: true,
                 },
                 selectedDateOption: {
-                    value: this.props.costume[0].date,
-                    label: this.props.costume[0].date,
+                    value: this.props.costume.date,
+                    label: this.props.costume.date,
                     valid: true,
                 },
                 //Geosuggest
                 location: {
-                    value: this.props.costume[0].location,
+                    value: this.props.costume.location,
                     valid: true,
                 },
                 location_select: {
-                    value: this.props.costume[0].location,
+                    value: this.props.costume.location,
                     valid: true,
                 },
+                images: {
+                    value: '',
+                    valid: true,
+                }
             }
             this.setState({costume: costumeInfo})
         }
@@ -242,6 +250,9 @@ class CostumeForm extends Component{
             updated[field].value = evt;
             updated[field].valid = evt ? true : false ;
         }
+        else if (field === 'images'){
+            updated[field].value = evt.target.files;
+        }
         else{
             updated[field].value = evt.target.value;
         }
@@ -262,9 +273,11 @@ class CostumeForm extends Component{
         if(this.formValidation()){
             if(this.props.editing){
                 this.handleUpdate();
+                this.handleMediaUpload();
             }
             else{
                 this.handleInsert();
+                this.handleMediaUpload();
             }
         }
     }
@@ -285,8 +298,11 @@ class CostumeForm extends Component{
     handleUpdate = () => {
         let data = this.state.costume;
         console.log("updating costume....", data);
-        //axios.post('http://88.197.53.80/kostoumart-api/edit_costume', { data: data, user: this.user_id, _id: this.props.costume[0].costume_id })
-        axios.post('http://localhost:8108/edit_costume', { data: data, user: this.user_id, _id: this.props.costume[0].costume_id})
+        const mediaData = new FormData() 
+        mediaData.append('media', this.state.costume.images.value)
+        console.log(this.state.costume.images, mediaData)
+        //axios.put('http://88.197.53.80/kostoumart-api/costumes'+ this.props.costume.costume_id, { data: data, mediaData: this.state.costume.images, user: this.user_id })
+        axios.put('http://localhost:8108/costumes/' + this.props.costume.costume_id, { data: data, mediaData: this.state.costume.images, user: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")
@@ -305,6 +321,17 @@ class CostumeForm extends Component{
             if(res.statusText ==="OK"){
                 this.createNotification("insert")
             }
+        })
+    }
+
+    handleMediaUpload = () => {
+        const mediaData = new FormData() 
+        mediaData.append('media', this.state.costume.images.value)
+        console.log("upload",mediaData)
+        axios.post('http://localhost:8108/uploadImage', mediaData)
+        .then(res => {
+            console.log("result from images", res.statusText);
+            
         })
     }
 
@@ -418,6 +445,15 @@ class CostumeForm extends Component{
                                 </div>
                             </div>
                             <br/>
+                            <div id='ImagesArea'>
+                                    <div id="Label">
+                                        <span>EIKONEΣ * </span>
+                                    </div>
+                                    <input 
+                                        type='file'
+                                        onChange={this.handleChange('images')}>
+                                    </input>
+                            </div>
                             <div id='CostumeUseCategory'>
                                 <div id='CostumeUseCategoryArea'>
                                     <div id="CostumeNameLabel">
