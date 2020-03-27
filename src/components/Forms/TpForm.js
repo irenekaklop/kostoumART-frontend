@@ -157,8 +157,8 @@ class TpForm extends Component{
 
     handleUpdate(){
         let data = this.state.theatricalPlay;
-        //axios.post('http://88.197.53.80/kostoumart-api/edit_tp', { data: data, userId: this.user_id, _id: this.props.tp.theatrical_play_id})
-        axios.post('http://localhost:8108/edit_tp', { data: data, userId: this.user_id, _id: this.props.tp.theatrical_play_id})
+        //axios.put('http://88.197.53.80/kostoumart-api/theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data, userId: this.user_id })
+        axios.put('http://localhost:8108/theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -168,8 +168,8 @@ class TpForm extends Component{
 
     handleInsert(){
         let data = this.state.theatricalPlay;
-        //axios.post("http://88.197.53.80/kostoumart-api/tps", { data: data, userId: this.user_id})
-        axios.post('http://localhost:8108/tps', { data: data, userId: this.user_id })
+        //axios.post("http://88.197.53.80/kostoumart-api/theatricalPlays", { data: data, userId: this.user_id})
+        axios.post('http://localhost:8108/theatricalPlays', { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText == 'OK'){
                 this.createNotification('insert')

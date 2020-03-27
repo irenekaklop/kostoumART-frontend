@@ -96,30 +96,30 @@ class  AccessoryForm extends Component{
         if(this.props.editing){
             let sex;
             let arrSexs = [];
-            if(this.props.accessory[0].sex.includes(",")){
-                sex = this.props.accessory[0].sex.split(",");
+            if(this.props.accessory.sex.includes(",")){
+                sex = this.props.accessory.sex.split(",");
             }
             else{
-                sex = [this.props.accessory[0].sex];
+                sex = [this.props.accessory.sex];
             }
             for(var i=0; i < sex.length; i++){
                 arrSexs.push({value: sex[i], label: sex[i]})
             }
             const accessoryInfo = {
                 name: {
-                    value: this.props.accessory[0].name,
+                    value: this.props.accessory.name,
                     valid: true,
                 },
                 description: {
-                    value: this.props.accessory[0].description,
+                    value: this.props.accessory.description,
                     valid: true,
                 },
                 actors: {
-                    value: this.props.accessory[0].actors,
+                    value: this.props.accessory.actors,
                     valid: true,
                 },
                 designer: {
-                    value: this.props.accessory[0].designer,
+                    value: this.props.accessory.designer,
                     valid: true,
                 },
                 selectedSexOption: {
@@ -127,38 +127,38 @@ class  AccessoryForm extends Component{
                     valid: true,
                 },
                 selectedUseOption: {
-                    value: this.props.accessory[0].use_name,
-                    label: this.props.accessory[0].use_name,
-                    category: this.props.accessory[0].use_category,
+                    value: this.props.accessory.use_name,
+                    label: this.props.accessory.use_name,
+                    category: this.props.accessory.use_category,
                     valid: true,
                 },
                 selectedTechniqueOption: {
-                    value: this.props.accessory[0].technique,
-                    label: this.props.accessory[0].technique,
+                    value: this.props.accessory.technique,
+                    label: this.props.accessory.technique,
                     valid: true,
                 },
                 selectedTPOption: {
-                    value: this.props.accessory[0].tp_title,
-                    label: this.props.accessory[0].tp_title,
+                    value: this.props.accessory.tp_title,
+                    label: this.props.accessory.tp_title,
                     valid: true,
                 },
                 selectedDateOption: {
-                    value: this.props.accessory[0].date,
-                    label: this.props.accessory[0].date,
+                    value: this.props.accessory.date,
+                    label: this.props.accessory.date,
                     valid: true,
                 },
                 selectedCostumeOption: {
-                    value: this.props.accessory[0].costume_name,
-                    label: this.props.accessory[0].costume_name,
+                    value: this.props.accessory.costume_name,
+                    label: this.props.accessory.costume_name,
                     valid: true,
                 },
                 //Geosuggest
                 location: {
-                    value: this.props.accessory[0].location,
+                    value: this.props.accessory.location,
                     valid: true,
                 },
                 location_select: {
-                    value: this.props.accessory[0].location,
+                    value: this.props.accessory.location,
                     valid: true,
                 },
             }
@@ -266,8 +266,8 @@ class  AccessoryForm extends Component{
 
     handleUpdate = () => {
         let data = this.state.accessory;
-        //axios.post('http://88.197.53.80/kostoumart-api/editAccessory',  { data: data, user: this.user_id, _id: this.props.accessory[0].accessory_id})
-        axios.post('http://localhost:8108/editAccessory',  { data: data, user: this.user_id, _id: this.props.accessory[0].accessory_id})
+        //axios.put('http://88.197.53.80/kostoumart-api/accessories/'+this.props.accessory.accessory_id,  { data: data, user: this.user_id })
+        axios.put('http://localhost:8108/accessories/'+this.props.accessory.accessory_id,  { data: data, user: this.user_id})
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")

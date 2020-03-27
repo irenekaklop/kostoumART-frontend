@@ -314,8 +314,8 @@ class CostumeForm extends Component{
         console.log("inserting", this.state.costume);
         let data = this.state.costume;
         console.log(data)
-        //axios.post('http://88.197.53.80/kostoumart-api/costumes', { data: data, user: this.user_id })
-        axios.post('http://localhost:8108/costumes', { data: data, user: this.user_id } )
+        //axios.post('http://88.197.53.80/kostoumart-api/costume', { data: data, user: this.user_id })
+        axios.post('http://localhost:8108/costume', { data: data, user: this.user_id } )
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){

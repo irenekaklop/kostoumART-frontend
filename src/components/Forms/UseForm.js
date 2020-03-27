@@ -141,8 +141,8 @@ class UseForm extends Component{
     handleUpdate(){
         const data = this.state.use;
         console.log("updating...", data)
-        //axios.post('http://88.197.53.80/kostoumart-api/edit_use', { data: data, userId: this.user_id, _id: this.props.use.useID})
-        axios.post('http://localhost:8108/edit_use', { data: data, userId: this.user_id, _id: this.props.use.useID})
+        //axios.put('http://88.197.53.80/kostoumart-api/uses/+this.props.use.useID', { data: data, userId: this.user_id })
+        axios.put('http://localhost:8108/uses/'+this.props.use.useID, { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
