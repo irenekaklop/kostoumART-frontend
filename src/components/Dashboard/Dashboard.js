@@ -494,7 +494,7 @@ class Dashboard extends Component{
     }
 
     handleCostumeDelete(index){
-        //axios.delete("http://88.197.53.80/kostoumart-api/costumes/", + index)
+        //axios.delete("http://88.197.53.80/kostoumart-api/costumes/" + index)
         axios.delete("http://localhost:8108/costumes/" + index)
         .then(res=> {
             if(res.statusText ==="OK"){
