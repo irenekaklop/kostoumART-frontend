@@ -103,15 +103,15 @@ export const materials = [{
   {
     label: 'Μαλλί',
     value: 'Μαλλί'
-    },
-    {
-      label: 'Βαμβάκι',
-      value: 'Βαμβάκι'
-    },
-    {
-      label: 'Δέρμα',
-      value: 'Δέρμα'
-    }];
+  },
+  {
+    label: 'Βαμβάκι',
+    value: 'Βαμβάκι'
+  },
+  {
+    label: 'Δέρμα',
+    value: 'Δέρμα'
+  }];
 
 export const techniques = [
 {

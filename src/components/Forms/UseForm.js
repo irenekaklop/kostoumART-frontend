@@ -10,76 +10,116 @@ import "./Forms.css";
 
 import axios from 'axios';
 
+function getCleanItem () {
+    return {
+        name: {
+            value: '',
+            valid: false,
+        },
+        description: {
+            value: '',
+            valid: false,
+        },
+        useCategory: {
+            value: '',
+            label: '',
+            valid: false,
+        },
+        customs: {
+            value: '',
+            valid: true,
+        },
+    }
+}
+
+function getCleanState () {
+    return {
+        use: getCleanItem(),
+        isFormValid: false,
+        error_description: false,
+        error_duplicate: false,
+        error_missing_value: false,
+    }
+}
+
 class UseForm extends Component{
 
     constructor(props){
         super(props);
-        this.state = { 
-            user:{
-                id: this.props.user
-            },
-            u_data: null,
-            use: null,
-            id: '',
-            name: '',
-            description: '',
-            customs: '',
-            other_use: '',
-            exists: '',
-            description_MAXlegnth: 2080,
-            description_status: false,
-            submit: false,
-            redirectToReferrer: false,
-            //Select var
-            selectedCategoryOption: '',
-            ////////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false,
-            ////////////////////////
-           
-        };
-        this.onChange = this.onChange.bind(this);
+        this.state = getCleanState();
+        this.user_id = this.props.user;
+        this.maxLegnth= 2080;
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
         console.log("Props", this.props);
         console.log("Use Form:", this.state);
         if(this.props.editing){
-            this.setState({
-                use: this.props.use,
-                name: this.props.use.name,
-                description: this.props.use.description,
-                customs: this.props.use.customs,
-                selectedCategoryOption: {value: this.props.use.use_category, label: this.props.use.use_category},
-                id: this.props.use.useID
-            })
+            const useInfo = {
+                name: {
+                    value: this.props.use.name,
+                    valid: true,
+                },
+                description: {
+                    value: this.props.use.description,
+                    valid: true,
+                },
+                useCategory: {
+                    value: this.props.use.use_category,
+                    label: this.props.use.use_category,
+                    valid: true,
+                },
+                customs: {
+                    value: this.props.use.customs,
+                    valid: true,
+                }
+            }
+            this.setState({use: useInfo})
         }
     }
 
-    onSelect = ( selectedCategoryOption ) => { 
-        this.setState({ selectedCategoryOption }); 
-        console.log(this.state)
-    };
-
-    onChange = ( evt ) => { 
-        this.setState({ [evt.target.name]: evt.target.value }); 
-        console.log(this.state)
-    };
-
-    decription_legnth(){
-        if(this.state.description){
-            return this.state.description.length;
+    handleChange = (field) => (evt) => {
+        console.log(evt)
+        let updated = {...this.state.use};
+        if(field === 'name'){
+            //axios.get('http://88.197.53.80/kostoumart-api/checkDuplicate', {params: {item: "use", name: evt.target.value}})
+            axios.get('http://localhost:8108/checkDuplicate', {params: {item: 'use', name: evt.target.value}})
+            .then( item => {
+                console.log("result from costume", item.data.response);
+                if(item.data.response.length !== 0){
+                    this.createNotification('error-duplicate');
+                    updated[field].valid = false;
+                    return;
+                }
+            })
+            updated[field].value = evt.target.value;
+            updated[field].valid = evt.target.value ? true : false ;
+        }
+        else if(field === 'description'){
+            if(evt.target.value.length > this.maxLegnth){
+                if(!this.state.error_description){
+                    this.setState({error_description: true})
+                    this.createNotification("error-description")
+                }
+                return;
+            }
+            updated[field].value = evt.target.value;
+            updated[field].valid = evt.target.value ? true : false ;
+        }
+        else if(field === 'useCategory'){
+            updated[field].label = evt.value;
+            updated[field].value = evt.value;
+            updated[field].valid = true;
         }
         else{
-            return 0;
+            updated[field].value = evt.target.value;
+            updated[field].valid = true;
         }
-    }
-
-    handleCategorySelect = (selectedCategoryOption) => {
-        this.setState({ selectedCategoryOption });
-        console.log("Option selected:", this.state.selectedCategoryOption)
+        this.setState({
+            use: updated
+        })
+        console.log(this.state.use)
     }
 
     handleClose(){
@@ -99,10 +139,10 @@ class UseForm extends Component{
     }
 
     handleUpdate(){
-        const data = { id: this.state.id, name: this.state.name, category: this.state.selectedCategoryOption.value, description: this.state.description, customs: this.state.customs }
+        const data = this.state.use;
         console.log("updating...", data)
-        //axios.post('http://88.197.53.80/kostoumart-api/edit_use', data)
-        axios.post('http://localhost:8108/edit_use', data)
+        //axios.put('http://88.197.53.80/kostoumart-api/uses/+'this.props.use.useID, { data: data, userId: this.user_id })
+        axios.put('http://localhost:8108/uses/'+this.props.use.useID, { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -111,9 +151,9 @@ class UseForm extends Component{
     }
 
     handleInsert(){
-        const data = { name: this.state.name, category: this.state.selectedCategoryOption.value, description: this.state.description, customs: this.state.customs }
-        //axios.post("http://88.197.53.80/kostoumart-api/uses", data)
-        axios.post('http://localhost:8108/uses', data)
+        const data = this.state.use;
+        //axios.post("http://88.197.53.80/kostoumart-api/uses",  { data: data, userId: this.user_id})
+        axios.post('http://localhost:8108/uses', { data: data, userId: this.user_id})
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('insert')
@@ -121,76 +161,32 @@ class UseForm extends Component{
        })    
     }
 
-    formValidation(){
+    formValidation () {
         console.log("formValidation", this.state)
-        if(!this.validateInputLength()){
-            return false;
+        let isFormValid = true;
+        for (let formElement in this.state.use) {
+            isFormValid = isFormValid && this.state.use[formElement].valid;
         }
-        if(this.handleDuplicate()){
-            return false;
+        if(!isFormValid){
+            this.createNotification('error-missing-value')
         }
-        if(!this.state.name || !this.state.description || !this.state.selectedCategoryOption){
-            console.log("something is missing");
-            this.createNotification('error-missing-value');
-              return false;
-        }
-        console.log("something is missing");
-        return true;
-    }
-
-    validateInputLength(){
-        if(this.state.description && this.state.description.length>this.state.description_MAXlegnth){
-            console.log("too big or too small description");
-            // Snackbar error for too big description
-            this.createNotification('error-description')
-            return false;
-        }
-        else return true;
-    }
-    
-    //true: Has duplicate, false: Doesn't have
-    handleDuplicate(){
-        const uses_list = this.props.uses;
-        //check this name and use category already exist
-        for(var i=0; i < uses_list.length; i++){
-            if(uses_list[i].name === this.state.name && uses_list[i].use_category=== this.state.selectedCategoryOption){
-                if(this.props.editing){
-                    if(this.state.name===this.props.use.name){
-                        return false;
-                    }
-                }
-                console.log("already exists this name")
-                this.createNotification('error-duplicate')
-                return true;
-            }
-        }
-        return false;
+        this.setState({isFormValid})
+        return isFormValid;
     }
 
     resetForm() {
-        this.setState({
-            use: '',
-            id: '',
-            name: '',
-            description: '',
-            customs: '',
-            other_use: '',
-            exists: '',
-            description_status: false,
-            submit: false,
-            redirectToReferrer: false,
-            //Select var
-            selectedCategoryOption: '',
-            ////////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false,
-        })
+        this.state = getCleanState();
     }
 
     createNotification(type){
         if(type === "error-description"){
+            setTimeout(
+                function() {
+                    this.setState({error_description: false})
+                }
+                .bind(this),
+                2000
+            );
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error("Text should be under 2080 characters",'Too big description!', 2000) }</NotificationContainer>
@@ -224,14 +220,12 @@ class UseForm extends Component{
     }
 
     render(){
-        const {selectedCategoryOption}= this.state;
-        const {name, description, customs} =this.state;
         return(
             <React.Fragment>
                 <div id="ADD">
                     <NotificationContainer>{this.createNotification()}</NotificationContainer>
                     <div id="FormTitle">Χρήση</div><br/>
-                    <form id="Form" onSubmit={this.submit}>
+                    <form id="Form">
                         <div id="Name">
                             <div id="NameArea">
                                 <div id="NameLabel">
@@ -239,9 +233,9 @@ class UseForm extends Component{
                                 </div>
                                 <input
                                 id="TextArea"
-                                value={name}
+                                value={this.state.use.name.value}
                                 name="name"
-                                onChange={this.onChange}
+                                onChange={this.handleChange('name')}
                                 required={true}
                                 />
                             </div>
@@ -256,9 +250,9 @@ class UseForm extends Component{
                                 id="SelectContainer"
                                 className="react-select"
                                 placeholder={''}
-                                name="selectedCategoryOption"
-                                value={selectedCategoryOption}
-                                onChange={this.handleCategorySelect}
+                                name="useCategory"
+                                value={this.state.use.useCategory}
+                                onChange={this.handleChange('useCategory')}
                                 required={true}
                                 options={use_categories}
                                 closeMenuOnSelect={true} 
@@ -272,14 +266,14 @@ class UseForm extends Component{
                                     <div className="Title">
                                             <span>ΠΕΡΙΓΡΑΦΗ</span>
                                     </div>
-                                    <div className="Subtitle">({this.state.description_MAXlegnth-this.decription_legnth()} CHARACTERS REMAINING)</div>
+                                    <div className="Subtitle">({this.maxLegnth-this.state.use.description.value.length} CHARACTERS REMAINING)</div>
                                 </div>
                                 <TextareaAutosize
                                 id="DescriptionInput"
                                 type='text'
                                 name="description"
-                                value={description}
-                                onChange={this.onChange}
+                                value={this.state.use.description.value}
+                                onChange={this.handleChange('description')}
                                 required={true}
                                 />
                             </div>
@@ -293,8 +287,8 @@ class UseForm extends Component{
                                 <input
                                 id="TextArea"
                                 name="customs"
-                                value={customs}
-                                onChange={this.onChange}
+                                value={this.state.use.customs.value}
+                                onChange={this.handleChange('customs')}
                                 required={false}
                                 />
                             </div>
@@ -303,8 +297,7 @@ class UseForm extends Component{
                         <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>
                         <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
                     </form>
-                </div>
-                
+                </div>    
             </React.Fragment>
         )
     }

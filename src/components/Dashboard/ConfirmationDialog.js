@@ -3,11 +3,7 @@ import React, {Component} from 'react';
 import {Dialog, DialogTitle, DialogContent, DialogActions, Button} from '@material-ui/core';
 
 class ConfirmationDialog extends Component{
-
-    constructor(props){
-        super(props);
-    }
-
+    
     render(){
         return(
             <div>

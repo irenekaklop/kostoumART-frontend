@@ -5,86 +5,147 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 import "./Forms.css";
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 import axios from 'axios';
+import { eras } from '../../utils/options';
+
+function getCleanItem () {
+    return {
+        name: {
+            value: '',
+            valid: false,
+        },
+        theater: {
+            value: '',
+            valid: false,
+        },
+        director: {
+            value: '',
+            valid: false,
+        },
+        actors: {
+            value: '',
+            valid: true,
+        },
+        dates: {
+            value: null,
+            valid: false
+        }
+    }
+}
+
+function getCleanState () {
+    return {
+        theatricalPlay: getCleanItem(),
+        isFormValid: false,
+        error_description: false,
+        error_duplicate: false,
+        error_missing_value: false,
+    }
+}
 
 class TpForm extends Component{
-
     constructor(props){
         super(props);
-        this.state = { 
-            tp_data: null,
-            theatrical_play_id: '',
-            name: '',
-            theater: '',
-            date: [],
-            actors: '',
-            director: '',
-            years: [],
-            user_id: this.props.user,
-            submit: false,
-            redirectToReferrer: false,
-            ////////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false
-        };
-        this.onChange = this.onChange.bind(this);
+        this.state = getCleanState();
+        this.user_id = this.props.user;
+        this.maxLegnth= 2080;
+        this.years = [];
+        var startYear=1900;
+        for(var i=0; i < 200; i++){
+            this.years.push({value: (startYear+i).toString(), label:  startYear+i});
+        }
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
-        var startYear=1900;
-        for(var i=0; i < 200; i++){
-            this.state.years.push({value: (startYear+i).toString(), label:  startYear+i});
-        }
         if(this.props.editing){
             let d_arr=[];
-            if(this.props.tp.date){
             if(this.props.tp.date.includes(",")){
                 d_arr = this.props.tp.date.split(",");
-
-            }
-            else if(this.props.tp.date.length===0){
-                d_arr = []
             }
             else{
                 d_arr = [this.props.tp.date];
-            }}
+            }
             let arrDates=[];
             for(var i=0; i < d_arr.length; i++){
                 arrDates.push({value: d_arr[i], label: d_arr[i]})
             }
-            this.setState({
-                tp: this.props.tp,
-                name: this.props.tp.title,
-                theater: this.props.tp.theater,
-                actors: this.props.tp.actors,
-                director: this.props.tp.director,
-                date: arrDates,
-                theatrical_play_id: this.props.tp.theatrical_play_id,
-                tp_data: this.props.theatrical_plays
-                })
+            const tpInfo = {
+                name: {
+                    value: this.props.tp.title,
+                    valid: true,
+                },
+                theater: {
+                    value: this.props.tp.theater,
+                    valid: true
+                },
+                director: {
+                    value: this.props.tp.director,
+                    valid: true
+                },
+                actors: {
+                    value: this.props.tp.actors,
+                    valid: true,
+                },
+                dates: {
+                    value: arrDates,
+                    valid: true
+                }
+            }
+            this.setState({theatricalPlay: tpInfo})
         }
         console.log("TP state", this.state)
         console.log("TP props", this.props)
     }
 
-    onChange = ( evt ) => { 
-        this.setState({ [evt.target.name]: evt.target.value }); 
-        console.log(this.state)
-    };
-
-    handleDateSelect = (date) => {
-        console.log(date)
-        this.setState({date})
+    handleChange = (field) => (evt) => {
+        let updated = {...this.state.theatricalPlay};
+        console.log("tp evt", evt)
+        if(field === 'name'){
+            //axios.get('http://88.197.53.80/kostoumart-api/checkDuplicate', {params: {item: 'theatrical_play', name: evt.target.value}})
+            axios.get('http://localhost:8108/checkDuplicate', {params: {item: 'theatrical_play', name: evt.target.value}})
+            .then(name => {
+                console.log("result from checkDuplicate", name.data.response);
+                if(name.data.response.length !== 0){
+                    this.createNotification('error-duplicate');
+                    updated[field].valid = false;
+                    return;
+                }
+            })
+            updated[field].value = evt.target.value;
+            updated[field].valid =  evt.target.value ? true : false ;
+        }
+        else if(field === 'description'){
+            if(evt.target.value.length > this.maxLegnth ){
+                if(!this.state.error_description){
+                    this.setState({error_description: true})
+                    this.createNotification("error-description")
+                }
+                return;
+            }
+            updated[field].value = evt.target.value;
+            updated[field].valid = evt.target.value ? true : false ;
+        }
+        else if (field === 'dates'){
+            updated[field].value = evt;
+            updated[field].valid = (!evt || evt.length===0 ) ? false : true ;
+        }
+        else{
+            updated[field].value = evt.target.value;
+            updated[field].valid = evt.target.value ? true : false ;
+        }
+        this.setState({
+            theatricalPlay: updated
+        })
+        console.log(this.state.theatricalPlay)
     }
-
+   
     handleClose(){
         this.resetForm();
         this.setState(() => {this.props.handleClose()});
     }
 
     handleSubmit = () => {
-        if(this.formValidate()){
+        if(this.formValidation()){
             if(this.props.editing){
                 this.handleUpdate();
             }
@@ -95,16 +156,9 @@ class TpForm extends Component{
     }
 
     handleUpdate(){
-        let dates='';
-        for(var i=0; i < this.state.date.length; i++){
-            dates = dates+this.state.date[i].value;
-            if(i != this.state.date.length-1){
-                dates=dates+','
-            }
-        }
-        let data ={theatrical_play_id: this.state.theatrical_play_id, title: this.state.name, date: dates, actors: this.state.actors, director: this.state.director, theater: this.state.theater, userId: this.state.user_id};
-        //axios.post('http://88.197.53.80/kostoumart-api//edit_tp', data)
-        axios.post('http://localhost:8108/edit_tp', data)
+        let data = this.state.theatricalPlay;
+        //axios.put('http://88.197.53.80/kostoumart-api/theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data, userId: this.user_id })
+        axios.put('http://localhost:8108/theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -113,17 +167,9 @@ class TpForm extends Component{
     }
 
     handleInsert(){
-        let dates='';
-        for(var i=0; i < this.state.date.length; i++){
-            dates = dates+this.state.date[i].value;
-            if(i != this.state.date.length-1){
-                dates=dates+','
-            }
-        }
-        console.log("dates", dates);
-        let data ={title: this.state.name, date: dates, actors: this.state.actors, director: this.state.director, theater: this.state.theater, userId: this.state.user_id};
-        //axios.post("http://88.197.53.80/kostoumart-api/tps", data)
-        axios.post('http://localhost:8108/tps', data)
+        let data = this.state.theatricalPlay;
+        //axios.post("http://88.197.53.80/kostoumart-api/theatricalPlays", { data: data, userId: this.user_id})
+        axios.post('http://localhost:8108/theatricalPlays', { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText == 'OK'){
                 this.createNotification('insert')
@@ -131,58 +177,32 @@ class TpForm extends Component{
           })
     }
 
-    formValidate(){
-        if(!this.state.name || !this.state.theater || !this.state.director){
-            console.log("something is missing");
+    formValidation () {
+        console.log("formValidation", this.state)
+        let isFormValid = true;
+        for (let formElement in this.state.theatricalPlay) {
+            isFormValid = isFormValid && this.state.theatricalPlay[formElement].valid;
+        }
+        if(!isFormValid){
             this.createNotification('error-missing-value')
-            return false;
         }
-        if(this.handleDuplicate()){
-            return false;
-        }
-        return true;
+        this.setState({isFormValid})
+        return isFormValid;
     }
 
-    handleDuplicate (){
-        const tp_list = this.props.theatrical_plays;
-        //check this name and use category already exist
-        for(var i=0; i < tp_list.length; i++){
-            console.log(tp_list[i].title, this.state.name )
-            if(tp_list[i].title === this.state.name){
-                if(this.props.editing){
-                    if(this.props.tp.title === this.state.name){
-                        return false;
-                    }
-                }
-                console.log("already exists this name")
-                this.createNotification('error-duplicate')
-                return true;
-            }
-        }
-        return false;
-    }
-       
     resetForm() {
-        this.setState( { 
-            theatrical_play_id: '',
-            name: '',
-            theater: '',
-            date: [],
-            actors: '',
-            director: '',
-            user_id:'',
-            submit: false,
-            redirectToReferrer: false,
-            ////////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false
-        });
+        this.state = getCleanState();
     }
 
     createNotification(type){
         if(type === "error-description"){
+            setTimeout(
+                function() {
+                    this.setState({error_description: false})
+                }
+                .bind(this),
+                2000
+            );
             return(
                 <div>
                     <NotificationContainer>{ NotificationManager.error("Text should be under 2080 characters",'Too big description!', 2000) }</NotificationContainer>
@@ -217,9 +237,6 @@ class TpForm extends Component{
 
 
     render(){
-        const {name, theater, director, date} = this.state;
-        console.log(this.state)
-        
         return(
             <React.Fragment>
                 <div id="ADD">
@@ -235,8 +252,8 @@ class TpForm extends Component{
                                 id="TextArea"
                                 type='text'
                                 name="name" 
-                                value={name} 
-                                onChange={this.onChange}
+                                value={this.state.theatricalPlay.name.value} 
+                                onChange={this.handleChange('name')}
                                 required={true}
                                 />
                             </div>    
@@ -251,8 +268,8 @@ class TpForm extends Component{
                             id="TextArea"
                             type='text'
                             name="director"
-                            value={director} 
-                            onChange={this.onChange}
+                            value={this.state.theatricalPlay.director.value} 
+                            onChange={this.handleChange('director')}
                             required={true}
                             />
                             </div>
@@ -267,8 +284,8 @@ class TpForm extends Component{
                                 id="TextArea"
                                 type='text'
                                 name="theater"
-                                value={theater} 
-                                onChange={this.onChange}
+                                value={this.state.theatricalPlay.theater.value} 
+                                onChange={this.handleChange('theater')}
                                 required={false}
                                 />
                             </div>
@@ -284,10 +301,10 @@ class TpForm extends Component{
                                 className="react-select"
                                 placeholder={''}
                                 isMulti
-                                name="date"
-                                options={this.state.years}
-                                value={date}
-                                onChange={this.handleDateSelect}
+                                name="dates"
+                                options={this.years}
+                                value={this.state.theatricalPlay.dates.value}
+                                onChange={this.handleChange('dates')}
                                 closeMenuOnSelect={true} 
                                 />
                             </div>

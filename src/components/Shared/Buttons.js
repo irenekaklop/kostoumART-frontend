@@ -122,7 +122,7 @@ class CancelButton extends Component {
 class ApplyButton extends Component {
     render(){
         return(
-            <IconButton>
+            <div className="ApplyButton">
                 <svg class="Path_28" viewBox="2213.628 737.769 104.628 37.786">
                     <path fill="rgba(0,0,0,0)" stroke="rgba(255,222,23,1)" stroke-width="0.7817211747169495px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_28" d="M 2299.363037109375 775.5549926757812 C 2309.797119140625 775.5549926757812 2318.256103515625 767.0969848632812 2318.256103515625 756.6630249023438 C 2318.256103515625 746.22802734375 2309.797119140625 737.656982421875 2299.363037109375 737.77001953125 L 2232.52099609375 737.77001953125 C 2222.0869140625 737.656982421875 2213.6279296875 746.22802734375 2213.6279296875 756.6630249023438 C 2213.6279296875 767.0969848632812 2222.0859375 775.5549926757812 2232.52099609375 775.5549926757812 L 2299.363037109375 775.5549926757812 Z">
                     </path>
@@ -131,7 +131,7 @@ class ApplyButton extends Component {
                 <div id="_________gh">
                     <span>ΕΦΑΡΜΟΓΗ</span>
                 </div>
-            </IconButton>
+            </div>
             
         )
 
@@ -141,7 +141,7 @@ class ApplyButton extends Component {
 class ResetButton extends Component {
     render(){
         return(
-            <IconButton>
+            <div className="ResetButton">
                 <svg class="Path_29" viewBox="2406.15 737.769 104.629 37.786">
                     <path fill="rgba(0,0,0,0)" stroke="rgba(199,199,199,1)" stroke-width="0.7817211747169495px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Path_29" d="M 2491.885986328125 775.5549926757812 C 2502.320068359375 775.5549926757812 2510.779052734375 767.0969848632812 2510.779052734375 756.6630249023438 C 2510.779052734375 746.22802734375 2502.319091796875 737.656982421875 2491.885986328125 737.77001953125 L 2425.04296875 737.77001953125 C 2414.610107421875 737.656982421875 2406.14990234375 746.22802734375 2406.14990234375 756.6630249023438 C 2406.14990234375 767.0969848632812 2414.60888671875 775.5549926757812 2425.04296875 775.5549926757812 L 2491.885986328125 775.5549926757812 Z">
                     </path>
@@ -149,7 +149,7 @@ class ResetButton extends Component {
                 <div id="__________gj">
                     <span>ΕΠΑΝΑΦΟΡΑ</span>
                 </div>
-            </IconButton>
+            </div>
             
         )
 

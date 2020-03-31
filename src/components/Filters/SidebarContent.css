@@ -139,6 +139,7 @@
     left: 55.4px;
     top: 732.313px;
     background-color: white;
+    cursor: pointer;
 }
 
 #ButtonApply:hover {
@@ -153,6 +154,7 @@
     left: 217.522px;
     top: 732.313px;
     background-color: white;
+    cursor: pointer;
 }
 
 
