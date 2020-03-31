@@ -84,58 +84,11 @@ function getCleanState () {
 class  AccessoryForm extends Component{
     constructor(props) {
         super(props);
-<<<<<<< HEAD
-        this.state = {
-            user_id: this.props.user,
-            accessory: null,
-            name: '',
-            description: '',
-            usesData: '',
-            costumesData: '',
-            accessory_id: '',
-            actors: '',
-            designer: '',
-            parts: '',
-            //Select
-            selectedSexOption: [],
-            selectedUseOption: '',
-            selectedUseCategoryOption: '',
-            selectedMaterialOption: '',
-            selectedTechniqueOption: '',
-            selectedCostumeOption: '',
-            selectedDateOption: '',
-            selectedTPOption: '',
-            //Geosuggest
-            location: '',
-            location_select: '',
-            //For validation reasons
-            description_MAXlegnth: 2080,
-            description_status: false,
-            submit: false,
-            redirectToReferrer: false,
-            /////////////////////////
-            cond1: false,
-            cond2: true,
-            cond3: false,
-            ////////////////////////
-            enableSelectUse: true,
-            ///////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false,
-            isNotificationOpen: false,
-            //////////////////////////////
-            years: eras,
-        }
-        this.onChange = this.onChange.bind(this);
-=======
         this.state = getCleanState();
         this.user_id = this.props.user;
         this.maxLegnth= 2080;
         this.years= eras;
         this.handleChange = this.handleChange.bind(this);
->>>>>>> 0a4427215e5f566322cbc0f9914e1b3fd562e7ac
     }
 
     componentDidMount(){

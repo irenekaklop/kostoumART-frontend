@@ -14,59 +14,6 @@ import axios from 'axios';
 import { IconButton } from '@material-ui/core';
 import TextEditorDialog from '../Shared/TextEditorDialog';
 
-<<<<<<< HEAD
-class  CostumeForm extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            user_id: this.props.user,
-            costume: null,
-            name: '',
-            descr: '',
-            //For backend insert
-            actors: '',
-            designer: '',
-            parts: '',
-            //Select
-            selectedSexOption: [],
-            selectedUseOption: '',
-            selectedUseCategoryOption: '',
-            selectedMaterialOption: '',
-            selectedTechniqueOption: '',
-            selectedTPOption: '',
-            selectedDateOption: '',
-            //Geosuggest
-            location: '',
-            location_select: '',
-            //Text Editor
-            isTextEditorOpen: false,
-            //For validation reasons
-            description_MAXlegnth: 2080,
-            description_status: false,
-            submit: false,
-            redirectToReferrer: false,
-
-            /////////////////////////
-            cond1: false,
-            cond2: true,
-            cond3: false,
-            ////////////////////////
-            enableSelectUse: true,
-            ///////////////////////
-            error_description: false,
-            error_duplicate: false,
-            error_missing_value: false,
-            insert: false,
-            isNotificationOpen: false,
-            //////////////////////////////
-            years: eras,
-        }
-        this.onChange = this.onChange.bind(this);
-        this.handleUseSelect = this.handleUseSelect.bind(this);
-    }
-
-    componentDidMount(){
-=======
 function getCleanItem () {
     return {
         name: {
@@ -158,7 +105,6 @@ class CostumeForm extends Component{
     componentDidMount(){
         console.log("props costume form", this.props);
         console.log('costume form state', this.state);
->>>>>>> 0a4427215e5f566322cbc0f9914e1b3fd562e7ac
         if(this.props.editing){
             let sex;
             let arrSexs = [];
