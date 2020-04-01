@@ -406,13 +406,14 @@ class Dashboard extends Component{
     }
 
     handleTabChange = (value) => {
-        //If screen is on a Form close it.
-        if(this.state.isCostumeFormOpen || this.state.isUseFormOpen || this.state.isTPFormOpen || this.state.isAccessoryFormOpen){
-            this.handleCloseDialog();
-        }
         //Refresh Tables
         if(value===0){
-            this.getCostumes();
+            if(this.state.filters.length!==0){
+                this.applyFilters();
+            }
+            else{
+                this.getCostumes();
+            }
         }
         else if(value===1){
             this.getAccessories();
