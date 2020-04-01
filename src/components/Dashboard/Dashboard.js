@@ -919,9 +919,9 @@ class Dashboard extends Component{
 
                 {/*Tab panels*/}
                 {this.state.current_tab===0 && !this.state.isCostumeFormOpen &&
-                    <div className="TableContainer">
-                        <table className="Table">
-                                <thead className="TableHead">
+                    <div className="panel-container">
+                        <table className="table">
+                                <thead className="table-head">
                                 <tr>
                                     <th
                                     id="ColumnImageCostume"
@@ -981,20 +981,21 @@ class Dashboard extends Component{
                                     id="th_actions"></th>
                                     </tr> 
                                 </thead>
-                                <tbody className="TableBody">
+                                <tbody className="table-body">
                                     {this.renderTableCostumesData()} 
                                 </tbody>
                             </table>
                         
-                        <button className="ButtonAdd" onClick={()=>this.handleAddCostume()}>                                
+                        <button className="button-insert" onClick={()=>this.handleAddCostume()}>                                
                             <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
                             <span id="ButtonAddText">προσθήκη</span>
                         </button>
-                        <Footer/>
                     </div>
                 }
+
+                <Footer/>
                
-                {this.state.isCostumeFormOpen ?(
+                {this.state.current_tab===0 && this.state.isCostumeFormOpen ? (
                     console.log("Form should be called"),
                     <div id="TabPanel">
                         <CostumeForm
@@ -1013,7 +1014,7 @@ class Dashboard extends Component{
                     
                 }
 
-                {this.state.isAccessoryFormOpen ?(    
+                {this.state.current_tab===1 && this.state.isAccessoryFormOpen ?(    
                     <div id="TabPanel">
                     <AccessoryForm
                     handleClose={this.handleCloseDialog.bind(this)}
@@ -1030,9 +1031,9 @@ class Dashboard extends Component{
                     <div></div>
                 }
                 {this.state.current_tab===1 && !this.state.isAccessoryFormOpen&&
-                    <div className="TableContainer">
-                        <table className="Table">
-                            <thead className="TableHead">    
+                   <div className="panel-container">
+                        <table className="table">
+                           <thead className="table-head">
                                 <tr>
                                     <th sorted={column === 'name' ? direction : null}
                                     onClick={this.handleSort('name')}><sthong>ONOMA</sthong></th>
@@ -1065,17 +1066,17 @@ class Dashboard extends Component{
                                     <th id="th_actions"></th>
                                 </tr>
                             </thead>
-                            <tbody className="TableBody">{this.renderTableAccessoriesData()} </tbody>
+                            <tbody className="table-body">{this.renderTableAccessoriesData()} </tbody>
                         </table>
                                                
-                        <button className="ButtonAdd" onClick={() => this.handleAddAccessory()}>
+                        <button className="button-insert" onClick={() => this.handleAddAccessory()}>
                             <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
                             <span id="ButtonAddText">προσθήκη</span>
                         </button>
                         <Footer/>
                     </div>
                 }
-                {this.state.isUseFormOpen ? (
+                {this.state.current_tab===2 && this.state.isUseFormOpen ? (
                     <div id="TabPanel">
                     <UseForm 
                     handleClose={this.handleCloseDialog.bind(this)}
@@ -1090,9 +1091,9 @@ class Dashboard extends Component{
                 :
                 <div></div>}
                 {this.state.current_tab===2 && !this.state.isUseFormOpen &&
-                        <div className="TableContainer">
-                            <table className="Table">
-                            <thead className="TableHead">
+                   <div className="panel-container">
+                        <table className="table">
+                               <thead className="table-head">
                                 <tr>
                                 <th
                                 id="ColumnName"
@@ -1122,16 +1123,16 @@ class Dashboard extends Component{
                                 <th id="th_actions"></th>
                                 </tr>
                             </thead>
-                            <tbody className="TableBody">{this.renderTableUsesData()}</tbody>
+                            <tbody className="table-body">{this.renderTableUsesData()}</tbody>
                             </table>
-                        <button className="ButtonAdd" onClick={() => this.handleAddUse()}>
+                        <button className="button-insert" onClick={() => this.handleAddUse()}>
                             <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
                             <span id="ButtonAddText">προσθήκη</span>
                         </button>
                         <Footer/>
                         </div>
                 }
-                {this.state.isTPFormOpen ? (
+                {this.state.current_tab===3 && this.state.isTPFormOpen ? (
                     <div id="TabPanel">
                     <TpForm
                     isOpen={this.state.isTPFormOpen}
@@ -1145,9 +1146,9 @@ class Dashboard extends Component{
                 )
                 : <div></div>   }
                 {this.state.current_tab===3 && !this.state.isTPFormOpen &&
-                        <div className="TableContainer">
-                            <table className="Table">
-                            <thead className="TableHead">
+                    <div className="panel-container">
+                        <table className="table">
+                            <thead className="table-head">
                                 <tr>
                                     <th 
                                     id="ColumnName"
@@ -1168,9 +1169,9 @@ class Dashboard extends Component{
                                     <th id="th_actions"></th>
                                 </tr>
                             </thead>
-                            <tbody className="TableBody">{this.renderTableTPsData()} </tbody>
+                            <tbody className="table-body">{this.renderTableTPsData()} </tbody>
                             </table>
-                            <button className="ButtonAdd" onClick={() => this.handleAddTP()}>
+                            <button className="button-insert" onClick={() => this.handleAddTP()}>
                                 <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
                                 <span id="ButtonAddText">προσθήκη</span>
                             </button>
@@ -1185,7 +1186,6 @@ class Dashboard extends Component{
                 handleClose={this.handleCloseConfirmationDialog.bind(this)}
                 handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
 
-               
                 
                 {/*logout action*/}
                 <div>

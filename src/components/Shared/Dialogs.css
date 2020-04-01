@@ -1,3 +1,34 @@
-.Dialog {
-    width: 900px;
+
+#Editor {
+    width: 1200px;
+    min-height: 340.87px;
+    max-height: 350px;
+    line-height: 18px;    
+    margin-top: -1.5px;
+    vertical-align: bottom;
+    text-align: left;
+    font-family: RobotoSlab-Light;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    border-bottom: 1px solid rgba(255,222,23,1);
+    border-radius: 0px!important;
+    resize: vertical;
+  }
+
+#CheckButton {
+    background-color: green;
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+}
+
+#CheckButton:hover {
+    background-color: rgba(255, 255, 0, 0.75);
+}
+
+#button-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

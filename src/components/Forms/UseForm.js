@@ -7,6 +7,8 @@ import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 import TextareaAutosize from 'react-textarea-autosize';
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import "./Forms.css";
+import { IconButton } from '@material-ui/core';
+import TextEditorDialog from '../Shared/TextEditorDialog';
 
 import axios from 'axios';
 
@@ -36,6 +38,7 @@ function getCleanState () {
     return {
         use: getCleanItem(),
         isFormValid: false,
+        isTextEditorOpen: false,
         error_description: false,
         error_duplicate: false,
         error_missing_value: false,
@@ -77,6 +80,29 @@ class UseForm extends Component{
             }
             this.setState({use: useInfo})
         }
+    }
+
+    handleCloseEditor = (EditorData) => {
+        this.setState({
+            isTextEditorOpen: false,
+        })
+        let updated = {...this.state.use};
+        if(EditorData.length > this.maxLegnth){
+            if(!this.state.error_description){
+                this.setState({error_description: true})
+                this.createNotification("error-description")
+            }
+            return;
+        }
+        updated['description'].value = EditorData;
+        updated['description'].valid = EditorData ? true : false ;
+        console.log("Description of editor", EditorData);
+    }
+
+    handleOpenEditor = () => {
+        this.setState({
+            isTextEditorOpen: true,
+        })
     }
 
     handleChange = (field) => (evt) => {
@@ -268,6 +294,7 @@ class UseForm extends Component{
                                     </div>
                                     <div className="Subtitle">({this.maxLegnth-this.state.use.description.value.length} CHARACTERS REMAINING)</div>
                                 </div>
+                                <IconButton onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></IconButton>
                                 <TextareaAutosize
                                 id="DescriptionInput"
                                 type='text'
@@ -297,7 +324,11 @@ class UseForm extends Component{
                         <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>
                         <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
                     </form>
-                </div>    
+                </div>
+                <TextEditorDialog
+                isOpen={this.state.isTextEditorOpen}
+                data={this.state.use.description.value}
+                handleCloseEditor={this.handleCloseEditor.bind()}/>
             </React.Fragment>
         )
     }

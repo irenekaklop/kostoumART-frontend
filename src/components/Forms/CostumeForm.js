@@ -85,6 +85,7 @@ function getCleanState() {
     return {
         costume: getCleanItem(),
         isFormValid: false,
+        isTextEditorOpen: false,
         enableSelectUse: true,
         error_description: false,
         error_duplicate: false,
@@ -197,10 +198,21 @@ class CostumeForm extends Component{
         console.log('costume form state', this.state);
     }
 
-    handleCloseEditor = () => {
+    handleCloseEditor = (CostumeDescription) => {
         this.setState({
             isTextEditorOpen: false,
         })
+        let updated = {...this.state.costume};
+        if(CostumeDescription.length > this.maxLegnth){
+            if(!this.state.error_description){
+                this.setState({error_description: true})
+                this.createNotification("error-description")
+            }
+            return;
+        }
+        updated['description'].value = CostumeDescription;
+        updated['description'].valid = CostumeDescription ? true : false ;
+        console.log("Description of editor", CostumeDescription);
     }
 
     handleOpenEditor = () => {
@@ -625,7 +637,8 @@ class CostumeForm extends Component{
                 </div>
                 <TextEditorDialog
                 isOpen={this.state.isTextEditorOpen}
-                handleClose={this.handleCloseEditor.bind(this)}/>
+                data={this.state.costume.description.value}
+                handleCloseEditor={this.handleCloseEditor.bind()}/>
            </React.Fragment>
            
         )  

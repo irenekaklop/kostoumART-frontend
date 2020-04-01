@@ -1,58 +1,72 @@
 import React, {Component} from 'react';
 
-import {Dialog, DialogTitle, DialogContent, DialogActions, Button} from '@material-ui/core';
+import {Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton, Divider} from '@material-ui/core';
 
-import CKEditor from 'ckeditor4-react';
 import './Dialogs.css'
+
+import TextareaAutosize from 'react-textarea-autosize';
+import CloseIcon from '@material-ui/icons/Close';
+import CheckIcon from '@material-ui/icons/Check';
 
 class TextEditorDialog extends Component{
 
     constructor(props) {
         super(props);
         this.state = {
-            data: 'content',
+            data: '',
         }
+        this.maxLength = 2080;
         this.handleChange = this.handleChange.bind( this );
-        this.onEditorChange = this.onEditorChange.bind( this );
     }
 
-    onEditorChange( evt ) {
-        this.setState( {
-            data: evt.editor.getData()
-        } );
+    componentDidUpdate(prevProps, prevState){
+        console.log(this.props)
+        if(prevProps!==this.props){
+            this.setState({data: this.props.data})
+        }
     }
-
-    handleChange( changeEvent ) {
-        this.setState( {
-            data: changeEvent.target.value
-        } );
-    }
-
-    onChange = ( evt ) => { 
-        console.log(this.state.data)
-        this.setState({ data: evt.editor.getData() }); 
+    
+    handleChange = ( evt ) => { 
+        let updated = {...this.state.data}
+        let newData = evt.target.value
+        // Check for description requirments first
+        console.log(evt)
+        this.setState({ data: newData }); 
+        
     };
 
+    onClose = (e) => {
+        this.props.handleCloseEditor(this.state.data);
+    }
 
     render(){
         return(
-            <div className="Dialog">
+            <div id="Dialog">
                  <Dialog
                     maxWidth={'xl'}
                     open={this.props.isOpen}
-                    onClose={() => {this.props.handleClose(this.state.content)}}>
-                    <DialogTitle>Επεξεργασία κειμένου</DialogTitle>
+                    onClose={this.onClose}>
+                        <DialogTitle>Επεξεργασία περιγραφής</DialogTitle>
                         <DialogContent dividers>
-                          <CKEditor 
-                                data={this.state.data}
-                                onChange={this.onChange}
-                                config={ {
-                                    toolbar: [ [ 'Bold', 'Italic', '-', 'Link', '-', 'NumberedList', 'BulletedList', 'Undo', 'Redo'] ],
-                                    resize_dir: 'both',
-                                    width: '1200px',
-                                    height: '502px'
-                                }}
-                            />
+                        <TextareaAutosize
+                                id="Editor"
+                                type='text'
+                                name="description"
+                                value={this.state.data}
+                                onChange={this.handleChange}
+                                required={true}
+                                />
+                        <br/>
+                        <br/>
+                        <br/>
+                        <div id="button-area">
+                        <button id="CheckButton">
+                        <CheckIcon 
+                        style={{ color: 'white', cursor: 'pointer' }}
+                        onClick={this.onClose}/>
+                        </button>
+                        </div>
+                        <br/>
                         </DialogContent>
                     </Dialog>
             </div>

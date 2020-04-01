@@ -10,6 +10,8 @@ import {sexs, materials, techniques, use_categories, eras} from "../../utils/opt
 import "./Forms.css";
 import axios from 'axios';
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
+import TextEditorDialog from '../Shared/TextEditorDialog';
+import { IconButton } from '@material-ui/core';
 
 function getCleanItem () {
     return {
@@ -75,6 +77,7 @@ function getCleanState () {
     return {
         accessory: getCleanItem(),
         isFormValid: false,
+        isTextEditorOpen: false,
         error_description: false,
         error_duplicate: false,
         error_missing_value: false,
@@ -165,6 +168,28 @@ class  AccessoryForm extends Component{
             this.setState({accessory: accessoryInfo})
         }
         console.log('costume form state', this.state);
+    }
+
+    handleCloseEditor = (EditorData) => {
+        this.setState({
+            isTextEditorOpen: false,
+        })
+        let updated = {...this.state.accessory};
+        if(EditorData.length > this.maxLegnth){
+            if(!this.state.error_description){
+                this.setState({error_description: true})
+                this.createNotification("error-description")
+            }
+            return;
+        }
+        updated['description'].value = EditorData;
+        updated['description'].valid = EditorData ? true : false ;
+    }
+
+    handleOpenEditor = () => {
+        this.setState({
+            isTextEditorOpen: true,
+        })
     }
 
     handleClose(){
@@ -393,6 +418,7 @@ class  AccessoryForm extends Component{
                                     </div>
                                     <div className="Subtitle">({this.maxLegnth-this.state.accessory.description.value.length} CHARACTERS REMAINING)</div>
                                 </div>
+                                <IconButton onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></IconButton>
                                 <TextareaAutosize
                                 id="DescriptionInput"
                                 type='text'
@@ -554,6 +580,10 @@ class  AccessoryForm extends Component{
                         <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
                     </form>
                 </div>           
+                <TextEditorDialog
+                isOpen={this.state.isTextEditorOpen}
+                data={this.state.accessory.description.value}
+                handleCloseEditor={this.handleCloseEditor.bind()}/>
             </React.Fragment>             
         )  
     }
