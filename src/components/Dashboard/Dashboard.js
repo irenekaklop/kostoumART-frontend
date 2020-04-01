@@ -20,7 +20,6 @@ import _ from 'lodash'
 import Header from '../Shared/Header.js';
 import Footer from '../Shared/Footer.js';
 import {EditButton, DeleteButton, FilterButtons} from '../Shared/Buttons.js'
-import { CottonIcon, MaleIcon } from "../Shared/Icons.js";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Sidebar from 'react-sidebar';
 import SidebarContent from '../Filters/SidebarContent.js'
@@ -997,20 +996,25 @@ class Dashboard extends Component{
                
                 {this.state.isCostumeFormOpen ?(
                     console.log("Form should be called"),
-                    <CostumeForm
-                    handleClose={this.handleCloseDialog.bind(this)}
-                    user={this.state.user.user_id}
-                    costumes={this.state.costume_data}
-                    uses={this.state.use_data}
-                    theatrical_plays={this.state.tp_data}
-                    costume={this.state.costume}
-                    editing={this.state.editing}></CostumeForm>)
+                    <div id="TabPanel">
+                        <CostumeForm
+                        handleClose={this.handleCloseDialog.bind(this)}
+                        user={this.state.user.user_id}
+                        costumes={this.state.costume_data}
+                        uses={this.state.use_data}
+                        theatrical_plays={this.state.tp_data}
+                        costume={this.state.costume}
+                        editing={this.state.editing}></CostumeForm>
+                    </div>
+                   
+                    )
                     :
                     <div></div>
                     
                 }
 
                 {this.state.isAccessoryFormOpen ?(    
+                    <div id="TabPanel">
                     <AccessoryForm
                     handleClose={this.handleCloseDialog.bind(this)}
                     user={this.state.user.user_id}
@@ -1020,7 +1024,8 @@ class Dashboard extends Component{
                     uses={this.state.use_data}
                     costumes={this.state.costume_data}
                     theatrical_plays={this.state.tp_data}
-                    />)
+                    />
+                    </div>)
                     :
                     <div></div>
                 }
@@ -1071,6 +1076,7 @@ class Dashboard extends Component{
                     </div>
                 }
                 {this.state.isUseFormOpen ? (
+                    <div id="TabPanel">
                     <UseForm 
                     handleClose={this.handleCloseDialog.bind(this)}
                     user={this.state.user.user_id}
@@ -1079,6 +1085,7 @@ class Dashboard extends Component{
                     theatrical_plays={this.state.tp_data}
                     editing={this.state.editing}
                     use={this.state.use}></UseForm>
+                    </div>
                 )
                 :
                 <div></div>}
@@ -1125,6 +1132,7 @@ class Dashboard extends Component{
                         </div>
                 }
                 {this.state.isTPFormOpen ? (
+                    <div id="TabPanel">
                     <TpForm
                     isOpen={this.state.isTPFormOpen}
                     handleClose={this.handleCloseDialog.bind(this)}
@@ -1133,6 +1141,7 @@ class Dashboard extends Component{
                     editing={this.state.editing}
                     tp={this.state.theatricalPlay}
                     />
+                    </div>
                 )
                 : <div></div>   }
                 {this.state.current_tab===3 && !this.state.isTPFormOpen &&

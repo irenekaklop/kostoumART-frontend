@@ -11,6 +11,8 @@ import "./Forms.css";
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 
 import axios from 'axios';
+import { IconButton } from '@material-ui/core';
+import TextEditorDialog from '../Shared/TextEditorDialog';
 
 function getCleanItem () {
     return {
@@ -193,6 +195,18 @@ class CostumeForm extends Component{
             this.setState({costume: costumeInfo})
         }
         console.log('costume form state', this.state);
+    }
+
+    handleCloseEditor = () => {
+        this.setState({
+            isTextEditorOpen: false,
+        })
+    }
+
+    handleOpenEditor = () => {
+        this.setState({
+            isTextEditorOpen: true,
+        })
     }
 
     handleClose(){
@@ -434,6 +448,7 @@ class CostumeForm extends Component{
                                     </div>
                                     <div className="Subtitle">({this.maxLegnth-this.state.costume.description.value.length} CHARACTERS REMAINING)</div>
                                 </div>
+                                <IconButton onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></IconButton>
                                 <TextareaAutosize
                                 id="DescriptionInput"
                                 type='text'
@@ -608,7 +623,9 @@ class CostumeForm extends Component{
                         
                         </form>
                 </div>
-                
+                <TextEditorDialog
+                isOpen={this.state.isTextEditorOpen}
+                handleClose={this.handleCloseEditor.bind(this)}/>
            </React.Fragment>
            
         )  
