@@ -8,10 +8,11 @@ import Select from 'react-select';
 import TextareaAutosize from 'react-textarea-autosize';
 import {sexs, materials, techniques, use_categories, eras} from "../../utils/options";
 import "./Forms.css";
-import axios from 'axios';
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
-import TextEditorDialog from '../Shared/TextEditorDialog';
+import TextEditor from '../Shared/TextEditor/TextEditor.js';
 import { IconButton } from '@material-ui/core';
+
+import axios from '../../utils/api-url.js'
 
 function getCleanItem () {
     return {
@@ -20,6 +21,10 @@ function getCleanItem () {
             valid: false,
         },
         description: {
+            value: '',
+            valid: false,
+        },
+        descriptionHtml: {
             value: '',
             valid: false,
         },
@@ -117,6 +122,10 @@ class  AccessoryForm extends Component{
                     value: this.props.accessory.description,
                     valid: true,
                 },
+                descriptionHtml: {
+                    value: this.props.accessory.descriptionHtml,
+                    valid: true,
+                },
                 actors: {
                     value: this.props.accessory.actors,
                     valid: true,
@@ -170,22 +179,36 @@ class  AccessoryForm extends Component{
         console.log('costume form state', this.state);
     }
 
-    handleCloseEditor = (EditorData) => {
-        this.setState({
-            isTextEditorOpen: false,
-        })
-        let updated = {...this.state.accessory};
-        if(EditorData.length > this.maxLegnth){
-            if(!this.state.error_description){
-                this.setState({error_description: true})
-                this.createNotification("error-description")
-            }
-            return;
-        }
-        updated['description'].value = EditorData;
-        updated['description'].valid = EditorData ? true : false ;
+    transformText(description) {
+        description = description.replace(/<\/li>/g, '\n').replace(/<\/p>/g, '\n').replace(/<.*?>/g, '').replace(/&nbsp;/g, ' ');
+        return description.substring(0, description.length - 1).replace(/\n\n/g, '\n');
+      }
+    
+    transformHtml(description) {
+        return description.replace(/style=".*?"/g, '').replace(/&nbsp;/g, ' ');
     }
-
+    
+    onCloseEditor = (isEdited, newValue) => {
+        if(isEdited){
+            let updated = {...this.state.accessory};
+            
+            updated['descriptionHtml'].value =  this.transformHtml(newValue)
+            updated['descriptionHtml'].valid = newValue !== '<p><br></p>';
+      
+            updated['description'].value = this.transformText(newValue);
+            updated['description'].valid = newValue !== '<p><br></p>';
+      
+            this.setState({
+              accessory: updated,
+              isTextEditorOpen: false,
+            })
+        }
+        else{
+            this.setState({
+                isTextEditorOpen: false,
+            })
+        }
+    }
     handleOpenEditor = () => {
         this.setState({
             isTextEditorOpen: true,
@@ -201,8 +224,7 @@ class  AccessoryForm extends Component{
         console.log(evt)
         let updated = {...this.state.accessory};
         if(field === 'name'){
-            //axios.get('http://88.197.53.80/kostoumart-api/checkDuplicate', {params: {item: "accessory", name: evt.target.value}})
-            axios.get('http://localhost:8108/checkDuplicate', {params: {item: 'accessory', name: evt.target.value}})
+            axios.instance.get('checkDuplicate', {params: {item: 'accessory', name: evt.target.value}})
             .then( item => {
                 console.log("result from costume", item.data.response);
                 if(item.data.response.length !== 0){
@@ -224,6 +246,8 @@ class  AccessoryForm extends Component{
             }
             updated[field].value = evt.target.value;
             updated[field].valid = evt ? true : false ;
+            updated['descriptionHtml'].value = '<p>' + evt.target.value + '</p>';
+            updated['descriptionHtml'].valid = evt.target.value ? true : false ;
         }
         else if(field === 'selectedUseOption'){
             this.setState({
@@ -291,8 +315,7 @@ class  AccessoryForm extends Component{
 
     handleUpdate = () => {
         let data = this.state.accessory;
-        //axios.put('http://88.197.53.80/kostoumart-api/accessories/'+this.props.accessory.accessory_id,  { data: data, user: this.user_id })
-        axios.put('http://localhost:8108/accessories/'+this.props.accessory.accessory_id,  { data: data, user: this.user_id})
+        axios.instance.put('accessories/'+this.props.accessory.accessory_id,  { data: data, user: this.user_id})
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")
@@ -303,8 +326,7 @@ class  AccessoryForm extends Component{
     handleInsert = () => {
         console.log("inserting", this.state);
         let data = this.state.accessory;
-        //axios.post('http://88.197.53.80/kostoumart-api/accessory', { data: data, user: this.user_id })
-        axios.post('http://localhost:8108/accessory', { data: data, user: this.user_id })
+        axios.instance.post('accessory', { data: data, user: this.user_id })
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){
@@ -580,10 +602,10 @@ class  AccessoryForm extends Component{
                         <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
                     </form>
                 </div>           
-                <TextEditorDialog
+                <TextEditor
                 isOpen={this.state.isTextEditorOpen}
-                data={this.state.accessory.description.value}
-                handleCloseEditor={this.handleCloseEditor.bind()}/>
+                data={this.state.accessory['descriptionHtml'].value}
+                handleClose={this.onCloseEditor.bind(this)}/>
             </React.Fragment>             
         )  
     }

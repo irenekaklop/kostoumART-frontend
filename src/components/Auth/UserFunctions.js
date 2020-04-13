@@ -1,9 +1,7 @@
-import axios from 'axios'
+import axios from '../../utils/api-url.js';
 
 export const login = user => {
-  return axios
-    //.post('http://88.197.53.80/kostoumart-api/users/login', {
-    .post('http://localhost:8108/users/login', {
+  return  axios.instance.post('login', {
       email: user.email,
       password: user.password,
     })

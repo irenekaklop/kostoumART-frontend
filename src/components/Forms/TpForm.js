@@ -4,8 +4,8 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import "./Forms.css";
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
-import axios from 'axios';
-import { eras } from '../../utils/options';
+
+import axios from '../../utils/api-url.js'
 
 function getCleanItem () {
     return {
@@ -50,7 +50,7 @@ class TpForm extends Component{
         this.maxLegnth= 2080;
         this.years = [];
         var startYear=1900;
-        for(var i=0; i < 200; i++){
+        for(var i=0; i < 120; i++){
             this.years.push({value: (startYear+i).toString(), label:  startYear+i});
         }
         this.handleChange = this.handleChange.bind(this);
@@ -101,8 +101,7 @@ class TpForm extends Component{
         let updated = {...this.state.theatricalPlay};
         console.log("tp evt", evt)
         if(field === 'name'){
-            //axios.get('http://88.197.53.80/kostoumart-api/checkDuplicate', {params: {item: 'theatrical_play', name: evt.target.value}})
-            axios.get('http://localhost:8108/checkDuplicate', {params: {item: 'theatrical_play', name: evt.target.value}})
+            axios.instance.get('checkDuplicate', {params: {item: 'theatrical_play', name: evt.target.value}})
             .then(name => {
                 console.log("result from checkDuplicate", name.data.response);
                 if(name.data.response.length !== 0){
@@ -157,8 +156,7 @@ class TpForm extends Component{
 
     handleUpdate(){
         let data = this.state.theatricalPlay;
-        //axios.put('http://88.197.53.80/kostoumart-api/theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data, userId: this.user_id })
-        axios.put('http://localhost:8108/theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data, userId: this.user_id })
+        axios.instance.put('theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -168,8 +166,7 @@ class TpForm extends Component{
 
     handleInsert(){
         let data = this.state.theatricalPlay;
-        //axios.post("http://88.197.53.80/kostoumart-api/theatricalPlays", { data: data, userId: this.user_id})
-        axios.post('http://localhost:8108/theatricalPlays', { data: data, userId: this.user_id })
+        axios.instance.post('theatricalPlays', { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText == 'OK'){
                 this.createNotification('insert')

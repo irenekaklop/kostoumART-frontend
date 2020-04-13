@@ -8,11 +8,13 @@ import "../Geosuggest/Geosuggest.css"
 import {sexs, materials, techniques, use_categories, eras} from "../../utils/options";
 import "./Forms.css";
 
+import { Button } from '@material-ui/core';
+import TextEditorDialog from '../Shared/TextEditorDialog';
+import TextEditor from '../Shared/TextEditor/TextEditor.js';
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 
-import axios from 'axios';
-import { IconButton } from '@material-ui/core';
-import TextEditorDialog from '../Shared/TextEditorDialog';
+import axios from '../../utils/api-url.js'
+
 
 function getCleanItem () {
     return {
@@ -21,6 +23,10 @@ function getCleanItem () {
             valid: false,
         },
         description: {
+            value: '',
+            valid: false,
+        },
+        descriptionHtml: {
             value: '',
             valid: false,
         },
@@ -138,6 +144,10 @@ class CostumeForm extends Component{
                     value: this.props.costume.description,
                     valid: true,
                 },
+                descriptionHtml: {
+                    value: this.props.costume.descriptionHtml,
+                    valid: true,
+                },
                 actors: {
                     value: this.props.costume.actors,
                     valid: true,
@@ -198,21 +208,35 @@ class CostumeForm extends Component{
         console.log('costume form state', this.state);
     }
 
-    handleCloseEditor = (CostumeDescription) => {
-        this.setState({
-            isTextEditorOpen: false,
-        })
-        let updated = {...this.state.costume};
-        if(CostumeDescription.length > this.maxLegnth){
-            if(!this.state.error_description){
-                this.setState({error_description: true})
-                this.createNotification("error-description")
-            }
-            return;
+    transformText(description) {
+        description = description.replace(/<\/li>/g, '\n').replace(/<\/p>/g, '\n').replace(/<.*?>/g, '').replace(/&nbsp;/g, ' ');
+        return description.substring(0, description.length - 1).replace(/\n\n/g, '\n');
+      }
+    
+    transformHtml(description) {
+        return description.replace(/style=".*?"/g, '').replace(/&nbsp;/g, ' ');
+    }
+
+    onCloseEditor = (isEdited, newValue) => {
+        if(isEdited){
+            let updated = {...this.state.costume};
+            
+            updated['descriptionHtml'].value =  this.transformHtml(newValue)
+            updated['descriptionHtml'].valid = newValue !== '<p><br></p>';
+      
+            updated['description'].value = this.transformText(newValue);
+            updated['description'].valid = newValue !== '<p><br></p>';
+      
+            this.setState({
+              coustume: updated,
+              isTextEditorOpen: false,
+            })
         }
-        updated['description'].value = CostumeDescription;
-        updated['description'].valid = CostumeDescription ? true : false ;
-        console.log("Description of editor", CostumeDescription);
+        else{
+            this.setState({
+                isTextEditorOpen: false,
+            })
+        }
     }
 
     handleOpenEditor = () => {
@@ -229,8 +253,7 @@ class CostumeForm extends Component{
     handleChange = (field) => (evt) => {
         let updated = {...this.state.costume};
         if(field === 'name'){
-            //axios.get('http://88.197.53.80/kostoumart-api/checkDuplicate', {params: {item: 'costume', name: evt.target.value}})
-            axios.get('http://localhost:8108/checkDuplicate', {params: {item: 'costume', name: evt.target.value}})
+            axios.instance.get('checkDuplicate', {params: {item: 'costume', name: evt.target.value}})
             .then(name => {
                 console.log("result from costume", name.data.response);
                 if(name.data.response.length !== 0){
@@ -252,6 +275,8 @@ class CostumeForm extends Component{
             }
             updated[field].value = evt.target.value;
             updated[field].valid = evt.target.value ? true : false ;
+            updated['descriptionHtml'].value = '<p>' + evt.target.value + '</p>';
+            updated['descriptionHtml'].valid = evt.target.value ? true : false ;
         }
         else if(field === 'selectedUseOption'){
             this.setState({
@@ -299,11 +324,9 @@ class CostumeForm extends Component{
         if(this.formValidation()){
             if(this.props.editing){
                 this.handleUpdate();
-                this.handleMediaUpload();
             }
             else{
                 this.handleInsert();
-                this.handleMediaUpload();
             }
         }
     }
@@ -324,11 +347,10 @@ class CostumeForm extends Component{
     handleUpdate = () => {
         let data = this.state.costume;
         console.log("updating costume....", data);
-        const mediaData = new FormData() 
+        const mediaData = new FormData(); 
         mediaData.append('media', this.state.costume.images.value)
         console.log(this.state.costume.images, mediaData)
-        //axios.put('http://88.197.53.80/kostoumart-api/costumes'+ this.props.costume.costume_id, { data: data, mediaData: this.state.costume.images, user: this.user_id })
-        axios.put('http://localhost:8108/costumes/' + this.props.costume.costume_id, { data: data, mediaData: this.state.costume.images, user: this.user_id })
+        axios.instance.put('costumes/' + this.props.costume.costume_id, { data: data, mediaData: this.state.costume.images, user: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")
@@ -340,8 +362,7 @@ class CostumeForm extends Component{
         console.log("inserting", this.state.costume);
         let data = this.state.costume;
         console.log(data)
-        //axios.post('http://88.197.53.80/kostoumart-api/costume', { data: data, user: this.user_id })
-        axios.post('http://localhost:8108/costume', { data: data, user: this.user_id } )
+        axios.instance.post('costume', { data: data, user: this.user_id } )
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){
@@ -354,7 +375,7 @@ class CostumeForm extends Component{
         const mediaData = new FormData() 
         mediaData.append('media', this.state.costume.images.value)
         console.log("upload",mediaData)
-        axios.post('http://localhost:8108/uploadImage', mediaData)
+        axios.instance.post('uploadImage', mediaData)
         .then(res => {
             console.log("result from images", res.statusText);
             
@@ -460,7 +481,7 @@ class CostumeForm extends Component{
                                     </div>
                                     <div className="Subtitle">({this.maxLegnth-this.state.costume.description.value.length} CHARACTERS REMAINING)</div>
                                 </div>
-                                <IconButton onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></IconButton>
+                                <Button onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></Button>
                                 <TextareaAutosize
                                 id="DescriptionInput"
                                 type='text'
@@ -635,10 +656,11 @@ class CostumeForm extends Component{
                         
                         </form>
                 </div>
-                <TextEditorDialog
+                <TextEditor
                 isOpen={this.state.isTextEditorOpen}
-                data={this.state.costume.description.value}
-                handleCloseEditor={this.handleCloseEditor.bind()}/>
+                handleClose={this.onCloseEditor.bind(this)}
+                data={this.state.costume['descriptionHtml'].value}
+                />
            </React.Fragment>
            
         )  

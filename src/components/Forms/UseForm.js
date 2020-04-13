@@ -10,7 +10,7 @@ import "./Forms.css";
 import { IconButton } from '@material-ui/core';
 import TextEditorDialog from '../Shared/TextEditorDialog';
 
-import axios from 'axios';
+import axios from '../../utils/api-url.js'
 
 function getCleanItem () {
     return {
@@ -109,8 +109,7 @@ class UseForm extends Component{
         console.log(evt)
         let updated = {...this.state.use};
         if(field === 'name'){
-            //axios.get('http://88.197.53.80/kostoumart-api/checkDuplicate', {params: {item: "use", name: evt.target.value}})
-            axios.get('http://localhost:8108/checkDuplicate', {params: {item: 'use', name: evt.target.value}})
+            axios.instance.get('checkDuplicate', {params: {item: 'use', name: evt.target.value}})
             .then( item => {
                 console.log("result from costume", item.data.response);
                 if(item.data.response.length !== 0){
@@ -167,8 +166,7 @@ class UseForm extends Component{
     handleUpdate(){
         const data = this.state.use;
         console.log("updating...", data)
-        //axios.put('http://88.197.53.80/kostoumart-api/uses/+'this.props.use.useID, { data: data, userId: this.user_id })
-        axios.put('http://localhost:8108/uses/'+this.props.use.useID, { data: data, userId: this.user_id })
+        axios.instance.put('uses/'+this.props.use.useID, { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -178,8 +176,7 @@ class UseForm extends Component{
 
     handleInsert(){
         const data = this.state.use;
-        //axios.post("http://88.197.53.80/kostoumart-api/uses",  { data: data, userId: this.user_id})
-        axios.post('http://localhost:8108/uses', { data: data, userId: this.user_id})
+        axios.instance.post('uses', { data: data, userId: this.user_id})
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('insert')
