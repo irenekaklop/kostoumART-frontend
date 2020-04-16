@@ -8,8 +8,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import "./Forms.css";
 import { IconButton } from '@material-ui/core';
-import TextEditorDialog from '../Shared/TextEditorDialog';
-
+import TextEditor from '../Shared/TextEditor/TextEditor.js';
 import axios from '../../utils/api-url.js'
 
 function getCleanItem () {
@@ -19,6 +18,10 @@ function getCleanItem () {
             valid: false,
         },
         description: {
+            value: '',
+            valid: false,
+        },
+        descriptionHtml: {
             value: '',
             valid: false,
         },
@@ -68,6 +71,10 @@ class UseForm extends Component{
                     value: this.props.use.description,
                     valid: true,
                 },
+                descriptionHtml: {
+                    value: this.props.use.descriptionHtml,
+                    valid: true,
+                },
                 useCategory: {
                     value: this.props.use.use_category,
                     label: this.props.use.use_category,
@@ -82,21 +89,35 @@ class UseForm extends Component{
         }
     }
 
-    handleCloseEditor = (EditorData) => {
-        this.setState({
-            isTextEditorOpen: false,
-        })
-        let updated = {...this.state.use};
-        if(EditorData.length > this.maxLegnth){
-            if(!this.state.error_description){
-                this.setState({error_description: true})
-                this.createNotification("error-description")
-            }
-            return;
+    transformText(description) {
+        description = description.replace(/<\/li>/g, '\n').replace(/<\/p>/g, '\n').replace(/<.*?>/g, '').replace(/&nbsp;/g, ' ');
+        return description.substring(0, description.length - 1).replace(/\n\n/g, '\n');
+      }
+    
+    transformHtml(description) {
+        return description.replace(/style=".*?"/g, '').replace(/&nbsp;/g, ' ');
+    }
+
+    onCloseEditor = (isEdited, newValue) => {
+        if(isEdited){
+            let updated = {...this.state.use};
+            
+            updated['descriptionHtml'].value =  this.transformHtml(newValue)
+            updated['descriptionHtml'].valid = newValue !== '<p><br></p>';
+      
+            updated['description'].value = this.transformText(newValue);
+            updated['description'].valid = newValue !== '<p><br></p>';
+      
+            this.setState({
+              use: updated,
+              isTextEditorOpen: false,
+            })
         }
-        updated['description'].value = EditorData;
-        updated['description'].valid = EditorData ? true : false ;
-        console.log("Description of editor", EditorData);
+        else{
+            this.setState({
+                isTextEditorOpen: false,
+            })
+        }
     }
 
     handleOpenEditor = () => {
@@ -111,7 +132,7 @@ class UseForm extends Component{
         if(field === 'name'){
             axios.instance.get('checkDuplicate', {params: {item: 'use', name: evt.target.value}})
             .then( item => {
-                console.log("result from costume", item.data.response);
+                console.log("result from backend", item.data.response);
                 if(item.data.response.length !== 0){
                     this.createNotification('error-duplicate');
                     updated[field].valid = false;
@@ -131,6 +152,8 @@ class UseForm extends Component{
             }
             updated[field].value = evt.target.value;
             updated[field].valid = evt.target.value ? true : false ;
+            updated['descriptionHtml'].value = '<p>' + evt.target.value + '</p>';
+            updated['descriptionHtml'].valid = evt.target.value ? true : false ;
         }
         else if(field === 'useCategory'){
             updated[field].label = evt.value;
@@ -322,10 +345,11 @@ class UseForm extends Component{
                         <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
                     </form>
                 </div>
-                <TextEditorDialog
+                <TextEditor
                 isOpen={this.state.isTextEditorOpen}
-                data={this.state.use.description.value}
-                handleCloseEditor={this.handleCloseEditor.bind()}/>
+                handleClose={this.onCloseEditor.bind(this)}
+                data={this.state.use['descriptionHtml'].value}
+                />
             </React.Fragment>
         )
     }

@@ -584,7 +584,7 @@ class Dashboard extends Component{
             return (
                 <tr className="TableRow" key={costume_id}>
                     <td>
-	                   <img id="Image" src={require("../../styles/images/Rectangle_20.png")}/>  
+                       <img id="Image" src={require("../../styles/images/costume.png")}/>  
                     </td>
                 <td>{costume_name}</td>
                 <td className="DescriptionColumn">

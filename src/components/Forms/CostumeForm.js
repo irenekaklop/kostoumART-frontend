@@ -9,7 +9,6 @@ import {sexs, materials, techniques, use_categories, eras} from "../../utils/opt
 import "./Forms.css";
 
 import { Button } from '@material-ui/core';
-import TextEditorDialog from '../Shared/TextEditorDialog';
 import TextEditor from '../Shared/TextEditor/TextEditor.js';
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 
@@ -302,7 +301,24 @@ class CostumeForm extends Component{
             updated[field].valid = evt ? true : false ;
         }
         else if (field === 'images'){
-            updated[field].value = evt.target.files;
+            let file = evt.target.files[0];
+            // Make new FileReader
+            let reader = new FileReader();
+            // Convert the file to base64 text
+            reader.readAsDataURL(file);
+            // on reader load somthing...
+            reader.onload = () => {
+                // Make a fileInfo Object
+                let fileInfo = {
+                name: file.name,
+                type: file.type,
+                size: Math.round(file.size / 1000) + ' kB',
+                base64: reader.result,
+                file: file,
+                };
+                updated['images'].value = fileInfo.base64; 
+            }
+        
         }
         else{
             updated[field].value = evt.target.value;
@@ -346,11 +362,7 @@ class CostumeForm extends Component{
 
     handleUpdate = () => {
         let data = this.state.costume;
-        console.log("updating costume....", data);
-        const mediaData = new FormData(); 
-        mediaData.append('media', this.state.costume.images.value)
-        console.log(this.state.costume.images, mediaData)
-        axios.instance.put('costumes/' + this.props.costume.costume_id, { data: data, mediaData: this.state.costume.images, user: this.user_id })
+        axios.instance.put('costumes/' + this.props.costume.costume_id, { data: data, user: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")
@@ -372,14 +384,26 @@ class CostumeForm extends Component{
     }
 
     handleMediaUpload = () => {
-        const mediaData = new FormData() 
-        mediaData.append('media', this.state.costume.images.value)
-        console.log("upload",mediaData)
-        axios.instance.post('uploadImage', mediaData)
-        .then(res => {
-            console.log("result from images", res.statusText);
-            
-        })
+        let file = this.state.costume.images.value[0];
+        // Make new FileReader
+        let reader = new FileReader();
+        // Convert the file to base64 text
+        reader.readAsDataURL(file);
+         // on reader load somthing...
+        reader.onload = () => {
+            // Make a fileInfo Object
+            let fileInfo = {
+            name: file.name,
+            type: file.type,
+            size: Math.round(file.size / 1000) + ' kB',
+            base64: reader.result,
+            file: file,
+            };
+            let updated = {...this.state.costume}
+            updated['images'].value = fileInfo.base64; 
+            this.setState({costume: updated})
+        }
+        
     }
 
     resetForm () {
