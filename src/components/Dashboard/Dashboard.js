@@ -574,7 +574,7 @@ class Dashboard extends Component{
 
     renderTableCostumesData() {
         return this.state.current_costumes.map((costume, index) => {
-            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, parts, createdBy} = costume //desthucturing
+            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, imageURL, parts, createdBy} = costume //desthucturing
             console.log(costume)
             for (var element in costume){
                 if (!element || element===''){
@@ -584,7 +584,10 @@ class Dashboard extends Component{
             return (
                 <tr className="TableRow" key={costume_id}>
                     <td>
-                       <img id="Image" src={require("../../styles/images/costume.png")}/>  
+                        {costume.imageURL ? 
+                        <img id="Image" src={"http://localhost:8108"+costume.imageURL}/> 
+                        :
+                        <div></div>}
                     </td>
                 <td>{costume_name}</td>
                 <td className="DescriptionColumn">

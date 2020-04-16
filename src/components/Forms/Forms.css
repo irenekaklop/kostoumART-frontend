@@ -126,8 +126,7 @@ textarea {
 
 #DescriptionInput {
   width: 769.686px;
-  min-height: 58.606px;
-  max-height: 254.452px;
+  min-height: 254.452px;
   line-height: 18px;    
   margin-top: -1.5px;
   vertical-align: bottom;
@@ -138,7 +137,7 @@ textarea {
   font-size: 15px;
   border-bottom: 1px solid rgba(255,222,23,1);
   border-radius: 0px!important;
-  resize: vertical;
+  resize: none;
 }
 
 #ADD {
@@ -224,15 +223,12 @@ textarea {
   overflow: visible;
 }
 
-#ImagesArea {
+#MediaUploadArea {
   position: absolute;
 	left: 73.566px;
 	top: 551.599px;
 	overflow: visible;
-	width: 45px;
-  white-space: nowrap;
-	line-height: 13.200000762939453px;
-	margin-top: -1.1000003814697266px;
+	width: 799.06px;
 	text-align: left;
 	font-family: Roboto-Regular;
 	font-style: normal;

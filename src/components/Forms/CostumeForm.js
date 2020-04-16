@@ -12,6 +12,8 @@ import { Button } from '@material-ui/core';
 import TextEditor from '../Shared/TextEditor/TextEditor.js';
 import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 
+import ImageDropzone from '../Shared/MediaUpload/ImageDropzone.js';
+
 import axios from '../../utils/api-url.js'
 
 
@@ -383,27 +385,10 @@ class CostumeForm extends Component{
         })
     }
 
-    handleMediaUpload = () => {
-        let file = this.state.costume.images.value[0];
-        // Make new FileReader
-        let reader = new FileReader();
-        // Convert the file to base64 text
-        reader.readAsDataURL(file);
-         // on reader load somthing...
-        reader.onload = () => {
-            // Make a fileInfo Object
-            let fileInfo = {
-            name: file.name,
-            type: file.type,
-            size: Math.round(file.size / 1000) + ' kB',
-            base64: reader.result,
-            file: file,
-            };
-            let updated = {...this.state.costume}
-            updated['images'].value = fileInfo.base64; 
-            this.setState({costume: updated})
+    handleMediaUpload = (droppedFile) => {
+        if(droppedFile){
+            let updated = {...this}
         }
-        
     }
 
     resetForm () {
@@ -517,14 +502,14 @@ class CostumeForm extends Component{
                                 </div>
                             </div>
                             <br/>
-                            <div id='ImagesArea'>
+                            <div id='MediaUploadArea'>
                                     <div id="Label">
                                         <span>EIKONEΣ * </span>
                                     </div>
-                                    <input 
-                                        type='file'
-                                        onChange={this.handleChange('images')}>
-                                    </input>
+                                    <ImageDropzone 
+                                    disabled={true}
+                                    handleMediaUpload={this.handleMediaUpload.bind(this)}
+                                    />
                             </div>
                             <div id='CostumeUseCategory'>
                                 <div id='CostumeUseCategoryArea'>
