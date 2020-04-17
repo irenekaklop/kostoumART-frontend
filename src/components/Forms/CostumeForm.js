@@ -82,7 +82,7 @@ function getCleanItem () {
             valid: true,
         },
         images: {
-            value: '',
+            value: null,
             valid: true,
         }
     };
@@ -200,7 +200,7 @@ class CostumeForm extends Component{
                     valid: true,
                 },
                 images: {
-                    value: '',
+                    value: null,
                     valid: true,
                 }
             }
@@ -508,7 +508,6 @@ class CostumeForm extends Component{
                                     </div>
                                     <ImageDropzone 
                                     disabled={true}
-                                    handleMediaUpload={this.handleMediaUpload.bind(this)}
                                     />
                             </div>
                             <div id='CostumeUseCategory'>
