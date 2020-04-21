@@ -13,43 +13,36 @@ class ImageDropzone extends Component {
             files: []
         }
     }
-    
-    handleOnDrop = (files) => {
-        
-        let num = Math.floor(Math.random() * 1000000000) + 1;
-        files.forEach(file => {
+
+    onDropHandler = (droppedFiles) => {
+        let num = Date.now() + Math.random() + 1;
+        droppedFiles.forEach(file => {
             const reader = new FileReader();      
             reader.readAsDataURL(file);
             reader.onload = () => {
-              Object.assign(file, {
-                id: 'file-' + num++,
-                preview: URL.createObjectURL(file),
-                base64: reader.result
-              });
-            }
-        });
-
-        this.setState({files})
-
-        console.log(this.state)
+                Object.assign(file, {
+                    id: 'file-' + num++,
+                    preview: URL.createObjectURL(file),
+                    base64: reader.result
+                });
+      
+                this.setState({
+                    files: this.state.files.concat(droppedFiles)
+                })
+            };
+            reader.onabort = () => console.log('File reading was aborted');
+            reader.onerror = () => console.log('File reading has failed');
+          });
     }
-    
+
     render(){
-        const thumbs = this.state.files.map( file => (
-            <div key={file.name}>
-              <div >
-                <img
-                  src={file.preview}
-                />
-              </div>
-            </div>
-          ));
+        console.log(this.state)
         return(
             <section className="DropzoneSection">
                 <div className="Dropzone">
                 <Dropzone
                     multiple={false}
-                    onDrop={this.handleOnDrop.bind(this)}
+                    onDrop={this.onDropHandler.bind(this)}
                     accept={acceptedFileTypes}
                     disabled={this.props.disabled}
                 >
@@ -67,9 +60,20 @@ class ImageDropzone extends Component {
                     }}
                 </Dropzone>
                 </div>
-                <aside className="FileList">
-                    {this.state.files[0] ? <img src={this.state.files[0].preview}></img> : <div></div>}
-                </aside>
+                {
+                    this.state.files.map(file =>
+                        <React.Fragment className="thumbsContainer" key={file.id}>
+                            <div className="thumb">
+                               <div className="thumbInner">
+                                    <img
+                                        alt={file.name}
+                                        src={file.preview}
+                                    />
+                               </div>
+                            </div>
+                        </React.Fragment>
+                    )
+                }
             </section>
         )
     }
