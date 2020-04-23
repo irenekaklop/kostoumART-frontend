@@ -52,7 +52,7 @@
   overflow:hidden;
   position:relative; 
   left: 74.302px;
-  top: 113px;
+  top: 0;
 }
 
 .UnderlineTabTitle {
@@ -69,8 +69,7 @@
 
 .panel-container {
   display: flex;
-  width: 100%; 
-  width: 100vw;
+  width: 96.1%; 
   flex-direction: column;
   justify-content: center;
   position: absolute;
