@@ -335,7 +335,7 @@ class Dashboard extends Component{
             filters: filters,
             filterDrawerOpen: false
         })
-        this.setState(this.applyFilters(filters))
+        this.applyFilters(filters);
     }
     
     handleCloseDialog = () => {
@@ -626,8 +626,6 @@ class Dashboard extends Component{
                 <td>{technique}</td>
                 <td>{location}</td>
                 <td>{designer}</td>
-                <td>{tp_title}</td>
-                <td>{actors}</td>
                 <td>{createdBy}</td>
                 <td className="td_actions">
                     <div onClick={() => this.handleCostumeEditing(costume_id)}><EditButton/></div>
@@ -764,15 +762,15 @@ class Dashboard extends Component{
 
     applyFilters = (filters) => {
         var qs = require('qs');
-        axios.instance.get("costumes-filters/", { params: { filters: filters, user: this.state.user.role }, paramsSerializer: params => { return qs.stringify(params) } })
+        axios.instance.get("costumes-filters/", 
+        { params: { filters: filters, user: this.state.user.role }, 
+        paramsSerializer: params => { return qs.stringify(params) } })
         .then(res => {
+            console.log(res)
             if(res.statusText==='OK'){
-            const costume_data = res.data;
-            this.setState({
-                current_costumes: costume_data
-            })}
-        }
-        )
+                this.setState({current_costumes: res.data})
+            }
+        })
     }
 
     resetFilters = () => {
@@ -814,9 +812,9 @@ class Dashboard extends Component{
 
                 </div>
                 {/*Filters and right sidebar*/}
-                <div className="sidebar" onClick={this.handleDrawerOpen}>
+                {/*<div className="sidebar" onClick={this.handleDrawerOpen}>
                     <FilterButtons/>
-                </div>
+                </div>*/}
                 <Sidebar
                 rootClassName="FiltersSidebarRoot"
                 sidebarClassName="FiltersSidebar"
@@ -935,7 +933,7 @@ class Dashboard extends Component{
                                     <sthong>ΤΙΤΛΟΣ</sthong> 
                                     </th>
                                     <th
-                                    style={{width: '25%'}}
+                                    style={{width: '20%'}}
                                     sorted={column === 'descr' ? direction : null}
                                     onClick={this.handleSort('descr')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
                                     <th
@@ -947,15 +945,15 @@ class Dashboard extends Component{
                                     sorted={column === 'use_name' ? direction : null}
                                     onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
                                     <th
-                                    style={{width: '10%'}}
+                                    style={{width: '5%'}}
                                     sorted={column === 'sex' ? direction : null}
                                     onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
                                     <th 
-                                    style={{width: '10%'}}
+                                    style={{width: '5%'}}
                                     sorted={column === 'material' ? direction : null}
                                     onClick={this.handleSort('material')}><sthong>ΥΛΙΚΟ<br/>ΚΑΤΑΣΚΕΥΗΣ</sthong></th>
                                     <th
-                                    style={{width: '10%'}}
+                                    style={{width: '5%'}}
                                     sorted={column === 'technique' ? direction : null}
                                     onClick={this.handleSort('technique')}><sthong>ΤΕΧΝΙΚΗ</sthong></th>
                                     <th
@@ -966,14 +964,6 @@ class Dashboard extends Component{
                                     style={{width: '10%'}}
                                     sorted={column === 'designer' ? direction : null}
                                     onClick={this.handleSort('designer')}><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
-                                    <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'tp_title' ? direction : null}
-                                    onClick={this.handleSort('tp_title')}><sthong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</sthong></th>
-                                    <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'actors' ? direction : null}
-                                    onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
                                     <th style={{width: '5%'}}>
                                     <sthong>EDITOR</sthong>
                                     </th>
