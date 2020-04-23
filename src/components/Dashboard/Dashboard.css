@@ -1,92 +1,16 @@
-* {
-  box-sizing: border-box;
- }
- *:before,
- *:after {
-  box-sizing: border-box;
- }
-
-.Background {
-  position: absolute;
-  overflow: visible;
-  width: 100%;
-  height: 100%;
-  color: rgba(255,255,255,1);
-  left: 74.302px;
-  top: 0.487px;
-}
-
-#Background {
-  position: absolute;
-  width: 1839px;
-  height: 113px;
-  left: 76.13px;
-  top: 0px;
-  overflow: visible;
-}
-#Vector_Smart_Object {
-  position: absolute;
-  width: 1839px;
-  height: 113px;
-  left: 76.13px;
-  top: 0px;
-  overflow: visible;
-}
-#Rectangle_2 {
-  opacity: 0.4;
-}
-.Rectangle_2 {
-  width: 1458.365px;
-  height: 112.639px;
-  position: absolute;
-  overflow: visible;
-  transform: matrix(1,0,0,1,76.1299,-0.0001) rotate(180deg);
-  transform-origin: center;
-}
-#Rectangle_3_l {
-  opacity: 0.4;
-}
-
-.Rectangle_3_l {
-  position: absolute;
-  overflow: visible;
-  width: 1843.697px;
+.logout-area {
+  position:absolute;
+  top:0;
+  right:0;
+  width: 378.633px;
   height: 112.152px;
-  left: 74.302px;
-  top: 0.487px;
-}
-
-.Path_1 {
-  overflow: visible;
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  left: 1095.03px;
-  top: 112.639px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Path_2 {
-  overflow: visible;
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  left: 1859.402px;
-  top: 112.639px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Rectangle_5 {
-  position: absolute;
-  overflow: visible;
-  width: 208.184px;
-  height: 82.721px;
-  left: 73.551px;
-  top: 35.171px;
+  background-color: rgba(56,56,56,1);
 }
 
 .react-tabs__tab-list{
   position: absolute;
   overflow: visible;
-  width: 1843.697px;
+  width: 50%;
   height: 54px;
   left: 74.302px;
   top: 60.2px;
@@ -121,7 +45,6 @@
 
 #TabPanel {
   background: rgba(242,242,242,1);
-  width: 1843.697px;
   height: fit-content;
   display: flex;
   flex-direction: column;
@@ -145,15 +68,14 @@
  }
 
 .panel-container {
-  width: 1843.697px;
   display: flex;
+  width: 100%; 
+  width: 100vw;
   flex-direction: column;
   justify-content: center;
-  overflow:hidden;
-  position:relative; 
+  position: absolute;
   left: 74.302px;
   top: 113px;
-  
 }
 
 .button-insert {
@@ -184,14 +106,7 @@
 #ButtonAddText {
   margin-left: 16.34px;
 }
-.Rectangle_6 {
-  position: absolute;
-  overflow: visible;
-  width: 13.68px;
-  height: 157.785px;
-  left: 1904.319px;
-  top: 209.079px;
-}
+
 #Tailoring_Times {
   transform: matrix(1,0,0,1,-160.7261,438.9189) rotate(-90deg);
   transform-origin: center;
@@ -212,40 +127,17 @@
   letter-spacing: 0.4px;
 }
 
-.Rectangle_9 {
-  position: absolute;
-  overflow: visible;
-  width: 378.633px;
-  height: 112.152px;
-  left: 1534.495px;
-  top: 0.487px;
-}
-
-.Rectangle_8 {
-  position: absolute;
-  overflow: visible;
-  width: 21.327px;
-  height: 411.419px;
-  left: 23.631px;
-  top: 255.749px;
-}
-
 #LOGOUT_BUTTON {
   position: absolute;
-  overflow: visible;
-  left: 1834.021px;
-  top: 57.41px;
+  right: 0;
+  top: 50%;
   background-color: rgba(56, 56, 56, 1);
   color: rgba(255,222,23,1);
-  text-align: center;
   font-family: Roboto-Regular;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
-  line-height: 14.40000057220459px;
-  margin-top: -1.200000286102295px;
-  width: 50px;
-  white-space: nowrap;
+  width: 25%;
   cursor: pointer;
 }
 
@@ -255,11 +147,9 @@
 
 #USERNAME {
   position: absolute;
-  left: 1571.423px;
-  top: 34.271px;
-  overflow: visible;
+  left: 10%;
+  top: 29%;
   width: 59px;
-  white-space: nowrap;
   line-height: 13.200000762939453px;
   margin-top: -1.1000003814697266px;
   text-align: left;
@@ -272,11 +162,10 @@
 
 #administrator_email {
   position: absolute;
-  left: 1571.423px;
-  top: 51.412px;
+  left: 10%;
+  top: 50%;
   overflow: visible;
   width: 199px;
-  white-space: nowrap;
   line-height: 21.600000381469727px;
   margin-top: -1.8000001907348633px;
   text-align: left;
@@ -287,15 +176,26 @@
   color: rgba(255,255,255,1);
   letter-spacing: -0.17px;
 }
+
 .Line_5 {
   overflow: visible;
   position: absolute;
   width: 1px;
   height: 66.176px;
-  left: 1802.128px;
+  right: 25%;
   top: 29.079px;
   transform: matrix(1,0,0,1,0,0);
 }
+
+.Rectangle_8 {
+  position: absolute;
+  overflow: visible;
+  width: 21.327px;
+  height: 411.419px;
+  left: 23.631px;
+  top: 255.749px;
+}
+
 #costumART-Dashboard {
   transform: matrix(1,0,0,1,-40.7588,940.6748) rotate(-90deg);
   transform-origin: center;
@@ -314,45 +214,8 @@
   font-size: 24.451229095458984px;
   color: rgba(56,56,56,1);
 }
-.Path_5 {
-  overflow: visible;
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  left: 945.757px;
-  top: 173.47px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Path_6 {
-  overflow: visible;
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  left: 903.757px;
-  top: 173.47px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_6 {
-  overflow: visible;
-  position: absolute;
-  width: 49.232px;
-  height: 1px;
-  left: 711.46px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
-}
-.Line_7 {
-  overflow: visible;
-  position: absolute;
-  width: 84.319px;
-  height: 1px;
-  left: 324.456px;
-  top: 202.861px;
-  transform: matrix(1,0,0,1,0,0);
-}
 
 .table {
-  width: 100%;
   table-layout: auto;
   text-align: left;
   font-family: Roboto-Medium;
@@ -412,34 +275,11 @@ th:hover{
   vertical-align: top;
 }
 
-#ColumnImageCostume {
-  width: 176.69px;
-  padding:5px;
-  border-bottom: 2px solid rgba(88,89,91,1);
-  transform-origin: 0px 0px;
-  cursor: inherit;
-}
-
-#ColumnImageCostume:hover {
-  background-color: inherit;
-}
-
 #Image {
-  width: 140.266px;
-  height: 128.587px;
-}
-
-#ColumnName {
-  width: 225px;
-}
-
-#ColumnTitle {
-  width: 86px;
-}
-
-.DescriptionColumn {
-  width: 250.996px;
-  overflow: hidden;
+  padding: 1%;
+  width:100%; 
+  height:100%; 
+  object-fit: contain;
 }
 
 .block-ellipsis {
@@ -454,42 +294,6 @@ th:hover{
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-#ColumnSexCostume {
-  width: 89px;
-}
-
-#ColumnLocation {
-  width: 130px;
-}
-
-#ColumnDesigner {
-  width: 110px;
-}
-
-#ColumnDate {
-  width: 89px;
-}
-
-#ColumnParts {
-  width: 80px;
-}
-
-#ColumnActors {
-  width: 110px;
-}
-
-#ColumnActorsTP {
-  width: 240px;
-}
-
-#ColumnEditor {
-  width:119px;
-}
-
-#ColumnActions {
-  width:49px;
 }
 
 .ButtonsDivider {
@@ -525,13 +329,22 @@ th:hover{
   position: fixed;
   width: 50%;
   bottom: 10px;
-  border: 3px solid white;
+  border: 3px transparent white;
   right: 0;
 }
 
 .Sidebar {
   overflow-y: hidden!important;
   overflow-x: hidden!important;
+}
+
+.sidebar {
+  position: absolute;
+  height: 100%;
+  background-color: white;
+  width: 73.8px;
+  top: 0;
+  left: 0;
 }
 
 .FiltersSidebarRoot {

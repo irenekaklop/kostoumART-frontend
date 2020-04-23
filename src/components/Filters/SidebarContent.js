@@ -57,9 +57,9 @@ class SidebarContent extends Component {
                     isChecked: false,
                 },
                 {
-                    name: 'Άντρας',
-                    key: 'Άντρας',
-                    label: 'Άντρας',
+                    name: 'Άνδρας',
+                    key: 'Άνδρας',
+                    label: 'Άνδρας',
                     isChecked: false,
                 },
             ],

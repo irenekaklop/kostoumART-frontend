@@ -16,7 +16,6 @@ import ImageDropzone from '../Shared/MediaUpload/ImageDropzone.js';
 
 import axios from '../../utils/api-url.js'
 
-
 function getCleanItem () {
     return {
         name: {
@@ -82,8 +81,12 @@ function getCleanItem () {
             valid: true,
         },
         images: {
-            value: null,
+            value: [],
             valid: true,
+        },
+        removedImages: {
+            value: [],
+            valid: true
         }
     };
 }
@@ -111,6 +114,7 @@ class CostumeForm extends Component{
     }
 
     componentDidMount(){
+        console.log("Base URL", axios)
         console.log("props costume form", this.props);
         console.log('costume form state', this.state);
         if(this.props.editing){
@@ -200,8 +204,12 @@ class CostumeForm extends Component{
                     valid: true,
                 },
                 images: {
-                    value: null,
+                    value: this.props.costume.images ? JSON.parse(this.props.costume.images) : [],
                     valid: true,
+                },
+                removedImages: {
+                    value: [],
+                    valid: true
                 }
             }
             this.setState({costume: costumeInfo})
@@ -291,7 +299,19 @@ class CostumeForm extends Component{
         else if (field === 'selectedDateOption' || field === 'selectedTPOption' || field === 'selectedTechniqueOption'){
             updated[field].label = evt.value;
             updated[field].value = evt.value;
-            updated[field].valid = true;
+            updated[field].valid = true; 
+        }
+        else if (field === 'selectedTPOption'){
+            if(evt){
+                updated[field].label = evt.value;
+                updated[field].value = evt.value;
+                updated[field].valid = true; 
+            }
+            else{
+                updated[field].label = '';
+                updated[field].value = '';
+                updated[field].valid = true;
+            }
         }
         else if (field === 'selectedMaterialOption' || field === 'selectedSexOption'){
             updated[field].label = evt;
@@ -301,26 +321,6 @@ class CostumeForm extends Component{
         else if (field === 'location_select'){
             updated[field].value = evt;
             updated[field].valid = evt ? true : false ;
-        }
-        else if (field === 'images'){
-            let file = evt.target.files[0];
-            // Make new FileReader
-            let reader = new FileReader();
-            // Convert the file to base64 text
-            reader.readAsDataURL(file);
-            // on reader load somthing...
-            reader.onload = () => {
-                // Make a fileInfo Object
-                let fileInfo = {
-                name: file.name,
-                type: file.type,
-                size: Math.round(file.size / 1000) + ' kB',
-                base64: reader.result,
-                file: file,
-                };
-                updated['images'].value = fileInfo.base64; 
-            }
-        
         }
         else{
             updated[field].value = evt.target.value;
@@ -367,7 +367,8 @@ class CostumeForm extends Component{
         axios.instance.put('costumes/' + this.props.costume.costume_id, { data: data, user: this.user_id })
         .then(res => {
             if(res.statusText ==="OK"){
-                this.createNotification("update")
+                this.createNotification("update");
+                this.props.handleClose();
             }
        })    
     }
@@ -380,15 +381,24 @@ class CostumeForm extends Component{
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){
-                this.createNotification("insert")
+                this.createNotification("insert");
+                this.props.handleClose();
             }
         })
     }
 
-    handleMediaUpload = (droppedFile) => {
-        if(droppedFile){
-            let updated = {...this}
+    handleMediaUpload = (files, removedFiles) => {
+        let updated = {...this.state.costume}  
+        updated['images'].value = files;
+        
+        if(removedFiles){
+            //Remove file from backend
+            updated['removedImages'].value = removedFiles; 
         }
+
+        this.setState({
+            costume: updated
+        })
     }
 
     resetForm () {
@@ -437,10 +447,8 @@ class CostumeForm extends Component{
     }
 
     render(){
-
         const u_options = [];
         const p_options = [];
-
         /* Create Use Categories*/
         for (var key in use_categories){
             u_options.push( {label: use_categories[key].label, options: []});
@@ -507,7 +515,9 @@ class CostumeForm extends Component{
                                         <span>EIKONEΣ * </span>
                                     </div>
                                     <ImageDropzone 
-                                    disabled={true}
+                                    disabled={false}
+                                    handleMediaUpload={this.handleMediaUpload.bind(this)}
+                                    input={this.state.costume.images.value}
                                     />
                             </div>
                             <div id='CostumeUseCategory'>
@@ -610,7 +620,8 @@ class CostumeForm extends Component{
                                 onChange={this.handleChange('selectedTPOption')}
                                 name='selectedTPOption'
                                 options={p_options}
-                                placeholder={''}/>         
+                                placeholder={''}
+                                isClearable={true}/>         
                             </div>
                             <div id='Designer'>
                                 <div id='DesignerArea'>

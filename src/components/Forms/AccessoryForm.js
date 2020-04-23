@@ -12,6 +12,8 @@ import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 import TextEditor from '../Shared/TextEditor/TextEditor.js';
 import { IconButton } from '@material-ui/core';
 
+import ImageDropzone from '../Shared/MediaUpload/ImageDropzone.js';
+
 import axios from '../../utils/api-url.js'
 
 function getCleanItem () {
@@ -75,6 +77,14 @@ function getCleanItem () {
             value: '',
             valid: true,
         },
+        images: {
+            value: [],
+            valid: true,
+        },
+        removedImages: {
+            value: [],
+            valid: true
+        }
     }
 }
 
@@ -173,6 +183,14 @@ class  AccessoryForm extends Component{
                     value: this.props.accessory.location,
                     valid: true,
                 },
+                images: {
+                    value: this.props.accessory.images ? JSON.parse(this.props.accessory.images) : [],
+                    valid: true,
+                },
+                removedImages: {
+                    value: [],
+                    valid: true
+                }
             }
             this.setState({accessory: accessoryInfo})
         }
@@ -279,6 +297,20 @@ class  AccessoryForm extends Component{
             accessory: updated
         })
         console.log(this.state.accessory)
+    }
+
+    handleMediaUpload = (files, removedFiles) => {
+        let updated = {...this.state.accessory}  
+        updated['images'].value = files;
+        
+        if(removedFiles){
+            //Remove file from backend
+            updated['removedImages'].value = removedFiles; 
+        }
+
+        this.setState({
+            accessory: updated
+        })
     }
 
     /*Geosuggest functions*/
@@ -450,6 +482,17 @@ class  AccessoryForm extends Component{
                                 required={true}
                                 />
                                 </div>
+                        </div>
+                        <br/>
+                        <div id='MediaUploadArea'>
+                            <div id="Label">
+                                <span>EIKONEΣ * </span>
+                            </div>
+                            <ImageDropzone 
+                            disabled={false}
+                            handleMediaUpload={this.handleMediaUpload.bind(this)}
+                            input={this.state.accessory.images.value}
+                            />
                         </div>
                         <br/>
                         <div id='CostumeUseCategory'>

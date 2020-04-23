@@ -106,7 +106,6 @@ class Dashboard extends Component{
                 role: decoded.role,
                 username: decoded.username,
             } });
-            console.log("decoded", decoded);
             this.get_uses();
             this.getTheatricalPlays();
             this.getCostumes(decoded);
@@ -146,17 +145,14 @@ class Dashboard extends Component{
 
     handleCategoryUseSelect = (evt) => {
         this.setState({ useCategoryOption: evt.target.value});
-        console.log(`Option selected:`, evt.target);
     }
 
     handleTechniqueSelect = (evt) => {
         this.setState({ techniqueOption: evt.target.value});
-        console.log(`Option selected:`, evt.target);
     }
 
     handleSexSelect = (evt) => {
         this.setState({ sexOption: evt.target.value});
-        console.log(`Option selected:`, evt.target);
     }
 
     handleSort = (clickedColumn) => () => {
@@ -276,7 +272,6 @@ class Dashboard extends Component{
             if(res.statusText==='OK'){
                 const use_data = res.data;
                 this.setState({ use_data });
-                console.log(this.state);
             }
         }
         )
@@ -289,7 +284,6 @@ class Dashboard extends Component{
             if(res.statusText==='OK'){
                 const tp_data = res.data;
                 this.setState({ tp_data });
-                console.log(this.state);
             }
         })
     }
@@ -304,7 +298,6 @@ class Dashboard extends Component{
                     this.setState({
                         current_accessories: accessories
                     })
-                    console.log(this.state);
                 }
             }
             )
@@ -318,7 +311,6 @@ class Dashboard extends Component{
                     this.setState({
                         current_accessories: accessories
                     })
-                    console.log(this.state);
                 }
             })
         }
@@ -428,7 +420,6 @@ class Dashboard extends Component{
         this.setState({
             isCostumeFormOpen: true,
         })
-        console.log("HandleAddcostume")
     };
 
     handleAddUse = () => {
@@ -509,7 +500,6 @@ class Dashboard extends Component{
     }
 
     handleUseDelete(index){
-        console.log("delete", index)
         axios.instance.delete("uses/" + index )
         .then(res=> {
             if(res.statusText ==="OK"){
@@ -533,11 +523,9 @@ class Dashboard extends Component{
     }
 
     handleConfirmationForDelete(index){
-        console.log("Index", index);
         if(this.state.current_tab===0){
             axios.instance.get("dependencies/", {params: { index: index, column: 'costume' }} )
             .then(res=>{
-                console.log(res.data.response[0].result)
                 if (res.data.response[0].result===1) {
                     this.setState({dependency: true});
                 }
@@ -552,7 +540,6 @@ class Dashboard extends Component{
         if(this.state.current_tab===2){
             axios.instance.get("dependencies/",{params: { index: index, column: 'use' }} )
             .then(res=>{
-                console.log(res.data.response[0].result)
                 if (res.data.response[0].result===1) {
                     this.setState({dependency: true});
                 }
@@ -562,7 +549,6 @@ class Dashboard extends Component{
         else if(this.state.current_tab===3){
             axios.instance.get("dependencies/",{params: { index: index, column: 'theatrical_play' }} )
             .then(res=>{
-                console.log(res.data.response[0].result)
                 if (res.data.response[0].result===1) {
                     this.setState({dependency: true});
                 }
@@ -574,23 +560,27 @@ class Dashboard extends Component{
 
     renderTableCostumesData() {
         return this.state.current_costumes.map((costume, index) => {
-            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, imageURL, parts, createdBy} = costume //desthucturing
-            console.log(costume)
+            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, images, parts, createdBy} = costume //desthucturing
+            var img = null;
             for (var element in costume){
                 if (!element || element===''){
                     element='/t';
                 }}
-            
+            let imagesObj=JSON.parse(images);
+            if (imagesObj) {
+            imagesObj.map(image => {
+                img = image['path'];  
+            })}
             return (
                 <tr className="TableRow" key={costume_id}>
                     <td>
-                        {costume.imageURL ? 
-                        <img id="Image" src={"http://localhost:8108"+costume.imageURL}/> 
+                        {img ? 
+                        <img id="Image" src={axios.baseURL+img}/> 
                         :
-                        <div></div>}
+                        ''}
                     </td>
                 <td>{costume_name}</td>
-                <td className="DescriptionColumn">
+                <td style={{width: '250.996px'}}>
                     <p className="multi-line-truncate">
                         {description}
                     </p>
@@ -664,7 +654,7 @@ class Dashboard extends Component{
                     <td>
                         {use_category}
                     </td>
-                    <td className="DescriptionColumn">
+                    <td style={{width: '250.996px'}}>
                         <p className="multi-line-truncate">
                             {description}
                         </p>
@@ -713,56 +703,69 @@ class Dashboard extends Component{
 
     renderTableAccessoriesData() {
         return this.state.current_accessories.map((accessory, index) => {
-            const {accessory_id, name, description, date, sex, material, technique, tp_title, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
-            console.log(accessory)
+            const {accessory_id, name, description, date, sex, material, technique, tp_title, images, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
+            var img = null;
+            for (var element in accessory){
+                if (!element || element===''){
+                    element='/t';
+                }}
+            let imagesObj=JSON.parse(images);
+            if (imagesObj) {
+            imagesObj.map(image => {
+                img = image['path'];  
+            })}
             return (
                 <tr key={accessory_id}>
-                <td>{name}</td>
-                <td className="DescriptionColumn">
-                    <p className="multi-line-truncate">
-                        {description}
-                    </p>
-                </td>
-                <td>{use_name}</td>
-                <td>{tp_title}</td>
-                <td>{costume_name}</td>
-                <td>{date}</td>
-                <td>{technique}</td>
-                {sex==="Άνδρας" || sex==="Αγόρι" ? 
-                <td id="TextWithIconCell">
-                    <img src={require('../../styles/images/icons/Male.png')}/><br/>
-                    {sex}
-                </td>
-                :
-                <td id="TextWithIconCell">
-                    <img src={require('../../styles/images/icons/Female.png')}/><br/>
-                    {sex}
-                </td>
-                }
-                <td>{designer}</td>
-                <td>{location}</td>
-                <td>{actors}</td>
-                <td>{CreatedBy}</td>
-                <td className="td_actions">
-                    <div onClick={() => this.handleAccessoryEditing(accessory_id)}><EditButton/></div>
-                    <br/>
-                    <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
-                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
-                        </path>
-                    </svg>
-                    <div onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}><DeleteButton/></div>
-                </td>
+                    <td>
+                        {img ? 
+                        <img id="Image" src={axios.baseURL+img}/> 
+                        :
+                        ''}
+                    </td>
+                    <td>{name}</td>
+                    <td style={{width: '250.996px'}}>
+                        <p className="multi-line-truncate">
+                            {description}
+                        </p>
+                    </td>
+                    <td>{use_name}</td>
+                    <td>{tp_title}</td>
+                    <td>{costume_name}</td>
+                    <td>{date}</td>
+                    <td>{technique}</td>
+                    {sex==="Άνδρας" || sex==="Αγόρι" ? 
+                    <td id="TextWithIconCell">
+                        <img src={require('../../styles/images/icons/Male.png')}/><br/>
+                        {sex}
+                    </td>
+                    :
+                    <td id="TextWithIconCell">
+                        <img src={require('../../styles/images/icons/Female.png')}/><br/>
+                        {sex}
+                    </td>
+                    }
+                    <td>{designer}</td>
+                    <td>{location}</td>
+                    <td>{actors}</td>
+                    <td>{CreatedBy}</td>
+                    <td className="td_actions">
+                        <div onClick={() => this.handleAccessoryEditing(accessory_id)}><EditButton/></div>
+                        <br/>
+                        <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
+                            <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
+                            </path>
+                        </svg>
+                        <div onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}><DeleteButton/></div>
+                    </td>
                 </tr>
             )
         })
     }
 
     applyFilters = (filters) => {
-        console.log("Filters", filters);
         var qs = require('qs');
         axios.instance.get("costumes-filters/", { params: { filters: filters, user: this.state.user.role }, paramsSerializer: params => { return qs.stringify(params) } })
         .then(res => {
-            console.log(res)
             if(res.statusText==='OK'){
             const costume_data = res.data;
             this.setState({
@@ -782,8 +785,6 @@ class Dashboard extends Component{
     }
 
     render() {
-        console.log("State", this.state)
-
         const { column, use_data, direction } = this.state
 
         if (this.state.redirectToReferrer) {
@@ -793,13 +794,27 @@ class Dashboard extends Component{
         return (
             <React.Fragment>
                 <NotificationContainer/>
-                <Header 
-                    name={this.state.appName}
-                    email={this.state.user.email}
-                    logOut={this.logOut.bind(this)}>
-                </Header>
+                <Header/>
+                {/*logout action*/}
+                <div className='logout-area'>
+                   <button id="LOGOUT_BUTTON" onClick={() => this.logOut()}>Logout</button>
+            
+                    <div id="USERNAME">
+                        <span>USERNAME</span>
+                    </div>
+
+                    <div id="administrator_email">
+                        <span>{this.state.user.email}</span>
+                    </div>
+
+                    <svg class="Line_5" viewBox="0 0 1 66.176">
+                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_5" d="M 0 0 L 0 66.17550659179688">
+                        </path>
+                    </svg>
+
+                </div>
                 {/*Filters and right sidebar*/}
-                <div onClick={this.handleDrawerOpen}>
+                <div className="sidebar" onClick={this.handleDrawerOpen}>
                     <FilterButtons/>
                 </div>
                 <Sidebar
@@ -909,57 +924,57 @@ class Dashboard extends Component{
                                 <thead className="table-head">
                                 <tr>
                                     <th
-                                    id="ColumnImageCostume"
+                                    style={{cursor: 'inherit', backgroundColor: 'inherit', width: '20%'}}
                                     sorted={null}>
                                         <span><sthong>EIKONA</sthong></span>
                                     </th>
                                     <th
-                                    id="ColumnTitle"
+                                    style={{width: '10%'}}
                                     sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}>
                                     <sthong>ΤΙΤΛΟΣ</sthong> 
                                     </th>
                                     <th
-                                    id="DescriptionColumn"
+                                    style={{width: '25%'}}
                                     sorted={column === 'descr' ? direction : null}
                                     onClick={this.handleSort('descr')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
                                     <th
-                                    id="ColumnDateCostume"
+                                    style={{width: '10%'}}
                                     sorted={column === 'date' ? direction : null}
                                     onClick={this.handleSort('date')}><sthong>ΕΠΟΧΗ</sthong></th>
                                     <th
-                                    id="ColumnUseCostume"
+                                    style={{width: '10%'}}
                                     sorted={column === 'use_name' ? direction : null}
                                     onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
                                     <th
-                                    id="ColumnSexCostume"
+                                    style={{width: '10%'}}
                                     sorted={column === 'sex' ? direction : null}
                                     onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
                                     <th 
-                                    id="ColumnMaterial"
+                                    style={{width: '10%'}}
                                     sorted={column === 'material' ? direction : null}
                                     onClick={this.handleSort('material')}><sthong>ΥΛΙΚΟ<br/>ΚΑΤΑΣΚΕΥΗΣ</sthong></th>
                                     <th
-                                    id="ColumnTechnique"
+                                    style={{width: '10%'}}
                                     sorted={column === 'technique' ? direction : null}
                                     onClick={this.handleSort('technique')}><sthong>ΤΕΧΝΙΚΗ</sthong></th>
                                     <th
-                                    id="ColumnLocation"
+                                    style={{width: '10%'}}
                                     sorted={column === 'location' ? direction : null}
                                     onClick={this.handleSort('location')}><sthong>ΠΕΡΙΟΧΗ</sthong></th>
                                     <th
-                                    id="ColumnDesigner"
+                                    style={{width: '10%'}}
                                     sorted={column === 'designer' ? direction : null}
                                     onClick={this.handleSort('designer')}><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
                                     <th
-                                    id="ColumnTPCostume"
+                                    style={{width: '20%'}}
                                     sorted={column === 'tp_title' ? direction : null}
                                     onClick={this.handleSort('tp_title')}><sthong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</sthong></th>
                                     <th
-                                    id="ColumnActors"
+                                    style={{width: '20%'}}
                                     sorted={column === 'actors' ? direction : null}
                                     onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
-                                    <th id="ColumnEditor">
+                                    <th style={{width: '5%'}}>
                                     <sthong>EDITOR</sthong>
                                     </th>
                                     <th
@@ -981,7 +996,6 @@ class Dashboard extends Component{
                 <Footer/>
                
                 {this.state.current_tab===0 && this.state.isCostumeFormOpen ? (
-                    console.log("Form should be called"),
                     <div id="TabPanel">
                         <CostumeForm
                         handleClose={this.handleCloseDialog.bind(this)}
@@ -1020,32 +1034,56 @@ class Dashboard extends Component{
                         <table className="table">
                            <thead className="table-head">
                                 <tr>
-                                    <th sorted={column === 'name' ? direction : null}
+                                    <th
+                                    style={{cursor: 'inherit', backgroundColor: 'inherit', width: '20%'}}
+                                    sorted={null}>
+                                        <span><sthong>EIKONA</sthong></span>
+                                    </th>
+                                    <th 
+                                    style={{width: '10%'}}
+                                    sorted={column === 'name' ? direction : null}
                                     onClick={this.handleSort('name')}><sthong>ONOMA</sthong></th>
-                                    <th id="DescriptionColumn" 
+                                    <th
+                                    style={{width: '25%'}}
                                     sorted={column === 'description' ? direction : null}
                                     onClick={this.handleSort('description')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
-                                    <th id="ColumnUseCostume" sorted={column === 'use_name' ? direction : null}
+                                    <th 
+                                    style={{width: '10%'}}
+                                    sorted={column === 'use_name' ? direction : null}
                                     onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
                                     <th
-                                    id="ColumnTPCostume"
+                                    style={{width: '20%'}}
                                     sorted={column === 'tp_title' ? direction : null}
                                     onClick={this.handleSort('tp_title')}><sthong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</sthong></th>
-                                    <th id="ColumnUseCostume" sorted={column === 'costume_name' ? direction : null}
+                                    <th 
+                                    style={{width: '20%'}}
+                                    sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}><sthong>ΚΟΣΤΟΥΜΙ</sthong></th>
-                                    <th sorted={column === 'date' ? direction : null}
+                                    <th 
+                                    style={{width: '25%'}}
+                                    sorted={column === 'date' ? direction : null}
                                     onClick={this.handleSort('date')}><sthong>XΡΟΝΟΛΟΓΙΑ</sthong></th>
-                                    <th sorted={column === 'technique' ? direction : null}
+                                    <th 
+                                    style={{width: '20%'}}
+                                    sorted={column === 'technique' ? direction : null}
                                     onClick={this.handleSort('technique')}><sthong>ΤΕΧΝΙΚΗ</sthong></th>
-                                    <th sorted={column === 'sex' ? direction : null}
+                                    <th 
+                                    style={{width: '20%'}}
+                                    sorted={column === 'sex' ? direction : null}
                                     onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
-                                    <th id="ColumnDesigner" sorted={column === 'designer' ? direction : null}
+                                    <th
+                                    style={{width: '20%'}}
+                                    sorted={column === 'designer' ? direction : null}
                                     onClick={this.handleSort('designer')}><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
-                                    <th id="ColumnLocation" sorted={column === 'location' ? direction : null}
+                                    <th
+                                    style={{width: '20%'}}
+                                    sorted={column === 'location' ? direction : null}
                                     onClick={this.handleSort('location')}><sthong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</sthong></th>
-                                    <th id="ColumnActors" sorted={column === 'actors' ? direction : null}
+                                    <th
+                                    style={{width: '30%'}}
+                                    sorted={column === 'actors' ? direction : null}
                                     onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
-                                    <th id="ColumnEditor">
+                                    <th style={{width: '5%'}}>
                                     <sthong>EDITOR</sthong>
                                     </th>
                                     <th id="th_actions"></th>
@@ -1081,28 +1119,28 @@ class Dashboard extends Component{
                                <thead className="table-head">
                                 <tr>
                                 <th
-                                id="ColumnName"
+                                style={{width: '20%'}}
                                 sorted={column === 'name' ? direction : null}
                                 onClick={this.handleSort('name')}>
                                 <sthong>ΟΝΟΜΑ</sthong> 
                                 </th>
                                 <th
-                                id="ColumnName"
+                                style={{width: '20%'}}
                                 sorted={column === 'use_category' ? direction : null}
                                 onClick={this.handleSort('use_category')}>
                                 <sthong>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</sthong></th>
                                 <th
-                                id="DescriptionColumn"                                                                                     
+                                style={{width: '30%'}}                                                                         
                                 sorted={column === 'description' ? direction : null}
                                 onClick={this.handleSort('description')}>
                                 <sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
                                 <th
-                                id="DescriptionColumn" 
+                                style={{width: '10%'}}
                                 sorted={column === 'customs' ? direction : null}
                                 onClick={this.handleSort('customs')}>
                                 <sthong>ΕΘΙΜΑ</sthong>
                                 </th>
-                                <th id="ColumnEditor">
+                                <th style={{width: '10%'}}>
                                     <sthong>EDITOR</sthong>
                                 </th>
                                 <th id="th_actions"></th>
@@ -1136,19 +1174,21 @@ class Dashboard extends Component{
                             <thead className="table-head">
                                 <tr>
                                     <th 
-                                    id="ColumnName"
+                                    style={{width: '20%'}}
                                     sorted={column === 'title' ? direction : null}
                                     onClick={this.handleSort('title')}><sthong>ΟΝΟΜΑ ΠΑΡΑΣΤΑΣΗΣ</sthong></th>
-                                    <th id="ColumnActors" sorted={column === 'director' ? direction : null}
+                                    <th
+                                    style={{width: '20%'}}
+                                    sorted={column === 'director' ? direction : null}
                                     onClick={this.handleSort('director')}><sthong>ΣΚΗΝΟΘΕΤΗΣ</sthong></th>
                                     <th
-                                    id="ColumnActors"
+                                    style={{width: '20%'}}
                                     sorted={column === 'theater' ? direction : null}
                                     onClick={this.handleSort('theater')}><sthong>ΘΕΑΤΡΟ</sthong></th>
-                                    <th id="ColumnDate"
+                                    <th style={{width: '20%'}}
                                     sorted={column === 'date' ? direction : null}
                                     onClick={this.handleSort('date')}><sthong>ΧΡΟΝΟΛΟΓΙΑ</sthong></th>
-                                    <th id="ColumnEditor">
+                                    <th style={{width: '10%'}}>
                                     <sthong>EDITOR</sthong>
                                     </th>
                                     <th id="th_actions"></th>
@@ -1171,27 +1211,6 @@ class Dashboard extends Component{
                 handleClose={this.handleCloseConfirmationDialog.bind(this)}
                 handleOk={this.handleOk.bind(this)}></ConfirmationDialog>
 
-                
-                {/*logout action*/}
-                <div>
-                    <svg class="Rectangle_9">
-                        <rect fill="rgba(56,56,56,1)" id="Rectangle_9" rx="0" ry="0" x="0" y="0" width="378.633" height="112.152">
-                        </rect>
-                    </svg>
-                        
-                    <button id="LOGOUT_BUTTON" onClick={() => this.logOut()}>Logout</button>
-            
-                    <div id="USERNAME">
-                        <span>USERNAME</span>
-                    </div>
-                    <div id="administrator_email">
-                        <span>{this.state.user.email}</span>
-                    </div>
-                    <svg class="Line_5" viewBox="0 0 1 66.176">
-                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_5" d="M 0 0 L 0 66.17550659179688">
-                        </path>
-                    </svg>
-                </div>
                 
             </React.Fragment>
           );
