@@ -5,7 +5,6 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import { login } from './UserFunctions.js'
 import './Auth.css'
-import axios from 'axios';
 
 class Auth extends Component{
 

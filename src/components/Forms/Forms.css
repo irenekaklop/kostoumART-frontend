@@ -156,7 +156,7 @@ textarea {
   position: absolute;
   left: 77.193px;
   top: 50.697px;
-  overflow: visible;
+  overflow: hidden;
   width: 182px;
   white-space: nowrap;
   line-height: 36px;

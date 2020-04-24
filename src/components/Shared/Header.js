@@ -5,7 +5,7 @@ import Vector_Smart_Object from '../../styles/images/Vector_Smart_Object.png'
 class Header extends React.Component {
   render() {
   return (
-      <div>
+      <div style={{overflow:'hidden'}}>
           <img src={Vector_Smart_Object}/>
       </div>
     

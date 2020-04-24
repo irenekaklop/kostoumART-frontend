@@ -10,7 +10,7 @@
 .react-tabs__tab-list{
   position: absolute;
   overflow: visible;
-  width: 50%;
+  width: 60%;
   height: 54px;
   left: 74.302px;
   top: 60.2px;
@@ -43,16 +43,14 @@
   height: 82.721px;
 }
 
-#TabPanel {
+.form-panel {
   background: rgba(242,242,242,1);
-  height: fit-content;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow:hidden;
-  position:relative; 
+  position: absolute;
   left: 74.302px;
-  top: 0;
+  top: 113px;
 }
 
 .UnderlineTabTitle {
@@ -68,6 +66,7 @@
  }
 
 .panel-container {
+  overflow: hidden;
   display: flex;
   width: 96.1%; 
   flex-direction: column;
@@ -215,7 +214,6 @@
 }
 
 .table {
-  table-layout: auto;
   text-align: left;
   font-family: Roboto-Medium;
   font-style: normal;
@@ -226,11 +224,11 @@
   padding-bottom: 50px;
   padding-top: 23px;
   padding-left: 28px;
+  padding-right: 28px;
   background-color: rgba(242,242,242,1);
 }
 
 td { 
-  max-height: 10%;
   line-height: 17px;
   --lh: 17px;
   padding-top: 15px;

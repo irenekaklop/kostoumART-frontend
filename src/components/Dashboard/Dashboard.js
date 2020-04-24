@@ -21,7 +21,7 @@ import _ from 'lodash'
 import Header from '../Shared/Header.js';
 import Footer from '../Shared/Footer.js';
 import {EditButton, DeleteButton, FilterButtons} from '../Shared/Buttons.js'
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Tab, Tabs } from 'react-tabs';
 import Sidebar from 'react-sidebar';
 import SidebarContent from '../Filters/SidebarContent.js'
 
@@ -927,17 +927,17 @@ class Dashboard extends Component{
                                         <span><sthong>EIKONA</sthong></span>
                                     </th>
                                     <th
-                                    style={{width: '10%'}}
+                                    style={{width: '15%'}}
                                     sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}>
                                     <sthong>ΤΙΤΛΟΣ</sthong> 
                                     </th>
                                     <th
-                                    style={{width: '20%'}}
+                                    style={{width: '30%'}}
                                     sorted={column === 'descr' ? direction : null}
                                     onClick={this.handleSort('descr')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
                                     <th
-                                    style={{width: '10%'}}
+                                    style={{width: '20%'}}
                                     sorted={column === 'date' ? direction : null}
                                     onClick={this.handleSort('date')}><sthong>ΕΠΟΧΗ</sthong></th>
                                     <th
@@ -945,23 +945,23 @@ class Dashboard extends Component{
                                     sorted={column === 'use_name' ? direction : null}
                                     onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
                                     <th
-                                    style={{width: '5%'}}
+                                    style={{width: '10%'}}
                                     sorted={column === 'sex' ? direction : null}
                                     onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
                                     <th 
-                                    style={{width: '5%'}}
+                                    style={{width: '10%'}}
                                     sorted={column === 'material' ? direction : null}
                                     onClick={this.handleSort('material')}><sthong>ΥΛΙΚΟ<br/>ΚΑΤΑΣΚΕΥΗΣ</sthong></th>
                                     <th
-                                    style={{width: '5%'}}
+                                    style={{width: '10%'}}
                                     sorted={column === 'technique' ? direction : null}
                                     onClick={this.handleSort('technique')}><sthong>ΤΕΧΝΙΚΗ</sthong></th>
                                     <th
-                                    style={{width: '10%'}}
+                                    style={{width: '20%'}}
                                     sorted={column === 'location' ? direction : null}
                                     onClick={this.handleSort('location')}><sthong>ΠΕΡΙΟΧΗ</sthong></th>
                                     <th
-                                    style={{width: '10%'}}
+                                    style={{width: '20%'}}
                                     sorted={column === 'designer' ? direction : null}
                                     onClick={this.handleSort('designer')}><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
                                     <th style={{width: '5%'}}>
@@ -986,7 +986,7 @@ class Dashboard extends Component{
                 <Footer/>
                
                 {this.state.current_tab===0 && this.state.isCostumeFormOpen ? (
-                    <div id="TabPanel">
+                    <div className="form-panel">
                         <CostumeForm
                         handleClose={this.handleCloseDialog.bind(this)}
                         user={this.state.user.user_id}
@@ -1004,7 +1004,7 @@ class Dashboard extends Component{
                 }
 
                 {this.state.current_tab===1 && this.state.isAccessoryFormOpen ?(    
-                    <div id="TabPanel">
+                    <div className="form-panel">
                     <AccessoryForm
                     handleClose={this.handleCloseDialog.bind(this)}
                     user={this.state.user.user_id}
@@ -1090,7 +1090,7 @@ class Dashboard extends Component{
                     </div>
                 }
                 {this.state.current_tab===2 && this.state.isUseFormOpen ? (
-                    <div id="TabPanel">
+                    <div className="form-panel">
                     <UseForm 
                     handleClose={this.handleCloseDialog.bind(this)}
                     user={this.state.user.user_id}
@@ -1146,7 +1146,7 @@ class Dashboard extends Component{
                         </div>
                 }
                 {this.state.current_tab===3 && this.state.isTPFormOpen ? (
-                    <div id="TabPanel">
+                    <div className="form-panel">
                     <TpForm
                     isOpen={this.state.isTPFormOpen}
                     handleClose={this.handleCloseDialog.bind(this)}
