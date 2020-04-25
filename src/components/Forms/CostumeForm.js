@@ -76,10 +76,6 @@ function getCleanItem () {
             value: '',
             valid: true,
         },
-        location_select: {
-            value: '',
-            valid: true,
-        },
         images: {
             value: [],
             valid: true,
@@ -199,10 +195,6 @@ class CostumeForm extends Component{
                     value: this.props.costume.location,
                     valid: true,
                 },
-                location_select: {
-                    value: this.props.costume.location,
-                    valid: true,
-                },
                 images: {
                     value: this.props.costume.images ? JSON.parse(this.props.costume.images) : [],
                     valid: true,
@@ -318,8 +310,8 @@ class CostumeForm extends Component{
             updated[field].value = evt;
             updated[field].valid = (!evt || evt.length===0 ) ? false : true ;
         }
-        else if (field === 'location_select'){
-            updated[field].value = evt;
+        else if (field === 'location'){
+            updated[field].value = evt.description;
             updated[field].valid = evt ? true : false ;
         }
         else{
@@ -329,13 +321,6 @@ class CostumeForm extends Component{
             costume: updated
         })
         console.log(this.state.costume)
-    }
-        
-    handleLocation(){
-        if(this.state.location_select){
-            this.state.location = this.state.location_select.description;
-            console.log("HandleLocation:", this.state);
-        }
     }
 
     handleSubmit = () => {
@@ -649,11 +634,10 @@ class CostumeForm extends Component{
                                 className="geosuggest"
                                 placeholder="Αναζήτηση"
                                 initialValue={this.state.costume.location.value}
-                                required={true}
+                                required={false}
                                 ref={el=>this._geoSuggest=el}
-                                onSuggestSelect={this.handleChange('location_select')}
+                                onSuggestSelect={this.handleChange('location')}
                                     />
-                                {this.handleLocation()}
                             </div>
                             <br/>
                             <div id='Actors'>
