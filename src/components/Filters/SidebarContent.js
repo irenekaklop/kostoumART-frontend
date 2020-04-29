@@ -31,9 +31,9 @@ class SidebarContent extends Component {
                   isChecked: false,
                 },
                 {
-                  name: 'Βάφη',
-                  key: 'Βάφη',
-                  label: 'Βάφη',
+                  name: 'Βαφή',
+                  key: 'Βαφή',
+                  label: 'Βαφή',
                   isChecked: false,
                 },
             ],

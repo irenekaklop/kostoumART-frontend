@@ -40,14 +40,11 @@ class Dashboard extends Component{
         ];
         this.state = {
             current_tab: 0,
-            //Costumes
-            costume_data: [],
-            //Uses
-            use_data: [],
-            //TPs
-            tp_data:[],
-            //Accessories
+            costumes: [],
+            uses: [],
+            theatricalPlays:[],
             accessories: [],
+            filteredCostumes: [],
             //For Insert Form
             isCostumeFormOpen: false,
             isUseFormOpen: false,
@@ -60,13 +57,8 @@ class Dashboard extends Component{
             use: null,
             theatricalPlay: null,
             accessory: null,
-            //Filters
-            current_costumes: [],
-            current_accessories: [],
-            current_uses: [],
-            current_tps: [],
             filterDrawerOpen: false,
-            filters: '',
+            filters: [],
             //Confirmation Dialog answer
             index: null,
             dependency: false,
@@ -156,32 +148,32 @@ class Dashboard extends Component{
     }
 
     handleSort = (clickedColumn) => () => {
-        const { column, use_data, current_costumes, current_accessories, tp_data, accessories, direction } = this.state
+        const { column, uses, filteredCostumes, accessories, theatricalPlays, direction } = this.state
     
         if (column !== clickedColumn) {
             switch(this.state.current_tab){
                 case 0:
                     this.setState({
                         column: clickedColumn,
-                        current_costumes: _.sortBy(current_costumes, [clickedColumn]),
+                        filteredCostumes: _.sortBy(filteredCostumes, [clickedColumn]),
                         direction: 'ascending',
                       })
                 case 1:
                     this.setState({
                         column: clickedColumn,
-                        current_accessories: _.sortBy(current_accessories, [clickedColumn]),
+                        accessories: _.sortBy(accessories, [clickedColumn]),
                         direction: 'ascending',
                       })
                 case 2:
                     this.setState({
                         column: clickedColumn,
-                        use_data: _.sortBy(use_data, [clickedColumn]),
+                        uses: _.sortBy(uses, [clickedColumn]),
                         direction: 'ascending',
                       })
                 case 3:
                     this.setState({
                         column: clickedColumn,
-                        tp_data: _.sortBy(tp_data, [clickedColumn]),
+                        theatricalPlays: _.sortBy(theatricalPlays, [clickedColumn]),
                         direction: 'ascending',
                       })
                       
@@ -192,22 +184,22 @@ class Dashboard extends Component{
         switch(this.state.current_tab){
             case 0:
                 this.setState({
-                    current_costumes: current_costumes.reverse(),
+                    filteredCostumes: filteredCostumes.reverse(),
                     direction: direction === 'ascending' ? 'descending' : 'ascending',
                 })
             case 1:
                 this.setState({
-                    current_accessories: current_accessories.reverse(),
+                    accessories: accessories.reverse(),
                     direction: direction === 'ascending' ? 'descending' : 'ascending',
                   })
             case 2:
                 this.setState({
-                    use_data: use_data.reverse(),
+                    uses: uses.reverse(),
                     direction: direction === 'ascending' ? 'descending' : 'ascending',
                 })
             case 3:
                 this.setState({
-                    tp_data: tp_data.reverse(),
+                    theatricalPlays: theatricalPlays.reverse(),
                     direction: direction === 'ascending' ? 'descending' : 'ascending',
                 })
 
@@ -233,17 +225,15 @@ class Dashboard extends Component{
         };
     }
 
-    /*Get costumes from db*/
-    getCostumes = (decoded) => {
+    getCostumes (decoded){
+        this.setState({isLoading: true})
         if(decoded){
             axios.instance.get('costumes', {params: {user: decoded.role}})
             .then(res => {
                 if(res.statusText==='OK'){
-                    const costume_data = res.data;
-                    this.setState({ costume_data });
-                    this.setState({
-                        current_costumes: costume_data
-                    })
+                    const costumes = res.data;
+                    this.setState({ costumes });
+                    this.setState({filteredCostumes: costumes})
                 }
             }
             )
@@ -252,11 +242,9 @@ class Dashboard extends Component{
             axios.instance.get("costumes", {params: {user: this.state.user.role}})
             .then(res => {
                 if(res.statusText==='OK'){
-                    const costume_data = res.data;
-                    this.setState({ costume_data });
-                    this.setState({
-                        current_costumes: costume_data
-                    })
+                    const costumes = res.data;
+                    this.setState({ costumes });
+                    this.setState({filteredCostumes: costumes})
                 }
             }
             )
@@ -329,11 +317,11 @@ class Dashboard extends Component{
         })
     };
     
-    handleFilterSubmit = (filters) => {
-        console.log("Handle Filters", filters)
+    handleFilterSubmit ( filters ) {
         this.setState({
             filters: filters,
-            filterDrawerOpen: false
+            filterDrawerOpen: false,
+            filteredCostumes: this.state.costumes
         })
         this.applyFilters(filters);
     }
@@ -395,7 +383,7 @@ class Dashboard extends Component{
         //Refresh Tables
         if(value===0){
             if(this.state.filters.length!==0){
-                this.applyFilters();
+                this.applyFilters(this.state.filters);
             }
             else{
                 this.getCostumes();
@@ -559,18 +547,20 @@ class Dashboard extends Component{
     }
 
     renderTableCostumesData() {
-        return this.state.current_costumes.map((costume, index) => {
+        return this.state.filteredCostumes.map((costume, index) => {
             const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, images, parts, createdBy} = costume //desthucturing
             var img = null;
             for (var element in costume){
                 if (!element || element===''){
                     element='/t';
                 }}
-            let imagesObj=JSON.parse(images);
-            if (imagesObj) {
-            imagesObj.map(image => {
-                img = image['path'];  
-            })}
+            if(images){
+                let imagesObj=JSON.parse(images);
+                if (imagesObj) {
+                imagesObj.map(image => {
+                    img = image['path'];  
+                })}
+            }
             return (
                 <tr className="TableRow" key={costume_id}>
                     <td>
@@ -760,8 +750,33 @@ class Dashboard extends Component{
         })
     }
 
-    applyFilters = (filters) => {
-        var qs = require('qs');
+    applyFilters (filters) {
+        //Apply filters only front-end
+        let updatedCostumeList = [...this.state.costumes]
+        let reset = true;
+        let filteredCostumes = []
+        filters.forEach(filter => {
+            filter.value.forEach(element => {
+                if(element.isChecked){
+                    reset = false;
+                    filteredCostumes = updatedCostumeList.filter((costume) => {
+                        return costume[filter.name] === element.key
+                    })
+                }
+            });
+            
+        });
+
+        if (reset) {
+            this.resetFilters();
+            return;
+        }
+
+        this.setState({
+            filteredCostumes: filteredCostumes,
+        })
+
+        /* var qs = require('qs');
         axios.instance.get("costumes-filters/", 
         { params: { filters: filters, user: this.state.user.role }, 
         paramsSerializer: params => { return qs.stringify(params) } })
@@ -770,20 +785,15 @@ class Dashboard extends Component{
             if(res.statusText==='OK'){
                 this.setState({current_costumes: res.data})
             }
-        })
+        })*/
     }
 
     resetFilters = () => {
-        this.setState({
-            current_costumes: this.state.costume_data,
-            current_accessories: this.state.accessories,
-            current_tps: this.state.tp_data,
-            current_uses: this.state.use_data
-        })
+        this.getCostumes();
     }
 
     render() {
-        const { column, use_data, direction } = this.state
+        const { column, uses, direction } = this.state
 
         if (this.state.redirectToReferrer) {
             return <Redirect to="/auth" />
@@ -812,9 +822,9 @@ class Dashboard extends Component{
 
                 </div>
                 {/*Filters and right sidebar*/}
-                {/*<div className="sidebar" onClick={this.handleDrawerOpen}>
+                <div className="sidebar" onClick={this.handleDrawerOpen}>
                     <FilterButtons/>
-                </div>*/}
+                </div>
                 <Sidebar
                 rootClassName="FiltersSidebarRoot"
                 sidebarClassName="FiltersSidebar"
@@ -990,7 +1000,7 @@ class Dashboard extends Component{
                         <CostumeForm
                         handleClose={this.handleCloseDialog.bind(this)}
                         user={this.state.user.user_id}
-                        costumes={this.state.costume_data}
+                        costumes={this.state.costumes}
                         uses={this.state.use_data}
                         theatrical_plays={this.state.tp_data}
                         costume={this.state.costume}
@@ -1012,7 +1022,7 @@ class Dashboard extends Component{
                     editing={this.state.editing}
                     accessory={this.state.accessory}
                     uses={this.state.use_data}
-                    costumes={this.state.costume_data}
+                    costumes={this.state.costumes}
                     theatrical_plays={this.state.tp_data}
                     />
                     </div>)
@@ -1094,9 +1104,9 @@ class Dashboard extends Component{
                     <UseForm 
                     handleClose={this.handleCloseDialog.bind(this)}
                     user={this.state.user.user_id}
-                    costumes={this.state.costume_data}
-                    uses={this.state.use_data}
-                    theatrical_plays={this.state.tp_data}
+                    costumes={this.state.costumes}
+                    uses={this.state.uses}
+                    theatrical_plays={this.state.theatricalPlays}
                     editing={this.state.editing}
                     use={this.state.use}></UseForm>
                     </div>
