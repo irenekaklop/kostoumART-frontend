@@ -496,7 +496,7 @@ class CostumeForm extends Component{
                             </div>
                             <br/>
                             <div id='MediaUploadArea'>
-                                    <div id="Label">
+                                    <div>
                                         <span>EIKONEΣ * </span>
                                     </div>
                                     <ImageDropzone 

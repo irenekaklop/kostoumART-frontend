@@ -26,6 +26,8 @@ import Sidebar from 'react-sidebar';
 import SidebarContent from '../Filters/SidebarContent.js'
 
 
+import '../Shared/utils.js'
+
 class Dashboard extends Component{
 
     constructor(props) {
@@ -759,9 +761,10 @@ class Dashboard extends Component{
             filter.value.forEach(element => {
                 if(element.isChecked){
                     reset = false;
-                    filteredCostumes = updatedCostumeList.filter((costume) => {
+                    var filteredItems = updatedCostumeList.filter((costume) => {
                         return costume[filter.name] === element.key
                     })
+                    filteredCostumes = filteredCostumes.concat(filteredItems)
                 }
             });
             
@@ -773,7 +776,7 @@ class Dashboard extends Component{
         }
 
         this.setState({
-            filteredCostumes: filteredCostumes,
+            filteredCostumes: filteredCostumes.unique(),
         })
 
         /* var qs = require('qs');
@@ -934,48 +937,48 @@ class Dashboard extends Component{
                                     <th
                                     style={{cursor: 'inherit', backgroundColor: 'inherit', width: '20%'}}
                                     sorted={null}>
-                                        <span><sthong>EIKONA</sthong></span>
+                                        <span><strong>EIKONA</strong></span>
                                     </th>
                                     <th
                                     style={{width: '15%'}}
                                     sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}>
-                                    <sthong>ΤΙΤΛΟΣ</sthong> 
+                                    <strong>ΤΙΤΛΟΣ</strong> 
                                     </th>
                                     <th
                                     style={{width: '30%'}}
                                     sorted={column === 'descr' ? direction : null}
-                                    onClick={this.handleSort('descr')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
+                                    onClick={this.handleSort('descr')}><strong>ΠΕΡΙΓΡΑΦΗ</strong></th>
                                     <th
                                     style={{width: '20%'}}
                                     sorted={column === 'date' ? direction : null}
-                                    onClick={this.handleSort('date')}><sthong>ΕΠΟΧΗ</sthong></th>
+                                    onClick={this.handleSort('date')}><strong>ΕΠΟΧΗ</strong></th>
                                     <th
                                     style={{width: '10%'}}
                                     sorted={column === 'use_name' ? direction : null}
-                                    onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
+                                    onClick={this.handleSort('use_name')}><strong>ΧΡΗΣΗ</strong></th>
                                     <th
                                     style={{width: '10%'}}
                                     sorted={column === 'sex' ? direction : null}
-                                    onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
+                                    onClick={this.handleSort('sex')}><strong>ΦΥΛΟ</strong></th>
                                     <th 
                                     style={{width: '10%'}}
                                     sorted={column === 'material' ? direction : null}
-                                    onClick={this.handleSort('material')}><sthong>ΥΛΙΚΟ<br/>ΚΑΤΑΣΚΕΥΗΣ</sthong></th>
+                                    onClick={this.handleSort('material')}><strong>ΥΛΙΚΟ<br/>ΚΑΤΑΣΚΕΥΗΣ</strong></th>
                                     <th
                                     style={{width: '10%'}}
                                     sorted={column === 'technique' ? direction : null}
-                                    onClick={this.handleSort('technique')}><sthong>ΤΕΧΝΙΚΗ</sthong></th>
+                                    onClick={this.handleSort('technique')}><strong>ΤΕΧΝΙΚΗ</strong></th>
                                     <th
                                     style={{width: '20%'}}
                                     sorted={column === 'location' ? direction : null}
-                                    onClick={this.handleSort('location')}><sthong>ΠΕΡΙΟΧΗ</sthong></th>
+                                    onClick={this.handleSort('location')}><strong>ΠΕΡΙΟΧΗ</strong></th>
                                     <th
                                     style={{width: '20%'}}
                                     sorted={column === 'designer' ? direction : null}
-                                    onClick={this.handleSort('designer')}><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
+                                    onClick={this.handleSort('designer')}><strong>ΣΧΕΔΙΑΣΤΗΣ</strong></th>
                                     <th style={{width: '5%'}}>
-                                    <sthong>EDITOR</sthong>
+                                    <strong>EDITOR</strong>
                                     </th>
                                     <th
                                     id="th_actions"></th>
@@ -1037,54 +1040,54 @@ class Dashboard extends Component{
                                     <th
                                     style={{cursor: 'inherit', backgroundColor: 'inherit', width: '20%'}}
                                     sorted={null}>
-                                        <span><sthong>EIKONA</sthong></span>
+                                        <span><strong>EIKONA</strong></span>
                                     </th>
                                     <th 
                                     style={{width: '10%'}}
                                     sorted={column === 'name' ? direction : null}
-                                    onClick={this.handleSort('name')}><sthong>ONOMA</sthong></th>
+                                    onClick={this.handleSort('name')}><strong>ONOMA</strong></th>
                                     <th
                                     style={{width: '25%'}}
                                     sorted={column === 'description' ? direction : null}
-                                    onClick={this.handleSort('description')}><sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
+                                    onClick={this.handleSort('description')}><strong>ΠΕΡΙΓΡΑΦΗ</strong></th>
                                     <th 
                                     style={{width: '10%'}}
                                     sorted={column === 'use_name' ? direction : null}
-                                    onClick={this.handleSort('use_name')}><sthong>ΧΡΗΣΗ</sthong></th>
+                                    onClick={this.handleSort('use_name')}><strong>ΧΡΗΣΗ</strong></th>
                                     <th
                                     style={{width: '20%'}}
                                     sorted={column === 'tp_title' ? direction : null}
-                                    onClick={this.handleSort('tp_title')}><sthong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</sthong></th>
+                                    onClick={this.handleSort('tp_title')}><strong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</strong></th>
                                     <th 
                                     style={{width: '20%'}}
                                     sorted={column === 'costume_name' ? direction : null}
-                                    onClick={this.handleSort('costume_name')}><sthong>ΚΟΣΤΟΥΜΙ</sthong></th>
+                                    onClick={this.handleSort('costume_name')}><strong>ΚΟΣΤΟΥΜΙ</strong></th>
                                     <th 
                                     style={{width: '25%'}}
                                     sorted={column === 'date' ? direction : null}
-                                    onClick={this.handleSort('date')}><sthong>XΡΟΝΟΛΟΓΙΑ</sthong></th>
+                                    onClick={this.handleSort('date')}><strong>XΡΟΝΟΛΟΓΙΑ</strong></th>
                                     <th 
                                     style={{width: '20%'}}
                                     sorted={column === 'technique' ? direction : null}
-                                    onClick={this.handleSort('technique')}><sthong>ΤΕΧΝΙΚΗ</sthong></th>
+                                    onClick={this.handleSort('technique')}><strong>ΤΕΧΝΙΚΗ</strong></th>
                                     <th 
                                     style={{width: '20%'}}
                                     sorted={column === 'sex' ? direction : null}
-                                    onClick={this.handleSort('sex')}><sthong>ΦΥΛΟ</sthong></th>
+                                    onClick={this.handleSort('sex')}><strong>ΦΥΛΟ</strong></th>
                                     <th
                                     style={{width: '20%'}}
                                     sorted={column === 'designer' ? direction : null}
-                                    onClick={this.handleSort('designer')}><sthong>ΣΧΕΔΙΑΣΤΗΣ</sthong></th>
+                                    onClick={this.handleSort('designer')}><strong>ΣΧΕΔΙΑΣΤΗΣ</strong></th>
                                     <th
                                     style={{width: '20%'}}
                                     sorted={column === 'location' ? direction : null}
-                                    onClick={this.handleSort('location')}><sthong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</sthong></th>
+                                    onClick={this.handleSort('location')}><strong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</strong></th>
                                     <th
                                     style={{width: '30%'}}
                                     sorted={column === 'actors' ? direction : null}
-                                    onClick={this.handleSort('actors')}><sthong>ΗΘΟΠΟΙΟΙ</sthong></th>
+                                    onClick={this.handleSort('actors')}><strong>ΗΘΟΠΟΙΟΙ</strong></th>
                                     <th style={{width: '5%'}}>
-                                    <sthong>EDITOR</sthong>
+                                    <strong>EDITOR</strong>
                                     </th>
                                     <th id="th_actions"></th>
                                 </tr>
@@ -1122,26 +1125,26 @@ class Dashboard extends Component{
                                 style={{width: '20%'}}
                                 sorted={column === 'name' ? direction : null}
                                 onClick={this.handleSort('name')}>
-                                <sthong>ΟΝΟΜΑ</sthong> 
+                                <strong>ΟΝΟΜΑ</strong> 
                                 </th>
                                 <th
                                 style={{width: '20%'}}
                                 sorted={column === 'use_category' ? direction : null}
                                 onClick={this.handleSort('use_category')}>
-                                <sthong>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</sthong></th>
+                                <strong>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</strong></th>
                                 <th
                                 style={{width: '30%'}}                                                                         
                                 sorted={column === 'description' ? direction : null}
                                 onClick={this.handleSort('description')}>
-                                <sthong>ΠΕΡΙΓΡΑΦΗ</sthong></th>
+                                <strong>ΠΕΡΙΓΡΑΦΗ</strong></th>
                                 <th
                                 style={{width: '10%'}}
                                 sorted={column === 'customs' ? direction : null}
                                 onClick={this.handleSort('customs')}>
-                                <sthong>ΕΘΙΜΑ</sthong>
+                                <strong>ΕΘΙΜΑ</strong>
                                 </th>
                                 <th style={{width: '10%'}}>
-                                    <sthong>EDITOR</sthong>
+                                    <strong>EDITOR</strong>
                                 </th>
                                 <th id="th_actions"></th>
                                 </tr>
@@ -1176,20 +1179,20 @@ class Dashboard extends Component{
                                     <th 
                                     style={{width: '20%'}}
                                     sorted={column === 'title' ? direction : null}
-                                    onClick={this.handleSort('title')}><sthong>ΟΝΟΜΑ ΠΑΡΑΣΤΑΣΗΣ</sthong></th>
+                                    onClick={this.handleSort('title')}><strong>ΟΝΟΜΑ ΠΑΡΑΣΤΑΣΗΣ</strong></th>
                                     <th
                                     style={{width: '20%'}}
                                     sorted={column === 'director' ? direction : null}
-                                    onClick={this.handleSort('director')}><sthong>ΣΚΗΝΟΘΕΤΗΣ</sthong></th>
+                                    onClick={this.handleSort('director')}><strong>ΣΚΗΝΟΘΕΤΗΣ</strong></th>
                                     <th
                                     style={{width: '20%'}}
                                     sorted={column === 'theater' ? direction : null}
-                                    onClick={this.handleSort('theater')}><sthong>ΘΕΑΤΡΟ</sthong></th>
+                                    onClick={this.handleSort('theater')}><strong>ΘΕΑΤΡΟ</strong></th>
                                     <th style={{width: '20%'}}
                                     sorted={column === 'date' ? direction : null}
-                                    onClick={this.handleSort('date')}><sthong>ΧΡΟΝΟΛΟΓΙΑ</sthong></th>
+                                    onClick={this.handleSort('date')}><strong>ΧΡΟΝΟΛΟΓΙΑ</strong></th>
                                     <th style={{width: '10%'}}>
-                                    <sthong>EDITOR</sthong>
+                                    <strong>EDITOR</strong>
                                     </th>
                                     <th id="th_actions"></th>
                                 </tr>

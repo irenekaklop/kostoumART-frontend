@@ -61,12 +61,33 @@ class SidebarContent extends Component {
                     key: 'Άνδρας',
                     label: 'Άνδρας',
                     isChecked: false,
+                }
+            ],
+            use_category: [
+                {
+                    name: 'Επίσημο',
+                    key: 'Επίσημο',
+                    label: 'Επίσημο',
+                    isChecked: false,
+                  },
+                {
+                    name: 'Εργασίας',
+                    key: 'Εργασίας',
+                    label: 'Εργασίας',
+                    isChecked: false,
                 },
+                {
+                    name: 'Καθημερινό',
+                    key: 'Καθημερινό',
+                    label: 'Καθημερινό',
+                    isChecked: false,
+                }
             ],
             selectedItems : []
         }
         this.handleChangeTechnique = this.handleChangeTechnique.bind(this);
         this.handleChangeSex = this.handleChangeSex.bind(this);
+        this.handleChangeCategory = this.handleChangeCategory.bind(this);
     }
 
     handleChangeTechnique(e) {
@@ -84,6 +105,16 @@ class SidebarContent extends Component {
         let key=e.target.name;
         this.setState(prevState => ({
             sexs: prevState.sexs.map( 
+                el => el.key === key? { ...el, isChecked: !el.isChecked }: el )
+            }));
+        console.log(this.state)
+    }
+
+    handleChangeCategory(e) {
+        console.log(e.target.name)
+        let key=e.target.name;
+        this.setState(prevState => ({
+            use_category: prevState.use_category.map( 
                 el => el.key === key? { ...el, isChecked: !el.isChecked }: el )
             }));
         console.log(this.state)
@@ -107,6 +138,14 @@ class SidebarContent extends Component {
             }
         )
         this.state.selectedItems.push({name: "sex", value: array})
+        array=[];
+        this.state.use_category.forEach(
+            element => {
+            if(element.isChecked){
+                array.push(element)
+            }
+        });
+        this.state.selectedItems.push({name: 'use_category', value: array})
         this.setState(()=>this.props.handleFilterSubmit(this.state.selectedItems))
     }
 
@@ -164,6 +203,26 @@ class SidebarContent extends Component {
                     isChecked: false,
                 },
             ],
+            use_category: [
+                {
+                    name: 'Επίσημο',
+                    key: 'Επίσημο',
+                    label: 'Επίσημο',
+                    isChecked: false,
+                  },
+                {
+                    name: 'Εργασίας',
+                    key: 'Εργασίας',
+                    label: 'Εργασίας',
+                    isChecked: false,
+                },
+                {
+                    name: 'Καθημερινό',
+                    key: 'Καθημερινό',
+                    label: 'Καθημερινό',
+                    isChecked: false,
+                }
+            ],
             selectedItems : []
         })
         this.setState(()=>this.props.resetFilters())
@@ -171,7 +230,7 @@ class SidebarContent extends Component {
 
     render(){
         return(
-            <div>
+            <div className='filters'>
                 <button id="CloseButton">
                 <IconButton onClick={()=>{this.props.handleDrawerClose(false)}}>
                     <img src={require('../../styles/images/MENU ARROW@2x.png')}/>
@@ -180,21 +239,24 @@ class SidebarContent extends Component {
                 <div id="description"><span>Επιλέξτε τα στοιχεία, βάση των οποίων<br/>θα προβληθεί ο τελικός αριθμός<br/>των αποτελεσμάτων</span></div>
                 <div id="Separator"/>
 
-                <span id="TechniqueLabel">TEXNIKH</span><br/>
-                <div id="TechniqueOptions">
-                {
-                   
-                    this.state.techniques.map(item => (
-                    <label key={item.key}>
-                    <Checkbox name={item.name} checked={item.isChecked} onChange={this.handleChangeTechnique} />
-                    <br/>
-                    </label>
-                    ))
+                <div style={{padding: '10%'}}>
+                    <span id="Label">TEXNIKH</span><br/>
+                    <div id="Options">
+                    {
+                    
+                        this.state.techniques.map(item => (
+                        <label key={item.key}>
+                        <Checkbox name={item.name} checked={item.isChecked} onChange={this.handleChangeTechnique} />
+                        <br/>
+                        </label>
+                        ))
 
-                }
+                    }
+                    </div>
                 </div>
-                <span id="SexLabel">ΦΥΛΟ</span><br/>
-                <div id="SexOptions">
+                <div style={{padding: '10%'}}>
+                <span id="Label">ΦΥΛΟ</span><br/>
+                <div id="Options">
                 {
                     this.state.sexs.map(item => (
                     <label key={item.key}>
@@ -204,8 +266,21 @@ class SidebarContent extends Component {
                     ))
                 }
                 </div>
-
-                <div id="SeparatorDown"/>
+                </div>
+                <div style={{padding: '10%'}}>
+                <span id="Label">KATHΓΟΡΙΑ ΧΡΗΣΗΣ</span><br/>
+                <div id="Options">
+                {
+                    this.state.use_category.map(item => (
+                    <label key={item.key}>
+                    <Checkbox name={item.name} checked={item.isChecked} onChange={this.handleChangeCategory} />
+                    <br/>
+                    </label>
+                    ))
+                }
+                </div>
+                </div>
+                <div id="Separator"/>
                 <div id="SeparatorButtons"/>
                 <button id="ButtonApply" onClick={this.handleSubmit}>
                     <ApplyButton/>

@@ -11,15 +11,16 @@
     height: inherit;
 }
 
+.filters {
+    margin: 10%;
+}
+
 #description {
-    position: absolute;
-    left: 44.05px;
-    top: 69.874px;
     overflow: visible;
     width: 267px;
+    padding-bottom: 4%;
     white-space: nowrap;
     line-height: 18px;
-    margin-top: -2px;
     text-align: left;
     font-family: Roboto-LightItalic;
     font-style: normal;
@@ -31,24 +32,22 @@
 
 #Separator{
     overflow: visible;
-    position: absolute;
-    width: 288.753px;
-    left: 49.337px;
-    top: 142.033px;
+    width: 350px;
+    margin: 0;
     border-top: 2px dashed rgb(92, 92, 92);
-    margin: auto;
 }
 
-#TechniqueLabel {   
-    position: absolute;
-    left: 78.338px;
-    top: 187.171px;
+.filterArea {
+    padding: 10%;
+}
+
+#Label {   
     overflow: visible;
-    width: 57px;
     white-space: nowrap;
     line-height: 30px;
     margin-top: -9px;
-    text-align: left;
+    margin-bottom: 35px;
+    text-align: center;
     font-family: InputMono-Medium;
     font-style: normal;
     font-weight: normal;
@@ -57,10 +56,7 @@
     letter-spacing: 0.4px;
 }
 
-#TechniqueOptions {
-    position: absolute;
-    left: 44.338px;
-    top: 224.327px;
+#Options {
     overflow: visible;
     width: 92.167px;
     white-space: nowrap;
@@ -75,60 +71,18 @@
     letter-spacing: 0.43px;
 }
 
-#SexLabel {
-    position: absolute;
-    left: 78.338px;
-    top: 423.023px;
-    overflow: visible;
-    width: 33px;
-    white-space: nowrap;
-    line-height: 30px;
-    margin-top: -9px;
-    text-align: left;
-    font-family: InputMono-Medium;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    color: rgba(56,56,56,1);
-    letter-spacing: 0.4px;
-}
-
-#SexOptions {
-    position: absolute;
-    left: 44.338px;
-    top: 462.492px;
-    overflow: visible;
-    width: 188px;
-    white-space: nowrap;
-    line-height: 30px;
-    margin-top: -7px;
-    text-align: left;
-    font-family: Roboto-Regular;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    color: rgba(56,56,56,1);
-    letter-spacing: 0.43px;
-}
-
 #SeparatorDown {
-    overflow: visible;
-    position: absolute;
-    width: 288.753px;
-    left: 49.337px;
-    top: 710.411px;
+    width: 350px;
     border-top: 2px dashed rgb(92, 92, 92);
     margin: auto;
 }
 
 #SeparatorButtons {
     overflow: visible;
-    position: absolute;
-    width: 0.5px;
+    width: 175px;
     height: 72.375px;
-    left: 187.021px;
-    top: 710.411px;
-    border-left: 2px dashed rgb(92, 92, 92);
+ 
+    border-right: 2px dashed rgb(92, 92, 92);
 }
 
 #ButtonApply {
@@ -136,7 +90,7 @@
     position: absolute;
     width: 110.41px;
     height: 38.568px;
-    left: 55.4px;
+    left: 60px;
     top: 732.313px;
     background-color: white;
     cursor: pointer;
@@ -148,11 +102,10 @@
 
 #ButtonReset {
     overflow: visible;
-    position: absolute;
+    position: relative;
     width: 105.411px;
-    height: 38.568px;
-    left: 217.522px;
-    top: 732.313px;
+    left: 200px;
+    top: -50px;
     background-color: white;
     cursor: pointer;
 }
