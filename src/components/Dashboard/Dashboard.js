@@ -47,6 +47,8 @@ class Dashboard extends Component{
             theatricalPlays:[],
             accessories: [],
             filteredCostumes: [],
+            filteredAccessories: [],
+            filteredUses: [],
             //For Insert Form
             isCostumeFormOpen: false,
             isUseFormOpen: false,
@@ -150,7 +152,7 @@ class Dashboard extends Component{
     }
 
     handleSort = (clickedColumn) => () => {
-        const { column, uses, filteredCostumes, accessories, theatricalPlays, direction } = this.state
+        const { column, uses, filteredCostumes, filteredAccessories, theatricalPlays, direction } = this.state
     
         if (column !== clickedColumn) {
             switch(this.state.current_tab){
@@ -163,7 +165,7 @@ class Dashboard extends Component{
                 case 1:
                     this.setState({
                         column: clickedColumn,
-                        accessories: _.sortBy(accessories, [clickedColumn]),
+                        filteredAccessories: _.sortBy(filteredAccessories, [clickedColumn]),
                         direction: 'ascending',
                       })
                 case 2:
@@ -191,7 +193,7 @@ class Dashboard extends Component{
                 })
             case 1:
                 this.setState({
-                    accessories: accessories.reverse(),
+                    filteredAccessories: filteredAccessories.reverse(),
                     direction: direction === 'ascending' ? 'descending' : 'ascending',
                   })
             case 2:
@@ -286,7 +288,7 @@ class Dashboard extends Component{
                     const accessories = res.data;
                     this.setState({ accessories });
                     this.setState({
-                        current_accessories: accessories
+                        filteredAccessories: accessories
                     })
                 }
             }
@@ -299,7 +301,7 @@ class Dashboard extends Component{
                     const accessories = res.data;
                     this.setState({ accessories });
                     this.setState({
-                        current_accessories: accessories
+                        filteredAccessories: accessories
                     })
                 }
             })
@@ -692,7 +694,7 @@ class Dashboard extends Component{
     }
 
     renderTableAccessoriesData() {
-        return this.state.current_accessories.map((accessory, index) => {
+        return this.state.filteredAccessories.map((accessory, index) => {
             const {accessory_id, name, description, date, sex, material, technique, tp_title, images, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
             var img = null;
             for (var element in accessory){
@@ -755,16 +757,22 @@ class Dashboard extends Component{
     applyFilters (filters) {
         //Apply filters only front-end
         let updatedCostumeList = [...this.state.costumes]
+        let updatedAccessoriesList = [...this.state.accessories]
         let reset = true;
-        let filteredCostumes = []
+        let filteredAccessories = [];
+        let filteredCostumes = [];
         filters.forEach(filter => {
             filter.value.forEach(element => {
                 if(element.isChecked){
                     reset = false;
-                    var filteredItems = updatedCostumeList.filter((costume) => {
+                    var filteredCostumeItems = updatedCostumeList.filter((costume) => {
                         return costume[filter.name] === element.key
                     })
-                    filteredCostumes = filteredCostumes.concat(filteredItems)
+                    var filteredAccessoriesItems = updatedAccessoriesList.filter((accessory) => {
+                        return accessory[filter.name] === element.key
+                    })
+                    filteredAccessories = filteredAccessories.concat(filteredAccessoriesItems)
+                    filteredCostumes = filteredCostumes.concat(filteredCostumeItems)
                 }
             });
             
@@ -776,6 +784,7 @@ class Dashboard extends Component{
         }
 
         this.setState({
+            filteredAccessories: filteredAccessories.unique(),
             filteredCostumes: filteredCostumes.unique(),
         })
 
@@ -793,6 +802,7 @@ class Dashboard extends Component{
 
     resetFilters = () => {
         this.getCostumes();
+        this.getAccessories();
     }
 
     render() {
