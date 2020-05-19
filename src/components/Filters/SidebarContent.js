@@ -4,7 +4,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
 import Checkbox from "../Shared/Checkbox.js"
-import {ApplyButton, ResetButton} from '../Shared/Buttons.js'
+import {ApplyButton, ResetButton} from '../Shared/Buttons/Buttons.js'
 import './SidebarContent.css'
 
 class SidebarContent extends Component {

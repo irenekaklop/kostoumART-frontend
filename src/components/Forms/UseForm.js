@@ -3,11 +3,11 @@ import React, {Component} from 'react';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import Select from 'react-select';
-import {SaveButton, CancelButton} from "../Shared/Buttons.js";
+import {SaveButton, CancelButton} from "../Shared/Buttons/Buttons.js";
 import TextareaAutosize from 'react-textarea-autosize';
 import {sexs, materials, techniques, use_categories} from "../../utils/options";
 import "./Forms.css";
-import { IconButton } from '@material-ui/core';
+import { IconButton, Button } from '@material-ui/core';
 import TextEditor from '../Shared/TextEditor/TextEditor.js';
 import axios from '../../utils/api-url.js'
 
@@ -193,6 +193,7 @@ class UseForm extends Component{
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
+                this.props.handleClose(true);
             }
        })    
     }
@@ -203,6 +204,7 @@ class UseForm extends Component{
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('insert')
+                this.props.handleClose(true);
             }
        })    
     }
@@ -268,83 +270,52 @@ class UseForm extends Component{
     render(){
         return(
             <React.Fragment>
-                <div id="ADD">
-                    <NotificationContainer>{this.createNotification()}</NotificationContainer>
-                    <div id="FormTitle">Χρήση</div><br/>
-                    <form id="Form">
-                        <div id="Name">
-                            <div id="NameArea">
-                                <div id="NameLabel">
-                                    <span>ONOMA ΔΡΑΣΤΗΡΙΟΤΗΤΑΣ</span>
-                                </div>
-                                <input
-                                id="TextArea"
-                                value={this.state.use.name.value}
-                                name="name"
-                                onChange={this.handleChange('name')}
-                                required={true}
-                                />
-                            </div>
-                        </div>
-                        <br/>
-                        <div id="UseCategory">
-                            <div id="UseCategoryArea">
-                                <div id="UseNameLabel">
-                                    <span>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</span>
-                                </div>
-                                <Select
-                                id="SelectContainer"
-                                className="react-select"
-                                placeholder={''}
-                                name="useCategory"
-                                value={this.state.use.useCategory}
-                                onChange={this.handleChange('useCategory')}
-                                required={true}
-                                options={use_categories}
-                                closeMenuOnSelect={true} 
-                                />
-                            </div>
-                        </div>
-                        <br/>
-                        <div id='UseDescription'>
-                            <div id="DescriptionArea">
-                                <div id="LabelWithSubtitle">
-                                    <div className="Title">
-                                            <span>ΠΕΡΙΓΡΑΦΗ</span>
-                                    </div>
-                                    <div className="Subtitle">({this.maxLegnth-this.state.use.description.value.length} CHARACTERS REMAINING)</div>
-                                </div>
-                                <IconButton onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></IconButton>
-                                <TextareaAutosize
-                                id="DescriptionInput"
-                                type='text'
-                                name="description"
-                                value={this.state.use.description.value}
-                                onChange={this.handleChange('description')}
-                                required={true}
-                                />
-                            </div>
-                        </div>
-                        <br/>
-                        <div id="UseCustoms">
-                            <div id="UseCustomsArea">
-                                <div id="UseCustomsLabel">
-                                <span>ΗΘΗ/ΕΘΙΜΑ</span>
-                                </div>
-                                <input
-                                id="TextArea"
-                                name="customs"
-                                value={this.state.use.customs.value}
-                                onChange={this.handleChange('customs')}
-                                required={false}
-                                />
-                            </div>
-                        </div>
-                        <br/><br/><br/>
-                        <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>
-                        <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
-                    </form>
-                </div>
+                <NotificationContainer>{this.createNotification()}</NotificationContainer>
+                    <div id="FormTitle">Χρήση</div>
+                    <form className="FormPanel">
+                        <div className="column main" 
+                        style={{paddingRight: '50px'}}>
+                        <span className="Label">ONOMA ΔΡΑΣΤΗΡΙΟΤΗΤΑΣ *</span>
+                        <input
+                        id="input-area"
+                        value={this.state.use.name.value}
+                        name="name"
+                        onChange={this.handleChange('name')}
+                        required={true}
+                        />
+                        <span className="Label">ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ *</span>
+                        <Select
+                        placeholder={''}
+                        name="useCategory"
+                        value={this.state.use.useCategory}
+                        onChange={this.handleChange('useCategory')}
+                        required={true}
+                        options={use_categories}
+                        closeMenuOnSelect={true} 
+                        />
+                        <span className="Label">ΠΕΡΙΓΡΑΦΗ *</span>
+                        <div className="Subtitle">({this.maxLegnth-this.state.use.description.value.length} CHARACTERS REMAINING)</div>
+                        <Button onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></Button>
+                        <TextareaAutosize
+                        id="DescriptionInput"
+                        type='text'
+                        name="description"
+                        value={this.state.use.description.value}
+                        onChange={this.handleChange('description')}
+                        required={true}
+                        />
+                        <span className="Label">ΗΘΗ/ΕΘΙΜΑ</span>
+                        <input
+                        id="input-area"
+                        name="customs"
+                        value={this.state.use.customs.value}
+                        onChange={this.handleChange('customs')}
+                        required={false}
+                        />
+                    </div>
+                </form>
+                <IconButton onClick={this.props.handleClose}><img id='image-button' src={require('../../styles/images/buttons/CANCEL.svg')}/></IconButton>
+                <IconButton onClick={this.handleSubmit}><img id='image-button' src={require('../../styles/images/buttons/SAVE.svg')}/></IconButton>
                 <TextEditor
                 isOpen={this.state.isTextEditorOpen}
                 handleClose={this.onCloseEditor.bind(this)}

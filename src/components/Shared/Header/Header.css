@@ -1,0 +1,68 @@
+.logout-area {
+    position:absolute;
+    top:0;
+    right:0;
+    width: 378.633px;
+    height: 112.152px;
+    background-color: rgba(56,56,56,1);
+}
+
+#LOGOUT_BUTTON {
+    position: absolute;
+    right: 0;
+    top: 40%;
+    background-color: rgba(56, 56, 56, 1);
+    color: rgba(255,222,23,1);
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    width: 25%;
+    cursor: pointer;
+}
+  
+#LOGOUT_BUTTON:hover{
+    background-color: rgba(255, 255, 255, 0.04);
+}
+  
+#USERNAME {
+    position: absolute;
+    left: 10%;
+    top: 29%;
+    width: 59px;
+    line-height: 13.200000762939453px;
+    margin-top: -1.1000003814697266px;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    color: rgba(119,119,119,1);
+}
+  
+#administrator_email {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    overflow: visible;
+    width: 199px;
+    line-height: 21.600000381469727px;
+    margin-top: -1.8000001907348633px;
+    text-align: left;
+    font-family: Roboto-Light;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: rgba(255,255,255,1);
+    letter-spacing: -0.17px;
+}
+  
+.Line_5 {
+    overflow: visible;
+    position: absolute;
+    width: 1px;
+    height: 66.176px;
+    right: 25%;
+    top: 29.079px;
+    transform: matrix(1,0,0,1,0,0);
+}

@@ -1,48 +1,3 @@
-.logout-area {
-  position:absolute;
-  top:0;
-  right:0;
-  width: 378.633px;
-  height: 112.152px;
-  background-color: rgba(56,56,56,1);
-}
-
-.react-tabs__tab-list{
-  position: absolute;
-  overflow: visible;
-  width: 60%;
-  height: 54px;
-  left: 74.302px;
-  top: 60.2px;
-  margin-top: -1.5px;
-  text-align: left;
-  background: linear-gradient(to left, rgba(255,0,0,0), #ffde17);
-}
-
-.react-tabs__tab {
-  display: inline-block;
-  position: relative;
-  list-style: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  font-family: InputMono-Bold;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  color: rgba(255,255,255,1);
-  letter-spacing: 0.4px;
-  
-}
-
-.react-tabs__tab--selected {
-  padding: 6px 12px;
-  text-align: center;
-  color: rgba(56,56,56,1);
-  background: rgba(242,242,242,1);
-  width: 208.184px;
-  height: 82.721px;
-}
-
 .form-panel {
   background: rgba(242,242,242,1);
   display: flex;
@@ -51,166 +6,6 @@
   position: absolute;
   left: 74.302px;
   top: 113px;
-}
-
-.UnderlineTabTitle {
-  width: 87.443px;
-  height: 5.535px;
-}
-
-.main-container {
-  min-height: 100vh; /* will cover the 100% of viewport */
-  overflow: hidden;
-  display: block;
-  padding-bottom: 100px; /* height of your footer */
- }
-
-.panel-container {
-  overflow: hidden;
-  display: flex;
-  width: 96.1%; 
-  flex-direction: column;
-  justify-content: center;
-  position: absolute;
-  left: 74.302px;
-  top: 113px;
-}
-
-.button-insert {
-  position: relative;
-  margin: auto;
-  width: 13%;
-  top:-24px;
-  border-radius: 40% !important;
-	font-family: InputMono-Light;
-	font-style: normal;
-	font-weight: normal;
-  font-size: 12px;
-  color: rgba(88,89,91,1);
-  letter-spacing: 0.4px;
-  background-color: white;
-  cursor: pointer;
-}
-
-.button-insert:hover {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  background-color: rgba(240,240,240,1)
-}
-
-#ButtonAddIcon {
-  vertical-align:middle;
-}
-
-#ButtonAddText {
-  margin-left: 16.34px;
-}
-
-#Tailoring_Times {
-  transform: matrix(1,0,0,1,-160.7261,438.9189) rotate(-90deg);
-  transform-origin: center;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  overflow: visible;
-  width: 392px;
-  white-space: nowrap;
-  line-height: 58.10982131958008px;
-  margin-top: -9.68497085571289px;
-  text-align: left;
-  font-family: InputMono-Thin;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 38.7398796081543px;
-  color: rgba(56,56,56,1);
-  letter-spacing: 0.4px;
-}
-
-#LOGOUT_BUTTON {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  background-color: rgba(56, 56, 56, 1);
-  color: rgba(255,222,23,1);
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  width: 25%;
-  cursor: pointer;
-}
-
-#LOGOUT_BUTTON:hover{
-  background-color: rgba(255, 255, 255, 0.04);
-}
-
-#USERNAME {
-  position: absolute;
-  left: 10%;
-  top: 29%;
-  width: 59px;
-  line-height: 13.200000762939453px;
-  margin-top: -1.1000003814697266px;
-  text-align: left;
-  font-family: Roboto-Regular;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 11px;
-  color: rgba(119,119,119,1);
-}
-
-#administrator_email {
-  position: absolute;
-  left: 10%;
-  top: 50%;
-  overflow: visible;
-  width: 199px;
-  line-height: 21.600000381469727px;
-  margin-top: -1.8000001907348633px;
-  text-align: left;
-  font-family: Roboto-Light;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  color: rgba(255,255,255,1);
-  letter-spacing: -0.17px;
-}
-
-.Line_5 {
-  overflow: visible;
-  position: absolute;
-  width: 1px;
-  height: 66.176px;
-  right: 25%;
-  top: 29.079px;
-  transform: matrix(1,0,0,1,0,0);
-}
-
-.Rectangle_8 {
-  position: absolute;
-  overflow: visible;
-  width: 21.327px;
-  height: 411.419px;
-  left: 23.631px;
-  top: 255.749px;
-}
-
-#costumART-Dashboard {
-  transform: matrix(1,0,0,1,-40.7588,940.6748) rotate(-90deg);
-  transform-origin: center;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  overflow: visible;
-  width: 141px;
-  white-space: nowrap;
-  line-height: 29.341476440429688px;
-  margin-top: -2.4451236724853516px;
-  text-align: left;
-  font-family: InputMono-Thin;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24.451229095458984px;
-  color: rgba(56,56,56,1);
 }
 
 .table {
@@ -335,51 +130,9 @@ th:hover{
   overflow-x: hidden!important;
 }
 
-.sidebar {
-  position: absolute;
-  height: 100%;
-  background-color: white;
-  width: 73.8px;
-  top: 0;
-  left: 0;
-}
 
-.FiltersSidebarRoot {
-  left: 74.302px!important;
-  top: 0.487px!important;
-  z-index: auto!important;
-  width: 411.859px;
-  height: 1079.057px;
-}
 
-.FiltersSidebar {
-  position: absolute;
-  transition: transform .3s ease-out;
-  -webkit-transition: .3s ease-out;  
-  overflow-y: auto;
-  width: 411.859px;
-  height: 1079.057px;
-  background-color: white;
-  font-family: Roboto-LightItalic;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  color: rgba(56,56,56,1);
-  letter-spacing: 0.43px;
-  text-align: left;
-  line-height: 18px;
-}
 
-.Overlay {
-  z-index: 1;
-  position: absolute;
-  left: 74.302px!important;
-  top: 0.487px!important;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .3s ease-out, visibility .3s ease-out;
-  background-color: rgba(0,0,0,.3);
-}
 
 #TextWithIconCell {
   display: table-cell;
@@ -423,4 +176,9 @@ th:hover{
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
+  margin-block-start: 0;
+}
+
+input {
+  border: none;
 }

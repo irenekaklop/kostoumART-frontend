@@ -1,11 +1,25 @@
-.FormControl {
-  width: 100%;
-  margin-bottom: 3% !important;
-  margin-right: 2% !important;
+textarea {
+  border: none;
 }
 
-.FormContent {
-  margin: 6% 4%;
+
+.column {
+  float: left;
+}
+
+.main {
+  width: 50%;
+  height: fit-content;
+}
+
+.select-column {
+  width: 40%;
+  padding-right: 40px;
+}
+
+.rows {
+  display: grid;
+  grid-row: 13.45px;
 }
 
 #InputArea {
@@ -39,34 +53,18 @@
   color: rgba(147,149,152,1);
 }
 
-#TextArea {
-  width: 646.89px;
-  height: 50px;
-  margin-top: 13.45px;
-  text-align: left;
-  font-family: RobotoSlab-Light;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 19px;
-  color: rgba(88,89,91,1);
-  background-color: inherit;
-  border-bottom: 1px solid rgba(255,222,23,1);
-  border-radius: 0px!important;
-}
-
 #SelectContainer {
   margin-top: 13.45px;
 }
 
 .css-2b097c-container {
-  width: 365.137px;
-  height: 58.606px;
   background-color: inherit;
+  line-height: 32px;
+  margin-top: 13.45px;
+  margin-bottom: 13.45px!important;
 }
 
 .css-yk16xz-control {
-  width: 365.137px;
-  height: 58.606px;
   border: none!important;
   border-bottom: 1px solid rgba(255,222,23,1)!important;
   background-color: inherit;
@@ -74,17 +72,15 @@
 }
 
 .css-1pahdxg-control {
-  width: 365.137px!important;
-  height: 58.606px!important;
   background-color: inherit;
   border: none!important;
-  border-bottom: 1px solid #2684ff!important;
+  border-bottom: 1px solid rgba(255,222,23,1)!important;
   border-radius: 0px!important;
 }
 
 .css-1pahdxg-control:hover {
   border: none!important;
-  border-bottom: 1px solid #2684ff!important;
+  border-bottom: 1px solid rgba(255,222,23,1)!important;
   border-radius: 0px!important;
 }
 
@@ -125,7 +121,9 @@ textarea {
 }
 
 #DescriptionInput {
-  width: 769.686px;
+  width: 100%;
+  margin-top: 13.45px!important;
+  margin-bottom: 13.45px!important;
   min-height: 254.452px;
   line-height: 18px;    
   margin-top: -1.5px;
@@ -140,101 +138,52 @@ textarea {
   resize: none;
 }
 
-#ADD {
+.FormPanel {
+  position: relative;
   margin-top: 39px;
-  width: 1843.697px;
-  height: fit-content;
+  margin-left: 94.302px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow:hidden;
-  position:relative; 
+  justify-content: left;
+  text-align: left!important;
   background-color: rgba(255,255,255,1);
 }
 
 #FormTitle {
-  position: absolute;
-  left: 77.193px;
-  top: 50.697px;
-  overflow: hidden;
-  width: 182px;
-  white-space: nowrap;
-  line-height: 36px;
-  margin-top: -3px;
-  text-align: left;
-  font-family: InputMono-Light;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 30px;
-  color: rgba(56,56,56,1);
-  letter-spacing: 0.4px;
+  font-size: 125%;
+  font-weight: 400;
+  margin-top: 3%;
+  margin-left: 3%;
 }
 
-#CostumeName {
-  position: absolute;
-  width: 796.206px;
-  height: 58.607px;
-  left: 75.928px;
-  top: 121.049px;
-  overflow: visible;
-}
-
-#CostumeNameArea {
-  position: absolute;
-  width: 40px;
-  height: 13px;
-  left: 0px;
-  top: 0px;
-  overflow: visible;
-}
-
-#CostumeNameLabel {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  overflow: visible;
-  width: 41px;
-  white-space: nowrap;
+.Label {
   line-height: 13.200000762939453px;
   margin-top: -1.1000003814697266px;
-  text-align: left;
-  font-family: Roboto-Regular;
+  font-family: RobotoSlab-Light;
   font-style: normal;
   font-weight: normal;
-  font-size: 11px;
-  color: rgba(255,222,23,1);
+  font-size: 12px;
 }
 
-#CostumeDescription {
-  position: absolute;
-  width: 799.06px;
-  height: 297.81px;
-  left: 73.193px;
-  top: 219.051px;
-  overflow: visible;
+#image-button {
+  width: 150px;
+  height: 45px;
 }
 
-#DescriptionArea {
-  position: absolute;
-  width: 193px;
-  height: 13px;
-  left: 0px;
-  top: 0px;
-  overflow: visible;
-}
-
-#MediaUploadArea {
-  position: absolute;
-	left: 73.566px;
-	top: 551.599px;
-	overflow: visible;
-	width: 799.06px;
-	text-align: left;
-	font-family: Roboto-Regular;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 11px;
-	color: rgba(255,222,23,1);
+#input-area {
+  width: 100%;
+  line-height: 32px;    
+  margin-top: -1.5px;
+  background-color: inherit;
+  margin-top: 13.45px;
+  margin-bottom: 13.45px!important;
+  overflow: hidden;
+  text-align: left;
+  font-family: RobotoSlab-Light;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(255,222,23,1);
+  border-radius: 0px!important;
 }
 
 #CostumeUseCategory {
@@ -471,10 +420,8 @@ textarea {
   font-size: 11px;
   color: rgba(255,222,23,1);
 }
+
 #TextArea {
-  position: absolute;
-  left: 0px;
-  width: 646.89px;
   height: 50px;
   margin-top: 13.45px;
   text-align: left;
@@ -486,6 +433,10 @@ textarea {
   background-color: inherit;
   border-bottom: 1px solid rgba(255,222,23,1);
   border-radius: 0px!important;
+}
+
+#TextArea:focus{
+  border: none;
 }
 
 #Geosuggest {
@@ -552,11 +503,6 @@ textarea {
   font-weight: normal;
   font-size: 11px;
   color: rgba(255,222,23,1);
-}
-
-#Form {
-  width: 1838.827px;
-  height: 908.067px;
 }
 
 #ButtonSave {
@@ -781,3 +727,4 @@ textarea {
   font-size: 11px;
   color: rgba(255,222,23,1);
 }
+

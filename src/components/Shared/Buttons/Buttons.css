@@ -1,4 +1,5 @@
 .EditButton {
+    border: none;
     padding: 12px;
 }
 .Group_34 {
@@ -174,8 +175,6 @@
     position: absolute;
     overflow: visible;
     width: 58.122px;
-    left: 5px;
-    top: 56.5px;
     cursor: pointer;
     background-color: rgba(255, 255, 255, 1);
 }
@@ -188,8 +187,8 @@
     transform: matrix(1,0,0,1,11.2625,122.8705) rotate(-90deg);
     transform-origin: center;
     position: absolute;
-    left: 0px;
-    top: -45px;
+    left: 5px;
+    top: -13px;
     white-space: nowrap;
     line-height: 12px;
     text-align: left;
@@ -370,6 +369,7 @@
     position: absolute;
     right: 0px;  
     top: 18.79px;
+    border: none;
     background-color:inherit; 
 }
 
@@ -379,6 +379,7 @@
 }
 
 .ApplyButton {
+    border: none;
     position: relative;
     width: 105.41px;
     height: 38.568px;

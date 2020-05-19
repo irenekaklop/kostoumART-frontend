@@ -8,7 +8,6 @@
   
 .Dropzone {
     float: left;
-    width: 10%;
     margin-right: 4%;
     height: 100px;
     margin-bottom: 10px;
@@ -16,8 +15,8 @@
 }
   
 .Droptext {
-    width: 100%;
-    height: 100%;
+    width: 115.623px;
+    height: 92.499px;
     outline: none;
     color: black;
     background: rgba(255,222,23,1);
@@ -62,7 +61,8 @@
 .img-container {
     position: relative;
     width: 100%;
-    max-width: 400px;
+    max-width: 115.623px;
+    max-height: 92.609px;
 }
 
 .img-container:hover .overlay {

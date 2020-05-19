@@ -6,11 +6,10 @@ import Geosuggest from 'react-geosuggest';
 import "../Geosuggest/Geosuggest.css";
 import Select from 'react-select';
 import TextareaAutosize from 'react-textarea-autosize';
-import {sexs, materials, techniques, use_categories, eras} from "../../utils/options";
+import {sexs, techniques, use_categories, eras} from "../../utils/options";
 import "./Forms.css";
-import {SaveButton, CancelButton} from "../Shared/Buttons.js";
 import TextEditor from '../Shared/TextEditor/TextEditor.js';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Button } from '@material-ui/core';
 
 import ImageDropzone from '../Shared/MediaUpload/ImageDropzone.js';
 
@@ -351,6 +350,7 @@ class  AccessoryForm extends Component{
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")
+                this.props.handleClose(true);
             }
        })    
     }
@@ -363,6 +363,7 @@ class  AccessoryForm extends Component{
         console.log("result", res);
             if(res.statusText ==="OK"){
                 this.createNotification("insert")
+                this.props.handleClose(true);
             }
         })
     }
@@ -449,111 +450,80 @@ class  AccessoryForm extends Component{
                 <div id="ADD">
                     <NotificationContainer>{this.createNotification()}</NotificationContainer>
                     <div id="FormTitle">Συνοδευτικό</div>
-                    <form id='Form'><br/>
-                        <div id="CostumeName">
-                            <div id="CostumeNameArea">
-                                <div id="CostumeNameLabel">
-                                    <span>ONOMA *</span>
-                                </div>
-                                <input
-                                id='TextArea'
+                    <form className='FormPanel'>
+                        <div className="column main" 
+                        style={{paddingRight: '50px'}}>
+                            <span className="Label">ONOMA *</span>
+                            <input
+                                id="input-area"
                                 type='text'
                                 value={this.state.accessory.name.value}
                                 onChange={this.handleChange('name')}
                                 required={true}/>
-                            </div>
-                        </div>
-                        <br/>
-                        <div id='CostumeDescription'>
-                                <div id="DescriptionArea">
-                                    <div id="LabelWithSubtitle">
-                                    <div className="Title">
-                                            <span>ΠΕΡΙΓΡΑΦΗ *</span>
-                                    </div>
-                                    <div className="Subtitle">({this.maxLegnth-this.state.accessory.description.value.length} CHARACTERS REMAINING)</div>
-                                </div>
-                                <IconButton onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></IconButton>
-                                <TextareaAutosize
-                                id="DescriptionInput"
-                                type='text'
-                                name="description"
-                                value={this.state.accessory.description.value}
-                                onChange={this.handleChange('description')}
-                                required={true}
-                                />
-                                </div>
-                        </div>
-                        <br/>
-                        <div id='MediaUploadArea'>
-                            <div>
-                                <span>EIKONEΣ * </span>
-                            </div>
-                            <ImageDropzone 
-                            disabled={false}
-                            handleMediaUpload={this.handleMediaUpload.bind(this)}
-                            input={this.state.accessory.images.value}
+                            <br/>
+                            <span className="Label">ΠΕΡΙΓΡΑΦΗ *</span>
+                            <div className="Subtitle">({this.maxLegnth-this.state.accessory.description.value.length} CHARACTERS REMAINING)</div>
+                            <Button onClick={()=>{this.handleOpenEditor()}}><img src={require('../../styles/images/View.png')}/></Button>
+                            <TextareaAutosize
+                            id="DescriptionInput"
+                            type='text'
+                            name="description"
+                            value={this.state.accessory.description.value}
+                            onChange={this.handleChange('description')}
+                            required={true}
                             />
+                            <br/>
+                            <span className="Label">ΣΧΕΔΙΑΣΤΗΣ</span>
+                            <input
+                            id="input-area"
+                            type='text'
+                            name="designer"
+                            value={this.state.accessory.designer.value}
+                            onChange={this.handleChange('designer')}
+                            />
+                            <span className="Label">ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</span>
+                            <Geosuggest
+                            className="geosuggest"
+                            placeholder="Αναζήτηση"
+                            initialValue={this.state.accessory.location.value}
+                            required={false}
+                            ref={el=>this._geoSuggest=el}
+                            onSuggestSelect={this.handleChange('location')}/>
+                            <span className="Label">ΗΘΟΠΟΙΟΣ</span>
+                            <input
+                            id="input-area"
+                            type='text'
+                            name="actors"
+                            value={this.state.accessory.actors.value}
+                            onChange={this.handleChange('actors')}/>
                         </div>
-                        <br/>
-                        <div id='CostumeUseCategory'>
-                                <div id='CostumeUseCategoryArea'>
-                                    <div id="CostumeNameLabel">
-                                        <span>ΟΝΟΜΑ ΧΡΗΣΗΣ *</span>
-                                    </div>
-                                    <Select
-                                        id="SelectContainer"
-                                        className="react-select"
-                                        name="selectedUseOption"
-                                        required={true}
-                                        onChange={this.handleChange('selectedUseOption')}
-                                        value={this.state.accessory.selectedUseOption}
-                                        options={u_options}
-                                        placeholder={''} />        
-                                </div>
-                        </div>
-                        <br/>
-                        <div id='CostumeDate'>
-                                <div id="CostumeDateArea">
-                                    <div id='CostumeDateLabel'>
-                                        <span>ΧΡΟΝΟΛΟΓΙΑ *</span>
-                                    </div>
-                                </div>
+
+                        <div className='column main' style={{paddingRight: '50px'}}>
+                            <span className='Label'>ΟΝΟΜΑ ΧΡΗΣΗΣ *</span>
                                 <Select
-                                    id="SelectContainer"
-                                    className="react-select"
-                                    name="selectedDateOption"
-                                    value={this.state.accessory.selectedDateOption}
-                                    onChange={this.handleChange('selectedDateOption')}
-                                    options={this.years}
-                                    placeholder={''}/>
-                        </div>
-                        <br/>
-                        <div id='CostumeSex'>
-                                <div id='CostumeSexArea'>
-                                    <div id='CostumeSexLabel'>
-                                        <span>ΦΥΛΟ *</span>
-                                    </div>
-                                </div>
-                                <Select
-                                    id="SelectContainer"
-                                    className="react-select"
-                                    required={true}
-                                    isMulti
-                                    value={this.state.accessory.selectedSexOption.value}
-                                    onChange={this.handleChange('selectedSexOption')}
-                                    options={sexs}
-                                    placeholder={''}/>
-                        </div>
-                        <br/>
-                        <div id='CostumeTechnique'>
-                            <div id='CostumeTechniqueArea'>
-                                <div id='CostumeTechniqueLabel'>
-                                   <span>TEXNIKH *</span>
-                                </div>
-                            </div>
+                                name="selectedUseOption"
+                                required={true}
+                                onChange={this.handleChange('selectedUseOption')}
+                                value={this.state.accessory.selectedUseOption}
+                                options={u_options}
+                                placeholder={''} />
+                            <span className='Label'>ΧΡΟΝΟΛΟΓΙΑ *</span>
                             <Select
-                            id="SelectContainer"
-                            className="react-select"
+                            name="selectedDateOption"
+                            value={this.state.accessory.selectedDateOption}
+                            onChange={this.handleChange('selectedDateOption')}
+                            options={this.years}
+                            placeholder={''}/>
+                            <span className='Label'>ΦΥΛΟ *</span>
+                            <Select
+                            required={true}
+                            isMulti
+                            value={this.state.accessory.selectedSexOption.value}
+                            onChange={this.handleChange('selectedSexOption')}
+                            options={sexs}
+                            placeholder={''}/>
+                            <span className='Label'>TEXNIKH *</span>
+                            <Select
                             required={true}
                             name="selectedTechniqueOption"
                             value={this.state.accessory.selectedTechniqueOption}
@@ -561,94 +531,38 @@ class  AccessoryForm extends Component{
                             options={techniques}
                             placeholder={''}
                             />       
-                        </div>
-                        <br/>
-                        <div id='TP'>
-                                <div id='TPArea'>
-                                    <div id='TPLabel'>
-                                    <span>ΘΕΑΤΡΙΚΕΣ ΠΑΡΑΣΤΑΣΕΙΣ</span>
-                                    </div>    
-                                </div>
-                                <Select
-                                id="SelectContainer"
-                                className="react-select"
-                                value={this.state.accessory.selectedTPOption}
-                                onChange={this.handleChange('selectedTPOption')}
-                                name='selectedTPOption'
-                                options={p_options}
-                                placeholder={''}/>         
-                        </div>
-                        <div id='Designer'>
-                            <div id='DesignerArea'>
-                                <div id='DesignerLabel'>
-                                    <span>ΣΧΕΔΙΑΣΤΗΣ</span>
-                                </div>
-                            </div>
-                            <input
-                            id="TextArea"
-                            type='text'
-                            name="designer"
-                            value={this.state.accessory.designer.value}
-                            onChange={this.handleChange('designer')}
-                            />
-                        </div>
-                           
-                        <br/>
-                        <div id='Geosuggest'>
-                            <div id='GeosuggestArea'>
-                                <div id='GeosuggestLabel'>
-                                    <span>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</span>
-                                </div>
-                            </div>
-                            <Geosuggest
-                            className="geosuggest"
-                            placeholder="Αναζήτηση"
-                            initialValue={this.state.accessory.location.value}
-                            required={true}
-                            ref={el=>this._geoSuggest=el}
-                            onSuggestSelect={this.handleChange('location_select')}
-                            />
-                            {this.handleLocation()}
-                        </div>
-                        <br/>
-                        <div id='Actors'>
-                            <div id='ActorsArea'>
-                                <div id='ActorsLabel'>
-                                    <span>ΗΘΟΠΟΙΟΣ</span>
-                                </div>
-                            </div>
-                            <input
-                            id="TextArea"
-                            type='text'
-                            name="actors"
-                            value={this.state.accessory.actors.value}
-                            onChange={this.handleChange('actors')}/>
-                        </div>
-                        <br/>
-                        <div id='CostumeUseName'>
-                                <div id='CostumeUseNameArea'>
-                                    <div id="CostumeNameLabel">
-                                    <span>KOΣΤΟΥΜΙ</span>
-                                </div>
-                            </div>
+                            <span className='Label'>ΘΕΑΤΡΙΚΕΣ ΠΑΡΑΣΤΑΣΕΙΣ</span>
                             <Select
-                            id="SelectContainer"
-                            className="react-select"
+                            value={this.state.accessory.selectedTPOption}
+                            onChange={this.handleChange('selectedTPOption')}
+                            name='selectedTPOption'
+                            options={p_options}
+                            placeholder={''}/>         
+                            <span className='Label'>KOΣΤΟΥΜΙ</span>
+                            <Select
                             value={this.state.accessory.selectedCostumeOption}
                             onChange={this.handleChange('selectedCostumeOption')}
                             name='selectedCostumeOption'
                             options={c_options}
                             placeholder={''}/>
+                            <span className='Label'>EIKONEΣ * </span>
+                            <ImageDropzone 
+                                disabled={false}
+                                handleMediaUpload={this.handleMediaUpload.bind(this)}
+                                input={this.state.accessory.images.value}
+                                />  
                         </div>
-                        <br/><br/><br/>
-                        <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>
-                        <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
                     </form>
+                    
+                    <IconButton onClick={this.props.handleClose}><img id='image-button' src={require('../../styles/images/buttons/CANCEL.svg')}/></IconButton>
+                    <IconButton onClick={this.handleSubmit}><img id='image-button' src={require('../../styles/images/buttons/SAVE.svg')}/></IconButton>
+                    
+                    <TextEditor
+                    isOpen={this.state.isTextEditorOpen}
+                    data={this.state.accessory['descriptionHtml'].value}
+                    handleClose={this.onCloseEditor.bind(this)}/>
                 </div>           
-                <TextEditor
-                isOpen={this.state.isTextEditorOpen}
-                data={this.state.accessory['descriptionHtml'].value}
-                handleClose={this.onCloseEditor.bind(this)}/>
+              
             </React.Fragment>             
         )  
     }

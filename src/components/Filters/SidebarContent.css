@@ -88,6 +88,7 @@
 #ButtonApply {
     overflow: visible;
     position: absolute;
+    border: none;
     width: 110.41px;
     height: 38.568px;
     left: 60px;
@@ -101,6 +102,7 @@
 }
 
 #ButtonReset {
+    border: none;
     overflow: visible;
     position: relative;
     width: 105.411px;

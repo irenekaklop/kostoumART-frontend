@@ -105,7 +105,7 @@ class ImageDropzone extends Component {
                         style={{ cursor: this.props.disabled ? 'not-allowed' : 'pointer' }}
                         >
                         <input {...getInputProps()} />
-                        <p style={{ marginTop: 25, fontSize: '24px' }}> + </p>
+                        <p style={{ marginTop: 25, marginBottom: 0, fontSize: '24px' }}> + </p>
                         <p style={{ marginTop: 0 }}>ADD</p>
                         </div>
                     )

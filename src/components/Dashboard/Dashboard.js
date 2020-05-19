@@ -1,29 +1,20 @@
 import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import axios from '../../utils/api-url.js'
 
-import CostumeForm from '../Forms/CostumeForm.js';
-import AccessoryForm from '../Forms/AccessoryForm.js';
-import UseForm from '../Forms/UseForm.js';
-import TpForm from '../Forms/TpForm.js';
 import ConfirmationDialog from '../Dashboard/ConfirmationDialog.js';
 
 import "../Dashboard/Dashboard.css"
 
-import jwt_decode from 'jwt-decode';
+import { isAuthenticated, hasJWTToken } from "../../store/actions/auth";
 
 import _ from 'lodash'
 
-import Header from '../Shared/Header.js';
-import Footer from '../Shared/Footer.js';
-import {EditButton, DeleteButton, FilterButtons} from '../Shared/Buttons.js'
-import { Tab, Tabs } from 'react-tabs';
-import Sidebar from 'react-sidebar';
-import SidebarContent from '../Filters/SidebarContent.js'
+import {EditButton, DeleteButton} from '../Shared/Buttons/Buttons';
 
 
 import '../Shared/utils.js'
@@ -32,23 +23,7 @@ class Dashboard extends Component{
 
     constructor(props) {
         super(props);
-        this.events = [
-            "load",
-            "mousemove",
-            "mousedown",
-            "click",
-            "scroll",
-            "keypress"
-        ];
         this.state = {
-            current_tab: 0,
-            costumes: [],
-            uses: [],
-            theatricalPlays:[],
-            accessories: [],
-            filteredCostumes: [],
-            filteredAccessories: [],
-            filteredUses: [],
             //For Insert Form
             isCostumeFormOpen: false,
             isUseFormOpen: false,
@@ -57,115 +32,39 @@ class Dashboard extends Component{
             isAccessoryFormOpen: false,
             //For Editing
             editing: false,
-            costume: null,
-            use: null,
-            theatricalPlay: null,
-            accessory: null,
-            filterDrawerOpen: false,
-            filters: [],
+            itemToEdit: null,
             //Confirmation Dialog answer
             index: null,
             dependency: false,
-            user: {
-                user_id: null,
-                email: '',
-                username: '',
-                role: null,
-            },
-            redirectToReferrer: false,     
+            user_type: '',
             //Sorting
             column: null,
             direction: null,
-            use_data: [],
-
         }
-        this.logOut = this.logOut.bind(this);
-        this.resetTimeout = this.resetTimeout.bind(this);
-        this.handleCostumeEditing = this.handleCostumeEditing.bind(this)
-        this.handleDrawerClose = this.handleDrawerClose.bind(this);
-        this.applyFilters = this.applyFilters.bind(this);
-        //Set Timeout in case of inactivity 
-        for (var i in this.events) {
-            window.addEventListener(this.events[i], this.resetTimeout);
-          }
-      
-        this.setTimeout();
     }
 
     componentDidMount(){
-        const token = localStorage.usertoken
-        if(token){
-            const decoded = jwt_decode(token);
-            this.setState({ user: {
-                user_id: decoded.user_id,
-                email: decoded.email,
-                role: decoded.role,
-                username: decoded.username,
-            } });
-            this.get_uses();
-            this.getTheatricalPlays();
-            this.getCostumes(decoded);
-            this.getAccessories(decoded);
-        }
-        else{
-            this.setState({redirectToReferrer: true})
-        }
-    }
-
-    //Functions for auto-logout
-    clearTimeout() {
-        if (this.logoutTimeout) clearTimeout(this.logoutTimeout);
-    }
-    
-    //Set a Timeout after one hour
-    setTimeout() {
-        this.logoutTimeout = setTimeout(this.logOut, 36 * 100000);
-    }
-    
-    resetTimeout() {
-        this.clearTimeout();
-        this.setTimeout();
-    }
-    
-    logOut(e) {
-        localStorage.removeItem('usertoken')
-        this.clearTimeout();
-    
-        for (var i in this.events) {
-          window.removeEventListener(this.events[i], this.resetTimeout);
-        }
-        this.props.history.push({pathname: `/auth`, state: { detail: 'logout' }})
+        this.setState({user_type: Number(Number(localStorage.getItem('user-type')))})
     }
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
 
-    handleCategoryUseSelect = (evt) => {
-        this.setState({ useCategoryOption: evt.target.value});
-    }
-
-    handleTechniqueSelect = (evt) => {
-        this.setState({ techniqueOption: evt.target.value});
-    }
-
-    handleSexSelect = (evt) => {
-        this.setState({ sexOption: evt.target.value});
-    }
-
     handleSort = (clickedColumn) => () => {
-        const { column, uses, filteredCostumes, filteredAccessories, theatricalPlays, direction } = this.state
+        const { column, direction } = this.state;
+        const { uses, costumes, accessories, theatricalPlays } = this.props
     
         if (column !== clickedColumn) {
-            switch(this.state.current_tab){
+            switch(this.props.item){
                 case 0:
                     this.setState({
                         column: clickedColumn,
-                        filteredCostumes: _.sortBy(filteredCostumes, [clickedColumn]),
+                        costumes: _.sortBy(costumes, [clickedColumn]),
                         direction: 'ascending',
                       })
                 case 1:
                     this.setState({
                         column: clickedColumn,
-                        filteredAccessories: _.sortBy(filteredAccessories, [clickedColumn]),
+                        accessories: _.sortBy(accessories, [clickedColumn]),
                         direction: 'ascending',
                       })
                 case 2:
@@ -185,15 +84,15 @@ class Dashboard extends Component{
             return;
         }
         
-        switch(this.state.current_tab){
+        switch(this.props.item){
             case 0:
                 this.setState({
-                    filteredCostumes: filteredCostumes.reverse(),
+                    costumes: costumes.reverse(),
                     direction: direction === 'ascending' ? 'descending' : 'ascending',
                 })
             case 1:
                 this.setState({
-                    filteredAccessories: filteredAccessories.reverse(),
+                    accessories: accessories.reverse(),
                     direction: direction === 'ascending' ? 'descending' : 'ascending',
                   })
             case 2:
@@ -228,129 +127,7 @@ class Dashboard extends Component{
                 )
         };
     }
-
-    getCostumes (decoded){
-        this.setState({isLoading: true})
-        if(decoded){
-            axios.instance.get('costumes', {params: {user: decoded.role}})
-            .then(res => {
-                if(res.statusText==='OK'){
-                    const costumes = res.data;
-                    this.setState({ costumes });
-                    this.setState({filteredCostumes: costumes})
-                }
-            }
-            )
-        }
-        else{
-            axios.instance.get("costumes", {params: {user: this.state.user.role}})
-            .then(res => {
-                if(res.statusText==='OK'){
-                    const costumes = res.data;
-                    this.setState({ costumes });
-                    this.setState({filteredCostumes: costumes})
-                }
-            }
-            )
-        }
-       
-    }
-
-    /* Get uses from database*/ 
-    get_uses = _ => {
-        let self = this;
-        axios.instance.get("uses")
-        .then(res => {
-            if(res.statusText==='OK'){
-                const use_data = res.data;
-                this.setState({ use_data });
-            }
-        }
-        )
-    }
-
-    /*Get theatrical Plays from database*/
-    getTheatricalPlays = _ => {
-        axios.instance.get("theatricalPlays")
-        .then(res => {
-            if(res.statusText==='OK'){
-                const tp_data = res.data;
-                this.setState({ tp_data });
-            }
-        })
-    }
-
-    getAccessories = (decoded) => {
-        if(decoded){
-            axios.instance.get("accessories", {params: {user: decoded.role}})
-            .then(res => {
-                if(res.statusText==='OK'){
-                    const accessories = res.data;
-                    this.setState({ accessories });
-                    this.setState({
-                        filteredAccessories: accessories
-                    })
-                }
-            }
-            )
-        }
-        else{
-            axios.instance.get("accessories", {params: {user: this.state.user.role}})
-            .then(res => {
-                if(res.statusText==='OK'){
-                    const accessories = res.data;
-                    this.setState({ accessories });
-                    this.setState({
-                        filteredAccessories: accessories
-                    })
-                }
-            })
-        }
-       
-    }
-
-    handleDrawerOpen = () => {
-        this.setState({
-            filterDrawerOpen: true
-        })
-    };
     
-    handleDrawerClose = () => {
-        this.setState({
-            filterDrawerOpen: false
-        })
-    };
-    
-    handleFilterSubmit ( filters ) {
-        this.setState({
-            filters: filters,
-            filterDrawerOpen: false,
-            filteredCostumes: this.state.costumes
-        })
-        this.applyFilters(filters);
-    }
-    
-    handleCloseDialog = () => {
-        if(this.state.editing){
-            this.setState({ editing: false });
-        }
-        if(this.state.isCostumeFormOpen){
-            this.getCostumes();
-            this.setState({isCostumeFormOpen: false});}
-        else if(this.state.isUseFormOpen){
-            this.get_uses();
-            this.setState({isUseFormOpen: false});
-        }
-        else if(this.state.isTPFormOpen){
-            this.getTheatricalPlays();
-            this.setState({isTPFormOpen: false});
-        }
-        else if(this.state.isAccessoryFormOpen){
-            this.getAccessories();
-            this.setState({isAccessoryFormOpen: false})
-        }
-    }
-
     handleCloseConfirmationDialog = () => {
         this.setState({
             isConfirmationDialogOpen:false,
@@ -369,90 +146,42 @@ class Dashboard extends Component{
         this.setState({
             isConfirmationDialogOpen:false,
         });
-        if(this.state.current_tab===0){
+        if(this.props.item===0){
             this.handleCostumeDelete(index);
         }
-        else if(this.state.current_tab===1){
+        else if(this.props.item===1){
             this.handleAccessoryDelete(index);
         }
-        else if(this.state.current_tab===2){
+        else if(this.props.item===2){
             this.handleUseDelete(index);
         }
-        else if(this.state.current_tab===3){
+        else if(this.props.item===3){
             this.handleTPDelete(index);
         }
-    }
-
-    handleTabChange = (value) => {
-        //Refresh Tables
-        if(value===0){
-            if(this.state.filters.length!==0){
-                this.applyFilters(this.state.filters);
-            }
-            else{
-                this.getCostumes();
-            }
-        }
-        else if(value===1){
-            this.getAccessories();
-        }
-        else if(value===2){
-            this.get_uses();
-        }
-        else if(value===3){
-            this.getTheatricalPlays();
-        }
-        this.setState({
-          current_tab: value
-        });
-      };
-
-
-    handleAddCostume= () => {
-        this.setState({
-            isCostumeFormOpen: true,
-        })
-    };
-
-    handleAddUse = () => {
-        this.setState({
-            isUseFormOpen: true,
-        })
-    }
-
-    handleAddTP = () => {
-        this.setState({
-            isTPFormOpen: true,
-        })
-    }
-
-    handleAddAccessory = () => {
-        this.setState({
-            isAccessoryFormOpen: true,
-        })
     }
 
     handleCostumeEditing(index){
         axios.instance.get("costumes/"+index)
         .then(res => {
-            const costume = res.data;
-            this.setState({ costume: costume, editing: true, isCostumeFormOpen: true,});
+            const itemToEdit = res.data;
+            this.props.handleEditing(itemToEdit);
         })
+        
     }
 
     handleUseEditing (index) {
         axios.instance.get("uses/"+index)
         .then(res => {
-            const use = res.data;
-            this.setState({ use: use, editing: true, isUseFormOpen: true,});
+            const itemToEdit = res.data;
+            this.props.handleEditing(itemToEdit);
         })
     }
 
     handleTPEditing (index) {
        axios.instance.get("theatricalPlays/"+index)
        .then(res => {
-           const theatricalPlay = res.data;
-           this.setState({ theatricalPlay: theatricalPlay, editing: true, isTPFormOpen: true,});
+            const itemToEdit = res.data;
+            this.props.handleEditing(itemToEdit);
        })
     }
 
@@ -460,10 +189,9 @@ class Dashboard extends Component{
         axios.instance.get("accessories/" + index)
         .then(res => {
             if(res.statusText==='OK'){
-                const accessory = res.data;
-                this.setState({ accessory: accessory, editing: true,
-                    isAccessoryFormOpen: true,});
-                }            
+                const itemToEdit = res.data;
+                this.props.handleEditing(itemToEdit);
+            }            
         })
     }
 
@@ -471,9 +199,8 @@ class Dashboard extends Component{
         axios.instance.delete("costumes/" + index)
         .then(res=> {
             if(res.statusText ==="OK"){
+                this.props.refreshDataMethod();
                 let ret=this.createNotification("delete-success");
-                this.getCostumes();
-                this.getAccessories();
                 return ret;
             }
         })
@@ -483,9 +210,8 @@ class Dashboard extends Component{
         axios.instance.delete("theatricalPlays/" + index)
             .then(res=> {
                 if(res.statusText ==="OK"){
+                    this.props.refreshDataMethod();
                     let ret=this.createNotification("delete-success");
-                    this.getCostumes();
-                    this.getTheatricalPlays();
                     return ret;
                 }
             })
@@ -495,9 +221,8 @@ class Dashboard extends Component{
         axios.instance.delete("uses/" + index )
         .then(res=> {
             if(res.statusText ==="OK"){
+                this.props.refreshDataMethod();
                 let ret=this.createNotification("delete-success");
-                this.getCostumes();
-                this.get_uses();
                 return ret;
             }
         })
@@ -507,15 +232,15 @@ class Dashboard extends Component{
         axios.instance.delete("accessories/" + index )
         .then(res=> {
             if(res.statusText ==="OK"){
+                this.props.refreshDataMethod();
                 let ret=this.createNotification("delete-success");
-                this.getAccessories();
                 return ret;
             }
         })
     }
 
     handleConfirmationForDelete(index){
-        if(this.state.current_tab===0){
+        if(this.props.item===0){
             axios.instance.get("dependencies/", {params: { index: index, column: 'costume' }} )
             .then(res=>{
                 if (res.data.response[0].result===1) {
@@ -524,12 +249,12 @@ class Dashboard extends Component{
                 this.handleOpenConfirmationDialog(index);
             })
         }
-        if(this.state.current_tab===1){
+        if(this.props.item===1){
             this.handleOpenConfirmationDialog(index);
             this.setState({dependency: false});
         }
         //Check if this index is a foreign key in costumes' list before delete
-        if(this.state.current_tab===2){
+        if(this.props.item===2){
             axios.instance.get("dependencies/",{params: { index: index, column: 'use' }} )
             .then(res=>{
                 if (res.data.response[0].result===1) {
@@ -538,7 +263,7 @@ class Dashboard extends Component{
                 this.handleOpenConfirmationDialog(index);
             })
         }
-        else if(this.state.current_tab===3){
+        else if(this.props.item===3){
             axios.instance.get("dependencies/",{params: { index: index, column: 'theatrical_play' }} )
             .then(res=>{
                 if (res.data.response[0].result===1) {
@@ -551,7 +276,7 @@ class Dashboard extends Component{
     }
 
     renderTableCostumesData() {
-        return this.state.filteredCostumes.map((costume, index) => {
+        return this.props.costumes.map((costume, index) => {
             const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, images, parts, createdBy} = costume //desthucturing
             var img = null;
             for (var element in costume){
@@ -636,7 +361,7 @@ class Dashboard extends Component{
     }
 
     renderTableUsesData() {
-        return this.state.use_data.map((use, index) => {
+        return this.props.uses.map((use, index) => {
             const { useID, name, use_category,description, customs, createdBy } = use //desthucturing
             return (
                 <tr key={useID}>
@@ -670,7 +395,7 @@ class Dashboard extends Component{
     }
 
     renderTableTPsData() {
-        return this.state.tp_data.map((tp, index) => {
+        return this.props.theatricalPlays.map((tp, index) => {
             const { theatrical_play_id, title, date, actors, director, theater, createdBy } = tp //desthucturing
             return (
                 <tr key={theatrical_play_id}>
@@ -694,7 +419,7 @@ class Dashboard extends Component{
     }
 
     renderTableAccessoriesData() {
-        return this.state.filteredAccessories.map((accessory, index) => {
+        return this.props.accessories.map((accessory, index) => {
             const {accessory_id, name, description, date, sex, material, technique, tp_title, images, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
             var img = null;
             for (var element in accessory){
@@ -754,383 +479,138 @@ class Dashboard extends Component{
         })
     }
 
-    applyFilters (filters) {
-        //Apply filters only front-end
-        let updatedCostumeList = [...this.state.costumes]
-        let updatedAccessoriesList = [...this.state.accessories]
-        let reset = true;
-        let filteredAccessories = [];
-        let filteredCostumes = [];
-        filters.forEach(filter => {
-            filter.value.forEach(element => {
-                if(element.isChecked){
-                    reset = false;
-                    var filteredCostumeItems = updatedCostumeList.filter((costume) => {
-                        return costume[filter.name] === element.key
-                    })
-                    var filteredAccessoriesItems = updatedAccessoriesList.filter((accessory) => {
-                        return accessory[filter.name] === element.key
-                    })
-                    filteredAccessories = filteredAccessories.concat(filteredAccessoriesItems)
-                    filteredCostumes = filteredCostumes.concat(filteredCostumeItems)
-                }
-            });
-            
-        });
-
-        if (reset) {
-            this.resetFilters();
-            return;
-        }
-
-        this.setState({
-            filteredAccessories: filteredAccessories.unique(),
-            filteredCostumes: filteredCostumes.unique(),
-        })
-
-        /* var qs = require('qs');
-        axios.instance.get("costumes-filters/", 
-        { params: { filters: filters, user: this.state.user.role }, 
-        paramsSerializer: params => { return qs.stringify(params) } })
-        .then(res => {
-            console.log(res)
-            if(res.statusText==='OK'){
-                this.setState({current_costumes: res.data})
-            }
-        })*/
-    }
-
-    resetFilters = () => {
-        this.getCostumes();
-        this.getAccessories();
-    }
-
     render() {
-        const { column, uses, direction } = this.state
-
-        if (this.state.redirectToReferrer) {
-            return <Redirect to="/auth" />
-        }
-
+        const { column, direction } = this.state;
         return (
             <React.Fragment>
-                <NotificationContainer/>
-                <Header/>
-                {/*logout action*/}
-                <div className='logout-area'>
-                   <button id="LOGOUT_BUTTON" onClick={() => this.logOut()}>Logout</button>
-            
-                    <div id="USERNAME">
-                        <span>USERNAME</span>
-                    </div>
-
-                    <div id="administrator_email">
-                        <span>{this.state.user.email}</span>
-                    </div>
-
-                    <svg class="Line_5" viewBox="0 0 1 66.176">
-                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_5" d="M 0 0 L 0 66.17550659179688">
-                        </path>
-                    </svg>
-
-                </div>
-                {/*Filters and right sidebar*/}
-                <div className="sidebar" onClick={this.handleDrawerOpen}>
-                    <FilterButtons/>
-                </div>
-                <Sidebar
-                rootClassName="FiltersSidebarRoot"
-                sidebarClassName="FiltersSidebar"
-                overlayClassName = "Overlay"
-                sidebar={<SidebarContent
-                    resetFilters = {this.resetFilters.bind(this)}
-                    handleFilterSubmit = {this.handleFilterSubmit.bind(this)}
-                    handleDrawerClose = {this.handleDrawerClose.bind(this)}
-                    open={this.state.filterDrawerOpen}/>}
-                open={this.state.filterDrawerOpen}
-                onSetOpen={this.handleDrawerOpen}
-                
-                />
-                <svg class="Rectangle_8">
-                    <rect fill="rgba(255,222,23,1)" id="Rectangle_8" rx="0" ry="0" x="0" y="0" width="21.327" height="411.419">
-                    </rect>
-                </svg>
-                <div id="Tailoring_Times">
-                    <span>Tailoring Times</span>
-                </div>
-                <div id="costumART-Dashboard">
-                    <span>costumART</span>
-                </div>
-                
-
-                {/*Tabs*/}
-                <Tabs 
-                className="react-tabs__tab-list"
-                selectedIndex={this.state.current_tab}
-                onSelect={this.handleTabChange}
-                >
-                    <Tab>
-                        {this.state.current_tab===0?
-                            <div className="react-tabs__tab--selected">
-                            <span>  Κοστούμι</span>
-                            <br></br>
-                            <svg class="UnderlineTabTitle">
-                                <rect fill="rgba(255,222,23,1)" id="UnderlineTabTitle" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535">
-                                </rect>
-                            </svg>
-                            </div>
-                        :
-                            <div className="react-tabs__tab">
-                            <span>Κοστούμι</span>
-                            </div>
-                        }
-                        
-                        
-                    </Tab>
-                    <Tab>
-                        {this.state.current_tab===1?
-                            <div className="react-tabs__tab--selected">
-                            <span>Συνοδευτικό</span>
-                            <br></br>
-                            <svg class="UnderlineTabTitle">
-                                <rect fill="rgba(255,222,23,1)" id="UnderlineTabTitle" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535">
-                                </rect>
-                            </svg>
-                            </div>
-                        :
-                            <div className="react-tabs__tab">
-                            <span>Συνοδευτικό</span>
-                            </div>
-                        }
-                    </Tab>
-                    <Tab>
-                        {this.state.current_tab===2?
-                            <div className="react-tabs__tab--selected">
-                            <span>Χρήση</span>
-                            <br></br>
-                            <svg class="UnderlineTabTitle">
-                                <rect fill="rgba(255,222,23,1)" id="UnderlineTabTitle" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535">
-                                </rect>
-                            </svg>
-                            </div>
-                        :
-                            <div className="react-tabs__tab">
-                            <span>Χρήση</span>
-                            </div>
-                        }
-                    
-                    </Tab>
-                    <Tab>
-                        {this.state.current_tab===3?
-                            <div className="react-tabs__tab--selected">
-                                <span>Θεατρική παράσταση</span>
-                                <br></br>
-                                <svg class="UnderlineTabTitle">
-                                    <rect fill="rgba(255,222,23,1)" id="UnderlineTabTitle" rx="0" ry="0" x="0" y="0" width="87.443" height="5.535">
-                                    </rect>
-                                </svg>
-                            </div>
-                                :
-                            <div className="react-tabs__tab">
-                                <span>Θεατρική παράσταση</span>
-                            </div>
-                        }    
-                    </Tab>                   
-                </Tabs>
-
-                {/*Tab panels*/}
-                {this.state.current_tab===0 && !this.state.isCostumeFormOpen &&
-                    <div className="panel-container">
-                        <table className="table">
-                                <thead className="table-head">
-                                <tr>
-                                    <th
+                {this.props.item === 0 &&
+                    <table className="table">
+                        <thead className="table-head">
+                            <tr>
+                                <th
                                     style={{cursor: 'inherit', backgroundColor: 'inherit', width: '20%'}}
                                     sorted={null}>
-                                        <span><strong>EIKONA</strong></span>
-                                    </th>
-                                    <th
+                                    <span><strong>EIKONA</strong></span>
+                                </th>
+                                <th
                                     style={{width: '15%'}}
                                     sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}>
-                                    <strong>ΤΙΤΛΟΣ</strong> 
-                                    </th>
-                                    <th
+                                   <strong>ΤΙΤΛΟΣ</strong> 
+                                </th>
+                                <th
                                     style={{width: '30%'}}
                                     sorted={column === 'descr' ? direction : null}
                                     onClick={this.handleSort('descr')}><strong>ΠΕΡΙΓΡΑΦΗ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '20%'}}
                                     sorted={column === 'date' ? direction : null}
                                     onClick={this.handleSort('date')}><strong>ΕΠΟΧΗ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '10%'}}
                                     sorted={column === 'use_name' ? direction : null}
                                     onClick={this.handleSort('use_name')}><strong>ΧΡΗΣΗ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '10%'}}
                                     sorted={column === 'sex' ? direction : null}
                                     onClick={this.handleSort('sex')}><strong>ΦΥΛΟ</strong></th>
-                                    <th 
+                                <th 
                                     style={{width: '10%'}}
                                     sorted={column === 'material' ? direction : null}
                                     onClick={this.handleSort('material')}><strong>ΥΛΙΚΟ<br/>ΚΑΤΑΣΚΕΥΗΣ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '10%'}}
                                     sorted={column === 'technique' ? direction : null}
                                     onClick={this.handleSort('technique')}><strong>ΤΕΧΝΙΚΗ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '20%'}}
                                     sorted={column === 'location' ? direction : null}
                                     onClick={this.handleSort('location')}><strong>ΠΕΡΙΟΧΗ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '20%'}}
                                     sorted={column === 'designer' ? direction : null}
                                     onClick={this.handleSort('designer')}><strong>ΣΧΕΔΙΑΣΤΗΣ</strong></th>
-                                    <th style={{width: '5%'}}>
+                                <th style={{width: '5%'}}>
                                     <strong>EDITOR</strong>
-                                    </th>
-                                    <th
+                                </th>
+                                <th
                                     id="th_actions"></th>
-                                    </tr> 
-                                </thead>
-                                <tbody className="table-body">
-                                    {this.renderTableCostumesData()} 
-                                </tbody>
-                            </table>
-                        
-                        <button className="button-insert" onClick={()=>this.handleAddCostume()}>                                
-                            <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
-                            <span id="ButtonAddText">προσθήκη</span>
-                        </button>
-                    </div>
-                }
-
-                <Footer/>
-               
-                {this.state.current_tab===0 && this.state.isCostumeFormOpen ? (
-                    <div className="form-panel">
-                        <CostumeForm
-                        handleClose={this.handleCloseDialog.bind(this)}
-                        user={this.state.user.user_id}
-                        costumes={this.state.costumes}
-                        uses={this.state.use_data}
-                        theatrical_plays={this.state.tp_data}
-                        costume={this.state.costume}
-                        editing={this.state.editing}></CostumeForm>
-                    </div>
+                            </tr> 
+                        </thead>
+                        <tbody className="table-body">
+                            {this.renderTableCostumesData()} 
+                        </tbody>
+                    </table>
                    
-                    )
-                    :
-                    <div></div>
-                    
                 }
 
-                {this.state.current_tab===1 && this.state.isAccessoryFormOpen ?(    
-                    <div className="form-panel">
-                    <AccessoryForm
-                    handleClose={this.handleCloseDialog.bind(this)}
-                    user={this.state.user.user_id}
-                    accessories={this.state.accessories}
-                    editing={this.state.editing}
-                    accessory={this.state.accessory}
-                    uses={this.state.use_data}
-                    costumes={this.state.costumes}
-                    theatrical_plays={this.state.tp_data}
-                    />
-                    </div>)
-                    :
-                    <div></div>
-                }
-                {this.state.current_tab===1 && !this.state.isAccessoryFormOpen&&
-                   <div className="panel-container">
-                        <table className="table">
-                           <thead className="table-head">
-                                <tr>
-                                    <th
+                {this.props.item === 1 &&
+                   <table className="table">
+                        <thead className="table-head">
+                            <tr>
+                                <th
                                     style={{cursor: 'inherit', backgroundColor: 'inherit', width: '20%'}}
                                     sorted={null}>
                                         <span><strong>EIKONA</strong></span>
-                                    </th>
-                                    <th 
+                                </th>
+                                <th 
                                     style={{width: '10%'}}
                                     sorted={column === 'name' ? direction : null}
                                     onClick={this.handleSort('name')}><strong>ONOMA</strong></th>
-                                    <th
+                                <th
                                     style={{width: '25%'}}
                                     sorted={column === 'description' ? direction : null}
                                     onClick={this.handleSort('description')}><strong>ΠΕΡΙΓΡΑΦΗ</strong></th>
-                                    <th 
+                                <th 
                                     style={{width: '10%'}}
                                     sorted={column === 'use_name' ? direction : null}
                                     onClick={this.handleSort('use_name')}><strong>ΧΡΗΣΗ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '20%'}}
                                     sorted={column === 'tp_title' ? direction : null}
                                     onClick={this.handleSort('tp_title')}><strong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</strong></th>
-                                    <th 
+                                <th 
                                     style={{width: '20%'}}
                                     sorted={column === 'costume_name' ? direction : null}
                                     onClick={this.handleSort('costume_name')}><strong>ΚΟΣΤΟΥΜΙ</strong></th>
-                                    <th 
+                                <th 
                                     style={{width: '25%'}}
                                     sorted={column === 'date' ? direction : null}
                                     onClick={this.handleSort('date')}><strong>XΡΟΝΟΛΟΓΙΑ</strong></th>
-                                    <th 
+                                <th 
                                     style={{width: '20%'}}
                                     sorted={column === 'technique' ? direction : null}
                                     onClick={this.handleSort('technique')}><strong>ΤΕΧΝΙΚΗ</strong></th>
-                                    <th 
+                                <th 
                                     style={{width: '20%'}}
                                     sorted={column === 'sex' ? direction : null}
                                     onClick={this.handleSort('sex')}><strong>ΦΥΛΟ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '20%'}}
                                     sorted={column === 'designer' ? direction : null}
                                     onClick={this.handleSort('designer')}><strong>ΣΧΕΔΙΑΣΤΗΣ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '20%'}}
                                     sorted={column === 'location' ? direction : null}
                                     onClick={this.handleSort('location')}><strong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '30%'}}
                                     sorted={column === 'actors' ? direction : null}
                                     onClick={this.handleSort('actors')}><strong>ΗΘΟΠΟΙΟΙ</strong></th>
-                                    <th style={{width: '5%'}}>
-                                    <strong>EDITOR</strong>
-                                    </th>
-                                    <th id="th_actions"></th>
-                                </tr>
-                            </thead>
-                            <tbody className="table-body">{this.renderTableAccessoriesData()} </tbody>
-                        </table>
-                                               
-                        <button className="button-insert" onClick={() => this.handleAddAccessory()}>
-                            <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
-                            <span id="ButtonAddText">προσθήκη</span>
-                        </button>
-                        <Footer/>
-                    </div>
+                                <th style={{width: '5%'}}>
+                                <strong>EDITOR</strong>
+                                </th>
+                                <th id="th_actions"></th>
+                            </tr>
+                        </thead>
+                        <tbody className="table-body">{this.renderTableAccessoriesData()} </tbody>
+                    </table>
                 }
-                {this.state.current_tab===2 && this.state.isUseFormOpen ? (
-                    <div className="form-panel">
-                    <UseForm 
-                    handleClose={this.handleCloseDialog.bind(this)}
-                    user={this.state.user.user_id}
-                    costumes={this.state.costumes}
-                    uses={this.state.uses}
-                    theatrical_plays={this.state.theatricalPlays}
-                    editing={this.state.editing}
-                    use={this.state.use}></UseForm>
-                    </div>
-                )
-                :
-                <div></div>}
-                {this.state.current_tab===2 && !this.state.isUseFormOpen &&
-                   <div className="panel-container">
-                        <table className="table">
-                               <thead className="table-head">
-                                <tr>
+
+                {this.props.item===2 &&
+                   <table className="table">
+                        <thead className="table-head">
+                            <tr>
                                 <th
                                 style={{width: '20%'}}
                                 sorted={column === 'name' ? direction : null}
@@ -1157,64 +637,38 @@ class Dashboard extends Component{
                                     <strong>EDITOR</strong>
                                 </th>
                                 <th id="th_actions"></th>
-                                </tr>
-                            </thead>
-                            <tbody className="table-body">{this.renderTableUsesData()}</tbody>
-                            </table>
-                        <button className="button-insert" onClick={() => this.handleAddUse()}>
-                            <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
-                            <span id="ButtonAddText">προσθήκη</span>
-                        </button>
-                        <Footer/>
-                        </div>
+                            </tr>
+                        </thead>
+                        <tbody className="table-body">{this.renderTableUsesData()}</tbody>
+                    </table>
                 }
-                {this.state.current_tab===3 && this.state.isTPFormOpen ? (
-                    <div className="form-panel">
-                    <TpForm
-                    isOpen={this.state.isTPFormOpen}
-                    handleClose={this.handleCloseDialog.bind(this)}
-                    user={this.state.user.user_id}
-                    theatrical_plays={this.state.tp_data}
-                    editing={this.state.editing}
-                    tp={this.state.theatricalPlay}
-                    />
-                    </div>
-                )
-                : <div></div>   }
-                {this.state.current_tab===3 && !this.state.isTPFormOpen &&
-                    <div className="panel-container">
-                        <table className="table">
-                            <thead className="table-head">
-                                <tr>
-                                    <th 
+                {this.props.item===3 &&
+                    <table className="table">
+                        <thead className="table-head">
+                            <tr>
+                                <th 
                                     style={{width: '20%'}}
                                     sorted={column === 'title' ? direction : null}
                                     onClick={this.handleSort('title')}><strong>ΟΝΟΜΑ ΠΑΡΑΣΤΑΣΗΣ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '20%'}}
                                     sorted={column === 'director' ? direction : null}
                                     onClick={this.handleSort('director')}><strong>ΣΚΗΝΟΘΕΤΗΣ</strong></th>
-                                    <th
+                                <th
                                     style={{width: '20%'}}
                                     sorted={column === 'theater' ? direction : null}
                                     onClick={this.handleSort('theater')}><strong>ΘΕΑΤΡΟ</strong></th>
-                                    <th style={{width: '20%'}}
+                                <th style={{width: '20%'}}
                                     sorted={column === 'date' ? direction : null}
                                     onClick={this.handleSort('date')}><strong>ΧΡΟΝΟΛΟΓΙΑ</strong></th>
-                                    <th style={{width: '10%'}}>
-                                    <strong>EDITOR</strong>
-                                    </th>
-                                    <th id="th_actions"></th>
-                                </tr>
-                            </thead>
-                            <tbody className="table-body">{this.renderTableTPsData()} </tbody>
-                            </table>
-                            <button className="button-insert" onClick={() => this.handleAddTP()}>
-                                <img id="ButtonAddIcon" src={require('../../styles/images/ADD.png')}/>
-                                <span id="ButtonAddText">προσθήκη</span>
-                            </button>
-                            <Footer/>
-                        </div>
+                                <th style={{width: '10%'}}>
+                                <strong>EDITOR</strong>
+                                </th>
+                                <th id="th_actions"></th>
+                            </tr>
+                        </thead>
+                        <tbody className="table-body">{this.renderTableTPsData()} </tbody>
+                    </table>    
                 }
 
                 <ConfirmationDialog 
@@ -1231,4 +685,16 @@ class Dashboard extends Component{
     }
 }
 
-export default Dashboard;
+const mapStateToProps = () => {
+    return {
+      isAuthenticated: isAuthenticated()
+    };
+};
+  
+const mapDispatchToProps = dispatch => {
+    return {
+      hasJWTToken: () => dispatch(hasJWTToken())
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

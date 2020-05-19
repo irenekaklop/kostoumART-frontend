@@ -3,7 +3,8 @@ import Select from 'react-select';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import "./Forms.css";
-import {SaveButton, CancelButton} from "../Shared/Buttons.js";
+
+import { IconButton, Button } from '@material-ui/core';
 
 import axios from '../../utils/api-url.js'
 
@@ -160,6 +161,7 @@ class TpForm extends Component{
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
+                this.props.handleClose(true);
             }
        })    
     }
@@ -169,7 +171,8 @@ class TpForm extends Component{
         axios.instance.post('theatricalPlays', { data: data, userId: this.user_id })
         .then(res => {
             if(res.statusText == 'OK'){
-                this.createNotification('insert')
+                this.createNotification('insert');
+                this.props.handleClose(true);
             }
           })
     }
@@ -236,81 +239,52 @@ class TpForm extends Component{
     render(){
         return(
             <React.Fragment>
-                <div id="ADD">
-                    <div id="FormTitle">Θεατρική παράσταση</div><br/>
-                    <NotificationContainer>{this.createNotification()}</NotificationContainer>
-                    <form id="Form" onSubmit={this.handleSubmit}>
-                        <div id='Name'>
-                            <div id='NameArea'>
-                                <div id="NameLabel">
-                                    <span>ONOMA ΠΑΡΑΣΤΑΣΗΣ *</span>
-                                </div>
-                                <input
-                                id="TextArea"
-                                type='text'
-                                name="name" 
-                                value={this.state.theatricalPlay.name.value} 
-                                onChange={this.handleChange('name')}
-                                required={true}
-                                />
-                            </div>    
-                        </div>
-                        <br/>
-                        <div id='Director'>
-                            <div id='DirectorArea'>
-                                <div id='DirectorLabel'>
-                                <span>ΣΚΗΝΟΘΕΤΗΣ *</span>
-                                </div>
-                            <input
-                            id="TextArea"
-                            type='text'
-                            name="director"
-                            value={this.state.theatricalPlay.director.value} 
-                            onChange={this.handleChange('director')}
-                            required={true}
-                            />
-                            </div>
-                        </div>
-                        <br/>
-                        <div id='Theater'>
-                            <div id='TheaterArea'>
-                                <div id='TheaterLabel'>
-                                    <span>ΘΕΑΤΡΟ *</span>
-                                </div>  
-                                <input
-                                id="TextArea"
-                                type='text'
-                                name="theater"
-                                value={this.state.theatricalPlay.theater.value} 
-                                onChange={this.handleChange('theater')}
-                                required={false}
-                                />
-                            </div>
-                        </div>
-                        <br/>
-                        <div id='TPDate'>
-                            <div id='TPDateArea'>
-                                <div id='TPDateLabel'>
-                                <span>XΡΟΝΟΛΟΓΙΑ *</span>
-                                </div>
-                                <Select
-                                id="SelectContainer"
-                                className="react-select"
-                                placeholder={''}
-                                isMulti
-                                name="dates"
-                                options={this.years}
-                                value={this.state.theatricalPlay.dates.value}
-                                onChange={this.handleChange('dates')}
-                                closeMenuOnSelect={true} 
-                                />
-                            </div>
-                        </div>
-                        <br/><br/><br/>   
-                        <div onClick={this.handleSubmit}><SaveButton id="ButtonSave" /></div>
-                        <div onClick={this.props.handleClose}><CancelButton id="ButtonCancel" /></div>
-                    </form>
-                </div>            
+                <NotificationContainer>{this.createNotification()}</NotificationContainer>
+                <div id="FormTitle">Θεατρική παράσταση</div>
+                <form className="FormPanel">
+                    <div className='column main' style={{paddingRight: '50px'}}>
+                    <span className="Label">ONOMA ΠΑΡΑΣΤΑΣΗΣ *</span>
+                    <input
+                    id="input-area"
+                    type='text'                        
+                    name="name" 
+                    value={this.state.theatricalPlay.name.value} 
+                    onChange={this.handleChange('name')}
+                    required={true}
+                    />
+                    <br/>
+                    <span className="Label">ΣΚΗΝΟΘΕΤΗΣ *</span>
+                    <input
+                    id="input-area"
+                    type='text'
+                    name="director"
+                    value={this.state.theatricalPlay.director.value} 
+                    onChange={this.handleChange('director')}
+                    required={true}
+                    /><br/>
+                    <span className="Label">ΘΕΑΤΡΟ *</span>
+                    <input
+                    id="input-area"
+                    type='text'
+                    name="theater"
+                    value={this.state.theatricalPlay.theater.value} 
+                    onChange={this.handleChange('theater')}
+                    required={false}
+                    /><br/>
+                    <span className="Label">XΡΟΝΟΛΟΓΙΑ *</span>
+                    <Select
+                    placeholder={''}
+                    isMulti
+                    name="dates"
+                    options={this.years}
+                    value={this.state.theatricalPlay.dates.value}
+                    onChange={this.handleChange('dates')}
+                    closeMenuOnSelect={true} 
+                    />
+                </div>
+                </form>
+                 <IconButton onClick={this.props.handleClose}><img id='image-button' src={require('../../styles/images/buttons/CANCEL.svg')}/></IconButton>
+                <IconButton onClick={this.handleSubmit}><img id='image-button' src={require('../../styles/images/buttons/SAVE.svg')}/></IconButton>
             </React.Fragment>
         )
     }

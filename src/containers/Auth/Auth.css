@@ -1,23 +1,3 @@
-:root {
-    --web-view-ids: Web_1920___1;
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    border: none;
-}
-#Web_1920___1 {
-    position: absolute;
-    width: 1920px;
-    height: 1080px;
-    background-color: rgba(255,255,255,1);
-    overflow: hidden;
-    --web-view-name: Web 1920 – 1;
-    --web-view-id: Web_1920___1;
-    --web-scale-on-resize: true;
-    --web-enable-deep-linking: true;
-}
 #Group_1 {
     position: absolute;
     width: 1920px;
@@ -40,8 +20,6 @@
     top: 264.32px;
     overflow: visible;
     width: 494px;
-    white-space: nowrap;
-    line-height: 132.72003173828125px;
     margin-top: -11.060005187988281px;
     text-align: left;
     font-family: InputMono-Thin;
@@ -50,6 +28,7 @@
     font-size: 110.60002136230469px;
     color: rgba(255,255,255,1);
 }
+
 .Path_1 {
     overflow: visible;
     position: absolute;
@@ -67,7 +46,6 @@
     top: 0px;
     overflow: visible;
     width: 141px;
-    white-space: nowrap;
     line-height: 29.341476440429688px;
     margin-top: -2.4451236724853516px;
     text-align: left;
@@ -125,40 +103,6 @@
 #BUTTON:hover{
     background-color: rgb(56, 56, 23);
     cursor: pointer;
-}
-
-#Don_t_have_an_acount___ {
-    position: absolute;
-    left: 587.21px;
-    top: 1004.608px;
-    overflow: visible;
-    width: 178px;
-    white-space: nowrap;
-    line-height: 21.600000381469727px;
-    margin-top: -1.8000001907348633px;
-    text-align: left;
-    font-family: Roboto-Regular;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    color: rgba(255,255,255,1);
-    letter-spacing: -0.17px;
-}
-#Sign_up {
-    position: absolute;
-    left: 587.21px;
-    top: 1030.987px;
-    overflow: visible;
-    width: 41px;
-    white-space: nowrap;
-    line-height: 14.40000057220459px;
-    margin-top: -1.200000286102295px;
-    text-align: left;
-    font-family: Roboto-Regular;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    color: rgba(255,222,23,1);
 }
 #LOGIN {
     position: absolute;
@@ -265,22 +209,6 @@
     font-size: 18px;
     color: rgba(255,255,255,1);
     letter-spacing: -0.17px;
-}
-#Retrieve {
-    position: absolute;
-    left: 997.412px;
-    top: 1030.987px;
-    overflow: visible;
-    width: 44px;
-    white-space: nowrap;
-    line-height: 14.40000057220459px;
-    margin-top: -1.200000286102295px;
-    text-align: left;
-    font-family: Roboto-Regular;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    color: rgba(255,222,23,1);
 }
 
 #coustumartadmin {

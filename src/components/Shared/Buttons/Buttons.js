@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import "../Shared/Buttons.css"
+import "./Buttons.css"
+
 import IconButton from '@material-ui/core/IconButton';
+import { Button } from '@material-ui/core';
 
 class EditButton extends Component {
     
@@ -79,10 +81,14 @@ class DeleteButton extends Component {
 class FilterButtons extends Component {
     render(){
         return(
-                <button class="FilterButton">
-                    <img src={require('../../styles/images/FILTER_MENU_ICON@2x.png')}></img>
-                    <span className="FILTERS">FILTERS</span>
-                </button>
+            <div>
+                <IconButton style={{overflow: 'visible', top: '0', left:'-5px', marginTop: '25px'}}>
+                    <img src={require('../../../styles/images/FILTER_MENU_ICON@2x.png')}></img>
+                    
+                </IconButton>
+                <span className="FILTERS">FILTERS</span>
+            </div>
+                
         );
     }
 }
