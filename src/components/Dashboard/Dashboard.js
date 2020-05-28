@@ -34,7 +34,6 @@ function descendingComparator(a, b, orderBy) {
         }
         return 0;
     }
-    console.log(b[orderBy], a[orderBy])
     if (b[orderBy] < a[orderBy]) {
         return -1;
     }
@@ -367,7 +366,7 @@ class Dashboard extends Component{
                 <TableRow key={useID}>
                     <TableCell>{name}</TableCell>
                     <TableCell>{use_category}</TableCell>
-                    <TableCell>
+                    <TableCell style={{width:'550.996px'}} >
                         <p className="multi-line-truncate">
                             {description}
                         </p>
@@ -391,7 +390,6 @@ class Dashboard extends Component{
         return (
             stableSort(this.props.theatricalPlays, getComparator(this.state.order, this.state.orderBy))
             .map((tp, index) => {
-                console.log(tp)
             const { theatrical_play_id, title, years, actors, director, theater, createdBy } = tp //desthucturing
             return (
                 <TableRow key={theatrical_play_id}>
