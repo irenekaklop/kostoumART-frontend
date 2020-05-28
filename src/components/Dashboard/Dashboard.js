@@ -14,11 +14,8 @@ import { isAuthenticated, hasJWTToken } from "../../store/actions/auth";
 
 import _ from 'lodash'
 
-import {EditButton, DeleteButton} from '../Shared/Buttons/Buttons';
-
-
 import '../Shared/utils.js'
-import { Table, TableRow, TableCell, TableHead,TableBody, Tab, Divider, IconButton, TableSortLabel } from '@material-ui/core';
+import { Table, TableRow, TableCell, TableHead,TableBody, Tab, Divider, IconButton, TableSortLabel, TablePagination } from '@material-ui/core';
 
 import {eras} from '../../utils/options.js';
 
@@ -77,6 +74,9 @@ class Dashboard extends Component{
             index: null,
             dependency: false,
             user_type: '',
+            //Pagination
+            page: 0,
+            rowsPerPage: 5,
             //Sorting
             orderBy: '',
             order: 'asc',
@@ -121,6 +121,20 @@ class Dashboard extends Component{
     }
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
+
+
+    handleChangeRowsPerPage = (event) => {
+        this.setState({
+            rowsPerPage: parseInt(event.target.value, 10),
+            page: 0
+        })
+    }; 
+    
+    handleChangePage = (event, newPage) => {
+        this.setState({
+            page: newPage
+        })
+    };   
 
     handleRequestSort = (event, orderBy) => {
         let order = 'asc';
@@ -299,6 +313,7 @@ class Dashboard extends Component{
     renderTableCostumesData() {
         return (
             stableSort(this.props.costumes, getComparator(this.state.order, this.state.orderBy))
+            .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
             .map((costume) => {
                 const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, images, parts, createdBy} = costume //desthucturing
                 var img = null;
@@ -360,6 +375,7 @@ class Dashboard extends Component{
     renderTableUsesData() {
         return (
             stableSort(this.props.uses, getComparator(this.state.order, this.state.orderBy))
+            .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
             .map((use, index) => {
             const { useID, name, use_category,description, customs, createdBy } = use //desthucturing
             return (
@@ -389,6 +405,7 @@ class Dashboard extends Component{
     renderTableTPsData() {
         return (
             stableSort(this.props.theatricalPlays, getComparator(this.state.order, this.state.orderBy))
+            .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
             .map((tp, index) => {
             const { theatrical_play_id, title, years, actors, director, theater, createdBy } = tp //desthucturing
             return (
@@ -415,6 +432,7 @@ class Dashboard extends Component{
     renderTableAccessoriesData() {
         return (
             stableSort(this.props.accessories, getComparator(this.state.order, this.state.orderBy))
+            .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
             .map((accessory, index) => {
             const {accessory_id, name, description, date, sex, material, technique, tp_title, images, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
             var img = null;
@@ -471,7 +489,7 @@ class Dashboard extends Component{
     }
 
     render() {
-        const { column, direction } = this.state;
+        const emptyRows = this.state.rowsPerPage - Math.min(this.state.rowsPerPage, this.props.costumes.length - this.state.page * this.state.rowsPerPage);
         return (
             <React.Fragment>
                 {this.props.item === 0 &&
@@ -502,10 +520,16 @@ class Dashboard extends Component{
                                 }
                             </TableBody>
                         </Table>
+                        <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={this.props.costumes.length}
+                        rowsPerPage={this.state.rowsPerPage}
+                        page={this.state.page}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        />
                     </div>   
-                  
-                   
-                   
                 }
 
                 {this.props.item === 1 &&
@@ -533,6 +557,15 @@ class Dashboard extends Component{
                            {this.renderTableAccessoriesData()}
                         </TableBody>
                     </Table>
+                    <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={this.props.accessories.length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
                     </div>   
                 }
 
@@ -559,6 +592,15 @@ class Dashboard extends Component{
                             {this.renderTableUsesData()}
                         </TableBody>
                     </Table>
+                    <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={this.props.uses.length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
                    </div>
                 }
                 {this.props.item===3 &&
@@ -583,6 +625,15 @@ class Dashboard extends Component{
                             {this.renderTableTPsData()}
                         </TableBody>
                     </Table>
+                    <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={this.props.theatricalPlays.length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
                     </div>
                 }
 
