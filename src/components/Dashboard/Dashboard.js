@@ -479,7 +479,7 @@ class Dashboard extends Component{
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                <TableCell></TableCell>
+                                <TableCell>{'Εικόνα'}</TableCell>
                                 {this.state.costumeHeaders.map(header => (
                                     <TableCell 
                                     key={header.key}
@@ -513,7 +513,7 @@ class Dashboard extends Component{
                     <Table>
                         <TableHead>
                            <TableRow>
-                           <TableCell></TableCell>
+                           <TableCell>{'Εικόνα'}</TableCell>
                            {this.state.accessoryHeaders.map(header => (
                                <TableCell 
                                key={header.key}
