@@ -167,7 +167,7 @@ class CostumeForm extends Component{
                     value: this.props.costume.use_name,
                     label: this.props.costume.use_name,
                     category: this.props.costume.use_category,
-                    valid: true,
+                    valid: this.props.costume.useID ? true : false,
                 },
                 selectedMaterialOption: {
                     value: arrMaterials,

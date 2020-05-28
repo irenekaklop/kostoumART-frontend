@@ -26,7 +26,7 @@ function getCleanItem () {
             value: '',
             valid: true,
         },
-        dates: {
+        years: {
             value: null,
             valid: false
         }
@@ -60,15 +60,15 @@ class TpForm extends Component{
     componentDidMount(){
         if(this.props.editing){
             let d_arr=[];
-            if(this.props.tp.date.includes(",")){
-                d_arr = this.props.tp.date.split(",");
+            if(this.props.tp.years.includes(",")){
+                d_arr = this.props.tp.years.split(",");
             }
             else{
-                d_arr = [this.props.tp.date];
+                d_arr = [this.props.tp.years];
             }
-            let arrDates=[];
+            let arrYears=[];
             for(var i=0; i < d_arr.length; i++){
-                arrDates.push({value: d_arr[i], label: d_arr[i]})
+                arrYears.push({value: d_arr[i], label: d_arr[i]})
             }
             const tpInfo = {
                 name: {
@@ -87,8 +87,8 @@ class TpForm extends Component{
                     value: this.props.tp.actors,
                     valid: true,
                 },
-                dates: {
-                    value: arrDates,
+                years: {
+                    value: arrYears,
                     valid: true
                 }
             }
@@ -125,7 +125,7 @@ class TpForm extends Component{
             updated[field].value = evt.target.value;
             updated[field].valid = evt.target.value ? true : false ;
         }
-        else if (field === 'dates'){
+        else if (field === 'years'){
             updated[field].value = evt;
             updated[field].valid = (!evt || evt.length===0 ) ? false : true ;
         }
@@ -275,10 +275,10 @@ class TpForm extends Component{
                     <Select
                     placeholder={''}
                     isMulti
-                    name="dates"
+                    name="years"
                     options={this.years}
-                    value={this.state.theatricalPlay.dates.value}
-                    onChange={this.handleChange('dates')}
+                    value={this.state.theatricalPlay.years.value}
+                    onChange={this.handleChange('years')}
                     closeMenuOnSelect={true} 
                     />
                 </div>

@@ -24,14 +24,16 @@
 }
 
 td { 
+  font-family: Roboto-Medium !important;
+  font-style: normal!important;
+  font-weight: normal!important;
   line-height: 17px;
-  --lh: 17px;
-  padding-top: 15px;
-  padding-bottom: 10px;
-  padding-right: 10px;
 } 
 
 th {
+  font-family: Roboto-Medium !important;
+  font-style: normal!important;
+  font-weight: bolder!important;
   padding-bottom:12px;
   padding-right:24px;
   padding-top:10px;
@@ -129,9 +131,6 @@ th:hover{
   overflow-y: hidden!important;
   overflow-x: hidden!important;
 }
-
-
-
 
 
 #TextWithIconCell {

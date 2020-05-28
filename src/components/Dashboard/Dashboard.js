@@ -18,6 +18,47 @@ import {EditButton, DeleteButton} from '../Shared/Buttons/Buttons';
 
 
 import '../Shared/utils.js'
+import { Table, TableRow, TableCell, TableHead,TableBody, Tab, Divider, IconButton, TableSortLabel } from '@material-ui/core';
+
+import {eras} from '../../utils/options.js';
+
+function descendingComparator(a, b, orderBy) {
+    if(orderBy==='date'){
+        var eraA = eras.find(element => { return(element.label === a[orderBy])})
+        var eraB = eras.find(element => { return(element.label === b[orderBy])})
+        if (eraB.startYear < eraA.startYear) {
+            return -1;
+        }
+        if (eraB.startYear > eraA.startYear) {
+            return 1;
+        }
+        return 0;
+    }
+    console.log(b[orderBy], a[orderBy])
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+    return 0;
+}
+
+function getComparator(order, orderBy) {
+    return order === 'desc'
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+}
+  
+function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+}
 
 class Dashboard extends Component{
 
@@ -38,8 +79,41 @@ class Dashboard extends Component{
             dependency: false,
             user_type: '',
             //Sorting
+            orderBy: '',
+            order: 'asc',
             column: null,
             direction: null,
+            costumeHeaders: [
+                { id: 'costume_name', label: 'Όνομα' },
+                { id: 'description', label: 'Περιγραφή' },
+                { id: 'use_name', label: 'Χρήση' },
+                { id: 'sex', label: 'Φύλο' },
+                { id: 'date', label: 'Χρονολογία' },
+                { id: 'technique', label: 'Τεχνική' },
+                { id: 'createdBy', label: 'Editor' },
+            ],
+            accessoryHeaders: [
+                { id: 'name', label: 'Όνομα' },
+                { id: 'description', label: 'Περιγραφή' },
+                { id: 'use_name', label: 'Χρήση' },
+                { id: 'sex', label: 'Φύλο' },
+                { id: 'date', label: 'Χρονολογία' },
+                { id: 'technique', label: 'Τεχνική' },
+                { id: 'CreatedBy', label: 'Editor' },
+            ],
+            useHeaders: [
+                { id: 'name', label: 'Όνομα' },
+                { id: 'use_category', label: 'Κατηγορία Χρήσης' },
+                { id: 'description', label: 'Περιγραφή' },
+                { id: 'createdBy', label: 'Editor' },
+            ],
+            theatricalPlayHeaders: [
+                { id: 'title', label: 'Όνομα Παράστασης' },
+                { id: 'director', label: 'Σκηνοθέτης' },
+                { id: 'theater', label: 'Θέατρο' },
+                { id: 'years', label: 'Χρονολογία' },
+                { id: 'createdBy', label: 'Editor' },
+            ],
         }
     }
 
@@ -49,66 +123,14 @@ class Dashboard extends Component{
 
     onChange = ( evt ) => { this.setState({ [evt.target.name]: evt.target.value }); };
 
-    handleSort = (clickedColumn) => () => {
-        const { column, direction } = this.state;
-        const { uses, costumes, accessories, theatricalPlays } = this.props
+    handleRequestSort = (event, orderBy) => {
+        let order = 'asc';
+        if (this.state.orderBy === orderBy && this.state.order === 'asc') {
+          order = 'desc';
+        }
+        this.setState({ order, orderBy });
+      };
     
-        if (column !== clickedColumn) {
-            switch(this.props.item){
-                case 0:
-                    this.setState({
-                        column: clickedColumn,
-                        costumes: _.sortBy(costumes, [clickedColumn]),
-                        direction: 'ascending',
-                      })
-                case 1:
-                    this.setState({
-                        column: clickedColumn,
-                        accessories: _.sortBy(accessories, [clickedColumn]),
-                        direction: 'ascending',
-                      })
-                case 2:
-                    this.setState({
-                        column: clickedColumn,
-                        uses: _.sortBy(uses, [clickedColumn]),
-                        direction: 'ascending',
-                      })
-                case 3:
-                    this.setState({
-                        column: clickedColumn,
-                        theatricalPlays: _.sortBy(theatricalPlays, [clickedColumn]),
-                        direction: 'ascending',
-                      })
-                      
-                }
-            return;
-        }
-        
-        switch(this.props.item){
-            case 0:
-                this.setState({
-                    costumes: costumes.reverse(),
-                    direction: direction === 'ascending' ? 'descending' : 'ascending',
-                })
-            case 1:
-                this.setState({
-                    accessories: accessories.reverse(),
-                    direction: direction === 'ascending' ? 'descending' : 'ascending',
-                  })
-            case 2:
-                this.setState({
-                    uses: uses.reverse(),
-                    direction: direction === 'ascending' ? 'descending' : 'ascending',
-                })
-            case 3:
-                this.setState({
-                    theatricalPlays: theatricalPlays.reverse(),
-                    direction: direction === 'ascending' ? 'descending' : 'ascending',
-                })
-
-        }
-    }
-
     createNotification(type){
         switch (type) {
             case "error":
@@ -276,150 +298,126 @@ class Dashboard extends Component{
     }
 
     renderTableCostumesData() {
-        return this.props.costumes.map((costume, index) => {
-            const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, images, parts, createdBy} = costume //desthucturing
-            var img = null;
-            for (var element in costume){
-                if (!element || element===''){
-                    element='/t';
-                }}
-            if(images){
-                let imagesObj=JSON.parse(images);
-                if (imagesObj) {
-                imagesObj.map(image => {
-                    img = image['path'];  
-                })}
-            }
-            return (
-                <tr className="TableRow" key={costume_id}>
-                    <td>
-                        {img ? 
-                        <img id="Image" src={axios.baseURL+img}/> 
-                        :
-                        ''}
-                    </td>
-                <td>{costume_name}</td>
-                <td style={{width: '250.996px'}}>
-                    <p className="multi-line-truncate">
-                        {description}
-                    </p>
-                </td>
-                <td>{date}</td>
-                <td>{use_name}</td>
-                {sex==="Άνδρας" || sex==="Αγόρι" ? 
-                <td id="TextWithIconCell">
-                    <img src={require('../../styles/images/icons/Male.png')}/><br/>
-                    {sex}
-                </td>
-                :
-                <td id="TextWithIconCell">
-                    <img src={require('../../styles/images/icons/Female.png')}/><br/>
-                    {sex}
-                </td>
+        return (
+            stableSort(this.props.costumes, getComparator(this.state.order, this.state.orderBy))
+            .map((costume) => {
+                const { costume_id, use_name, costume_name, date, description, sex, material, technique, location, designer, tp_title, actors, images, parts, createdBy} = costume //desthucturing
+                var img = null;
+                for (var element in costume){
+                    if (!element || element===''){
+                        element='/t';
+                    }}
+                if(images){
+                    let imagesObj=JSON.parse(images);
+                    if (imagesObj) {
+                    imagesObj.map(image => {
+                        img = image['path'];  
+                    })}
                 }
-                {   (material==='Βαμβάκι') ?
-                    <td id="TextWithIconCell">
-                        <img src={require('../../styles/images/icons/cotton.png')}/><br/>
-                        {material}
-                    </td>
-                    : (material==='Μετάξι') ?
-                    <td id="TextWithIconCell">
-                        <img src={require('../../styles/images/icons/kasmir.png')}/><br/>
-                        {material}
-                    </td>
-                    : (material==='Μαλλί') ?
-                    <td id="TextWithIconCell">
-                        <img src={require('../../styles/images/icons/wool.png')}/><br/>
-                        {material}
-                    </td>
-                    : (material==='Δέρμα') ?
-                     <td id="TextWithIconCell">
-                         <img src={require('../../styles/images/icons/leather.png')}/><br/>
-                         {material}
-                     </td>
-                    :
-                    <td>
-                    <span>{material}</span>
-                    </td>
-                }
-                <td>{technique}</td>
-                <td>{location}</td>
-                <td>{designer}</td>
-                <td>{createdBy}</td>
-                <td className="td_actions">
-                    <div onClick={() => this.handleCostumeEditing(costume_id)}><EditButton/></div>
-                    <br/>
-                    <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
-                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
-                        </path>
-                    </svg>
-                    <div onClick={()=> this.handleConfirmationForDelete(costume_id)}><DeleteButton/></div>
-                </td>
-                </tr>
-            )
+                return (
+                    <TableRow key={costume_id}>
+                        <TableCell style={{width:'15%'}}>
+                            {img ? 
+                            <img id="Image" src={axios.baseURL+img}/> 
+                            :
+                            ''}
+                        </TableCell>
+                        <TableCell>{costume_name}</TableCell>
+                        <TableCell style={{width:'30%'}}>
+                            <p className="multi-line-truncate">
+                            {description}
+                            </p>
+                        </TableCell>
+                        <TableCell>{use_name}</TableCell>
+                        <TableCell align="center">
+                            {sex==="Άνδρας" || sex==="Αγόρι" ? 
+                                <img src={require('../../styles/images/icons/Male.png')}/>
+                                
+                            :
+                                <img src={require('../../styles/images/icons/Female.png')}/>
+                                
+                            }
+                            <br/>
+                            {sex}
+                        </TableCell>
+                        <TableCell>{date}</TableCell>
+                        <TableCell>{technique}</TableCell>
+                        <TableCell>{createdBy}</TableCell>
+                        <TableCell align="center" style={{width:'65.961px'}}>
+                            <IconButton onClick = {() => this.handleCostumeEditing(costume_id)}>
+                                <img src={require('../../styles/images/buttons/EDIT.png')}/>
+                            </IconButton>
+                            <Divider/>
+                            <IconButton onClick={()=> this.handleConfirmationForDelete(costume_id)}>
+                                <img src={require('../../styles/images/buttons/DELETE.png')}/>
+                            </IconButton>
+                        </TableCell>
+                    </TableRow>
+                )
         })
+        )
     }
 
     renderTableUsesData() {
-        return this.props.uses.map((use, index) => {
+        return (
+            stableSort(this.props.uses, getComparator(this.state.order, this.state.orderBy))
+            .map((use, index) => {
             const { useID, name, use_category,description, customs, createdBy } = use //desthucturing
             return (
-                <tr key={useID}>
-                    <td>
-                        {name}
-                   </td>
-                    <td>
-                        {use_category}
-                    </td>
-                    <td style={{width: '250.996px'}}>
+                <TableRow key={useID}>
+                    <TableCell>{name}</TableCell>
+                    <TableCell>{use_category}</TableCell>
+                    <TableCell>
                         <p className="multi-line-truncate">
                             {description}
                         </p>
-                    </td>
-                    <td>
-                        {customs}
-                    </td>
-                    <td>{createdBy}</td>
-                    <td className="td_actions">
-                        <div onClick={() => {this.handleUseEditing(useID);}}><EditButton/></div>
-                        <br/>
-                        <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
-                            <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
-                            </path>
-                        </svg>
-                        <div onClick={()=>{this.handleConfirmationForDelete(useID);}}><DeleteButton/></div>
-                    </td>
-                </tr>
+                    </TableCell>
+                    <TableCell>{createdBy}</TableCell>
+                    <TableCell style={{width:'65.961px'}}>
+                        <IconButton onClick={() => {this.handleUseEditing(useID);}}>
+                            <img src={require('../../styles/images/buttons/EDIT.png')}/>
+                        </IconButton>
+                        <Divider/>
+                        <IconButton onClick={()=>{this.handleConfirmationForDelete(useID)}}>
+                            <img src={require('../../styles/images/buttons/DELETE.png')}/>
+                        </IconButton>
+                    </TableCell>
+                </TableRow>
             )
-        })
+        }))
     }
 
     renderTableTPsData() {
-        return this.props.theatricalPlays.map((tp, index) => {
-            const { theatrical_play_id, title, date, actors, director, theater, createdBy } = tp //desthucturing
+        return (
+            stableSort(this.props.theatricalPlays, getComparator(this.state.order, this.state.orderBy))
+            .map((tp, index) => {
+                console.log(tp)
+            const { theatrical_play_id, title, years, actors, director, theater, createdBy } = tp //desthucturing
             return (
-                <tr key={theatrical_play_id}>
-                <td>{title}</td>
-                <td>{director}</td>
-                <td>{theater}</td>
-                <td>{date}</td>
-                <td>{createdBy}</td>
-                <td className="td_actions">
-                    <div onClick={() => this.handleTPEditing(theatrical_play_id)}><EditButton/></div>
-                    <br/>
-                    <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
-                        <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
-                        </path>
-                    </svg>
-                    <div onClick={()=>{this.handleConfirmationForDelete(theatrical_play_id);}}><DeleteButton/></div>
-                </td>
-                </tr>
+                <TableRow key={theatrical_play_id}>
+                <TableCell>{title}</TableCell>
+                <TableCell>{director}</TableCell>
+                <TableCell>{theater}</TableCell>
+                <TableCell>{years}</TableCell>
+                <TableCell>{createdBy}</TableCell>
+                <TableCell style={{width:'65.961px'}}>
+                    <IconButton onClick={() => this.handleTPEditing(theatrical_play_id)}>
+                        <img src={require('../../styles/images/buttons/EDIT.png')}/>
+                    </IconButton>
+                    <Divider/>
+                    <IconButton  onClick={() => this.handleConfirmationForDelete(theatrical_play_id)}>
+                        <img src={require('../../styles/images/buttons/DELETE.png')}/>
+                    </IconButton>
+                </TableCell>
+                </TableRow>
             )
-        })
+        }))
     }
 
     renderTableAccessoriesData() {
-        return this.props.accessories.map((accessory, index) => {
+        return (
+            stableSort(this.props.accessories, getComparator(this.state.order, this.state.orderBy))
+            .map((accessory, index) => {
             const {accessory_id, name, description, date, sex, material, technique, tp_title, images, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
             var img = null;
             for (var element in accessory){
@@ -432,51 +430,46 @@ class Dashboard extends Component{
                 img = image['path'];  
             })}
             return (
-                <tr key={accessory_id}>
-                    <td>
+                <TableRow key={accessory_id}>
+                    <TableCell style={{width:'15%'}}>
                         {img ? 
                         <img id="Image" src={axios.baseURL+img}/> 
                         :
                         ''}
-                    </td>
-                    <td>{name}</td>
-                    <td style={{width: '250.996px'}}>
+                    </TableCell>
+                    <TableCell>{name}</TableCell>
+                    <TableCell style={{width:'30%'}}>
                         <p className="multi-line-truncate">
-                            {description}
+                        {description}
                         </p>
-                    </td>
-                    <td>{use_name}</td>
-                    <td>{tp_title}</td>
-                    <td>{costume_name}</td>
-                    <td>{date}</td>
-                    <td>{technique}</td>
-                    {sex==="Άνδρας" || sex==="Αγόρι" ? 
-                    <td id="TextWithIconCell">
-                        <img src={require('../../styles/images/icons/Male.png')}/><br/>
-                        {sex}
-                    </td>
-                    :
-                    <td id="TextWithIconCell">
-                        <img src={require('../../styles/images/icons/Female.png')}/><br/>
-                        {sex}
-                    </td>
-                    }
-                    <td>{designer}</td>
-                    <td>{location}</td>
-                    <td>{actors}</td>
-                    <td>{CreatedBy}</td>
-                    <td className="td_actions">
-                        <div onClick={() => this.handleAccessoryEditing(accessory_id)}><EditButton/></div>
+                    </TableCell>
+                    <TableCell>{use_name}</TableCell>
+                    <TableCell align="center">
+                        {sex==="Άνδρας" || sex==="Αγόρι" ? 
+                            <img src={require('../../styles/images/icons/Male.png')}/>
+                            
+                        :
+                            <img src={require('../../styles/images/icons/Female.png')}/>
+                            
+                        }
                         <br/>
-                        <svg class="ButtonsDivider" viewBox="0 0 65.961 1">
-                            <path fill="transparent" stroke="rgba(88,89,91,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="ButtonsDivider" d="M 0 0 L 65.96097564697266 0">
-                            </path>
-                        </svg>
-                        <div onClick={()=>{this.handleConfirmationForDelete(accessory_id);}}><DeleteButton/></div>
-                    </td>
-                </tr>
+                        {sex}
+                    </TableCell>
+                    <TableCell>{date}</TableCell>
+                    <TableCell>{technique}</TableCell>
+                    <TableCell>{CreatedBy}</TableCell>
+                    <TableCell align="center" style={{width:'65.961px'}}>
+                        <IconButton onClick = {() => this.handleAccessoryEditing(accessory_id)}>
+                            <img src={require('../../styles/images/buttons/EDIT.png')}/>
+                        </IconButton>
+                        <Divider/>
+                        <IconButton onClick={()=> this.handleConfirmationForDelete(accessory_id)}>
+                            <img src={require('../../styles/images/buttons/DELETE.png')}/>
+                        </IconButton>
+                    </TableCell>
+                </TableRow>
             )
-        })
+        }))
     }
 
     render() {
@@ -484,191 +477,115 @@ class Dashboard extends Component{
         return (
             <React.Fragment>
                 {this.props.item === 0 &&
-                    <table className="table">
-                        <thead className="table-head">
-                            <tr>
-                                <th
-                                    style={{cursor: 'inherit', backgroundColor: 'inherit', width: '20%'}}
-                                    sorted={null}>
-                                    <span><strong>EIKONA</strong></span>
-                                </th>
-                                <th
-                                    style={{width: '15%'}}
-                                    sorted={column === 'costume_name' ? direction : null}
-                                    onClick={this.handleSort('costume_name')}>
-                                   <strong>ΤΙΤΛΟΣ</strong> 
-                                </th>
-                                <th
-                                    style={{width: '30%'}}
-                                    sorted={column === 'descr' ? direction : null}
-                                    onClick={this.handleSort('descr')}><strong>ΠΕΡΙΓΡΑΦΗ</strong></th>
-                                <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'date' ? direction : null}
-                                    onClick={this.handleSort('date')}><strong>ΕΠΟΧΗ</strong></th>
-                                <th
-                                    style={{width: '10%'}}
-                                    sorted={column === 'use_name' ? direction : null}
-                                    onClick={this.handleSort('use_name')}><strong>ΧΡΗΣΗ</strong></th>
-                                <th
-                                    style={{width: '10%'}}
-                                    sorted={column === 'sex' ? direction : null}
-                                    onClick={this.handleSort('sex')}><strong>ΦΥΛΟ</strong></th>
-                                <th 
-                                    style={{width: '10%'}}
-                                    sorted={column === 'material' ? direction : null}
-                                    onClick={this.handleSort('material')}><strong>ΥΛΙΚΟ<br/>ΚΑΤΑΣΚΕΥΗΣ</strong></th>
-                                <th
-                                    style={{width: '10%'}}
-                                    sorted={column === 'technique' ? direction : null}
-                                    onClick={this.handleSort('technique')}><strong>ΤΕΧΝΙΚΗ</strong></th>
-                                <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'location' ? direction : null}
-                                    onClick={this.handleSort('location')}><strong>ΠΕΡΙΟΧΗ</strong></th>
-                                <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'designer' ? direction : null}
-                                    onClick={this.handleSort('designer')}><strong>ΣΧΕΔΙΑΣΤΗΣ</strong></th>
-                                <th style={{width: '5%'}}>
-                                    <strong>EDITOR</strong>
-                                </th>
-                                <th
-                                    id="th_actions"></th>
-                            </tr> 
-                        </thead>
-                        <tbody className="table-body">
-                            {this.renderTableCostumesData()} 
-                        </tbody>
-                    </table>
+                    <div className='table'>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                <TableCell></TableCell>
+                                {this.state.costumeHeaders.map(header => (
+                                    <TableCell 
+                                    key={header.key}
+                                    sortDirection={this.state.orderBy === header.id ? this.state.order : false}>
+                                        <TableSortLabel
+                                        active={this.state.orderBy === header.id}
+                                        direction={this.state.order}
+                                        onClick={event => this.handleRequestSort(event, header.id)}>
+                                            {header.label}
+                                        </TableSortLabel>
+                                    </TableCell>
+                                ), this
+                                )}
+                                <TableCell></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    this.renderTableCostumesData()
+                                }
+                            </TableBody>
+                        </Table>
+                    </div>   
+                  
+                   
                    
                 }
 
                 {this.props.item === 1 &&
-                   <table className="table">
-                        <thead className="table-head">
-                            <tr>
-                                <th
-                                    style={{cursor: 'inherit', backgroundColor: 'inherit', width: '20%'}}
-                                    sorted={null}>
-                                        <span><strong>EIKONA</strong></span>
-                                </th>
-                                <th 
-                                    style={{width: '10%'}}
-                                    sorted={column === 'name' ? direction : null}
-                                    onClick={this.handleSort('name')}><strong>ONOMA</strong></th>
-                                <th
-                                    style={{width: '25%'}}
-                                    sorted={column === 'description' ? direction : null}
-                                    onClick={this.handleSort('description')}><strong>ΠΕΡΙΓΡΑΦΗ</strong></th>
-                                <th 
-                                    style={{width: '10%'}}
-                                    sorted={column === 'use_name' ? direction : null}
-                                    onClick={this.handleSort('use_name')}><strong>ΧΡΗΣΗ</strong></th>
-                                <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'tp_title' ? direction : null}
-                                    onClick={this.handleSort('tp_title')}><strong>ΘΕΑΤΡΙΚΕΣ <br/> ΠΑΡΑΣΤΑΣΕΙΣ</strong></th>
-                                <th 
-                                    style={{width: '20%'}}
-                                    sorted={column === 'costume_name' ? direction : null}
-                                    onClick={this.handleSort('costume_name')}><strong>ΚΟΣΤΟΥΜΙ</strong></th>
-                                <th 
-                                    style={{width: '25%'}}
-                                    sorted={column === 'date' ? direction : null}
-                                    onClick={this.handleSort('date')}><strong>XΡΟΝΟΛΟΓΙΑ</strong></th>
-                                <th 
-                                    style={{width: '20%'}}
-                                    sorted={column === 'technique' ? direction : null}
-                                    onClick={this.handleSort('technique')}><strong>ΤΕΧΝΙΚΗ</strong></th>
-                                <th 
-                                    style={{width: '20%'}}
-                                    sorted={column === 'sex' ? direction : null}
-                                    onClick={this.handleSort('sex')}><strong>ΦΥΛΟ</strong></th>
-                                <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'designer' ? direction : null}
-                                    onClick={this.handleSort('designer')}><strong>ΣΧΕΔΙΑΣΤΗΣ</strong></th>
-                                <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'location' ? direction : null}
-                                    onClick={this.handleSort('location')}><strong>ΠΕΡΙΟΧΗ ΑΝΑΦΟΡΑΣ</strong></th>
-                                <th
-                                    style={{width: '30%'}}
-                                    sorted={column === 'actors' ? direction : null}
-                                    onClick={this.handleSort('actors')}><strong>ΗΘΟΠΟΙΟΙ</strong></th>
-                                <th style={{width: '5%'}}>
-                                <strong>EDITOR</strong>
-                                </th>
-                                <th id="th_actions"></th>
-                            </tr>
-                        </thead>
-                        <tbody className="table-body">{this.renderTableAccessoriesData()} </tbody>
-                    </table>
+                    <div className='table'>
+                    <Table>
+                        <TableHead>
+                           <TableRow>
+                           <TableCell></TableCell>
+                           {this.state.accessoryHeaders.map(header => (
+                               <TableCell 
+                               key={header.key}
+                               sortDirection={this.state.orderBy === header.id ? this.state.order : false}>
+                                   <TableSortLabel
+                                    active={this.state.orderBy === header.id}
+                                    direction={this.state.order}
+                                    onClick={event => this.handleRequestSort(event, header.id)}>
+                                        {header.label}
+                                    </TableSortLabel>
+                               </TableCell>
+                           ))}
+                           <TableCell></TableCell>
+                           </TableRow>
+                        </TableHead>
+                        <TableBody>
+                           {this.renderTableAccessoriesData()}
+                        </TableBody>
+                    </Table>
+                    </div>   
                 }
 
                 {this.props.item===2 &&
-                   <table className="table">
-                        <thead className="table-head">
-                            <tr>
-                                <th
-                                style={{width: '20%'}}
-                                sorted={column === 'name' ? direction : null}
-                                onClick={this.handleSort('name')}>
-                                <strong>ΟΝΟΜΑ</strong> 
-                                </th>
-                                <th
-                                style={{width: '20%'}}
-                                sorted={column === 'use_category' ? direction : null}
-                                onClick={this.handleSort('use_category')}>
-                                <strong>ΚΑΤΗΓΟΡΙΑ ΧΡΗΣΗΣ</strong></th>
-                                <th
-                                style={{width: '30%'}}                                                                         
-                                sorted={column === 'description' ? direction : null}
-                                onClick={this.handleSort('description')}>
-                                <strong>ΠΕΡΙΓΡΑΦΗ</strong></th>
-                                <th
-                                style={{width: '10%'}}
-                                sorted={column === 'customs' ? direction : null}
-                                onClick={this.handleSort('customs')}>
-                                <strong>ΕΘΙΜΑ</strong>
-                                </th>
-                                <th style={{width: '10%'}}>
-                                    <strong>EDITOR</strong>
-                                </th>
-                                <th id="th_actions"></th>
-                            </tr>
-                        </thead>
-                        <tbody className="table-body">{this.renderTableUsesData()}</tbody>
-                    </table>
+                    <div className='table'>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                            {this.state.useHeaders.map(header => (
+                                <TableCell key={header.key}
+                                sortDirection={this.state.orderBy === header.id ? this.state.order : false}>
+                                    <TableSortLabel
+                                    active={this.state.orderBy === header.id}
+                                    direction={this.state.order}
+                                    onClick={event => this.handleRequestSort(event, header.id)}>
+                                        {header.label}
+                                    </TableSortLabel>
+                                </TableCell>
+                            ))}
+                            <TableCell></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.renderTableUsesData()}
+                        </TableBody>
+                    </Table>
+                   </div>
                 }
                 {this.props.item===3 &&
-                    <table className="table">
-                        <thead className="table-head">
-                            <tr>
-                                <th 
-                                    style={{width: '20%'}}
-                                    sorted={column === 'title' ? direction : null}
-                                    onClick={this.handleSort('title')}><strong>ΟΝΟΜΑ ΠΑΡΑΣΤΑΣΗΣ</strong></th>
-                                <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'director' ? direction : null}
-                                    onClick={this.handleSort('director')}><strong>ΣΚΗΝΟΘΕΤΗΣ</strong></th>
-                                <th
-                                    style={{width: '20%'}}
-                                    sorted={column === 'theater' ? direction : null}
-                                    onClick={this.handleSort('theater')}><strong>ΘΕΑΤΡΟ</strong></th>
-                                <th style={{width: '20%'}}
-                                    sorted={column === 'date' ? direction : null}
-                                    onClick={this.handleSort('date')}><strong>ΧΡΟΝΟΛΟΓΙΑ</strong></th>
-                                <th style={{width: '10%'}}>
-                                <strong>EDITOR</strong>
-                                </th>
-                                <th id="th_actions"></th>
-                            </tr>
-                        </thead>
-                        <tbody className="table-body">{this.renderTableTPsData()} </tbody>
-                    </table>    
+                    <div className='table'>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                            {this.state.theatricalPlayHeaders.map(header => (
+                                <TableCell key={header.key}
+                                sortDirection={this.state.orderBy === header.id ? this.state.order : false}>
+                                    <TableSortLabel
+                                    active={this.state.orderBy === header.id}
+                                    direction={this.state.order}
+                                    onClick={event => this.handleRequestSort(event, header.id)}>
+                                         {header.label}
+                                    </TableSortLabel>
+                                </TableCell>
+                            ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.renderTableTPsData()}
+                        </TableBody>
+                    </Table>
+                    </div>
                 }
 
                 <ConfirmationDialog 

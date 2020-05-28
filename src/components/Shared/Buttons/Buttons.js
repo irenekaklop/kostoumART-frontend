@@ -32,9 +32,6 @@ class EditButton extends Component {
                         <ellipse fill="rgba(0,0,0,0)" stroke="rgba(56,56,56,1)" stroke-width="0.7817211747169495px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Ellipse_4" rx="18.892915725708008" ry="18.892915725708008" cx="18.892915725708008" cy="18.892915725708008">
                         </ellipse>
                     </svg>
-                    <div id="edit">
-                        <span>edit</span>
-                    </div>
                 </button>
                
             </div>

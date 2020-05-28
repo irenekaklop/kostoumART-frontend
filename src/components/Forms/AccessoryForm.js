@@ -151,7 +151,7 @@ class  AccessoryForm extends Component{
                     value: this.props.accessory.use_name,
                     label: this.props.accessory.use_name,
                     category: this.props.accessory.use_category,
-                    valid: true,
+                    valid: this.props.accessory.useID ? true : false,
                 },
                 selectedTechniqueOption: {
                     value: this.props.accessory.technique,
@@ -171,7 +171,7 @@ class  AccessoryForm extends Component{
                 selectedCostumeOption: {
                     value: this.props.accessory.costume_name,
                     label: this.props.accessory.costume_name,
-                    valid: true,
+                    valid: true
                 },
                 //Geosuggest
                 location: {

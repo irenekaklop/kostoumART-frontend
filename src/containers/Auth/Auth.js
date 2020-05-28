@@ -102,6 +102,7 @@ class Auth extends Component {
               <Redirect to='/kostoumart-dashboard'/>
             );
         }
+
         return(
             <div>
                 <img src={require("../../styles/images/INTRO-IMAGE-3.png")}/>
@@ -141,7 +142,6 @@ class Auth extends Component {
                         value={this.state.controls.password.value}
                         onChange={this.inputChangedHandler('password') }
                     />    
-                    
 
                 </form>
                 <IconButton id="BUTTON" onClick={this.submitHandler}><img src={require('../../styles/images/ROUND_BTN.png')}/></IconButton>
