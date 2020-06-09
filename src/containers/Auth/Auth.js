@@ -4,9 +4,12 @@ import { Redirect } from 'react-router-dom';
 
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import { IconButton } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import './Auth.css';
 
 import { logIn, isAuthenticated } from "../../store/actions/auth";
+
 
 class Auth extends Component {
 
@@ -32,6 +35,32 @@ class Auth extends Component {
             }
         },
         isSignup: true
+    }
+
+    resetState = () => {
+        this.setState({
+            controls: {
+                email: {
+                    value: '',
+                    valid: false,
+                    touched: false,
+                    validation: {
+                        required: true,
+                        isEmail: true
+                    }
+                },
+                password: {
+                    value: '',
+                    valid: false,
+                    touched: false,
+                    validation: {
+                        required: true,
+                        minLength: 3
+                    }
+                }
+            },
+            isSignup: true
+        })
     }
 
     checkValidity ( value, rules ) {
@@ -95,7 +124,6 @@ class Auth extends Component {
     render(){
         if (this.props.controlsError) {
             this.createNotification('error-login');
-            window.location.reload();
         }
         if (this.props.isAuthenticated) {
             return (
@@ -129,9 +157,10 @@ class Auth extends Component {
                     </div>
                     <input
                         id="EmailInput"
-                        type='text'
+                        type='email'
                         value={this.state.controls.email.value}
                         onChange={this.inputChangedHandler('email')}
+                        autoComplete='email'
                     />       
                     <div id="PASSWORD">
                         <span>PASSWORD</span>
@@ -141,8 +170,8 @@ class Auth extends Component {
                         type='password'
                         value={this.state.controls.password.value}
                         onChange={this.inputChangedHandler('password') }
+                        autoComplete='password'
                     />    
-
                 </form>
                 <IconButton id="BUTTON" onClick={this.submitHandler}><img src={require('../../styles/images/ROUND_BTN.png')}/></IconButton>
                 <svg class="Line_3" viewBox="0 0 1924.593 1">
@@ -164,9 +193,10 @@ class Auth extends Component {
 
 const mapStateToProps = state => {
     return {
-      controlsError: state.error,
-      controlsErrorCode: state.code,
-      isAuthenticated: isAuthenticated()
+        loading: state.loading,
+        controlsError: state.error,
+        controlsErrorCode: state.code,
+        isAuthenticated: isAuthenticated()
     };
   };
   
