@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import axios from "axios";
+import axios from '../../utils/api-url';
 import jwt_decode from 'jwt-decode';
 
 export const authStart = () => {
@@ -41,7 +41,7 @@ export const authLogout = () => {
 export const logIn = (data) => {
   return dispatch => {
     dispatch(authStart());
-    axios.post('http://localhost:8108/login', data)
+    axios.instance.post('login', data)
     .then((response) => {
       console.log(response)
       localStorage.clear();
