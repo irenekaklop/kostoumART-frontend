@@ -8,59 +8,44 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import './Auth.css';
 
-import { logIn, isAuthenticated } from "../../store/actions/auth";
+import { logIn, isAuthenticated, resetError } from "../../store/actions/auth";
 
+function getCleanControls () {
+    return {
+        email: {
+            value: '',
+            valid: false,
+            touched: false,
+            validation: {
+                required: true,
+                isEmail: true
+            }
+        },
+        password: {
+            value: '',
+            valid: false,
+            touched: false,
+            validation: {
+                required: true,
+                minLength: 3
+            }
+        }
+    }
+}
+
+function getCleanState () {
+    return {
+        controls: getCleanControls(),
+        isSignup: true
+    }
+}
 
 class Auth extends Component {
 
-    state = {
-        controls: {
-            email: {
-                value: '',
-                valid: false,
-                touched: false,
-                validation: {
-                    required: true,
-                    isEmail: true
-                }
-            },
-            password: {
-                value: '',
-                valid: false,
-                touched: false,
-                validation: {
-                    required: true,
-                    minLength: 3
-                }
-            }
-        },
-        isSignup: true
-    }
+    state = getCleanState();
 
-    resetState = () => {
-        this.setState({
-            controls: {
-                email: {
-                    value: '',
-                    valid: false,
-                    touched: false,
-                    validation: {
-                        required: true,
-                        isEmail: true
-                    }
-                },
-                password: {
-                    value: '',
-                    valid: false,
-                    touched: false,
-                    validation: {
-                        required: true,
-                        minLength: 3
-                    }
-                }
-            },
-            isSignup: true
-        })
+    resetForm() {
+        this.state = getCleanState();
     }
 
     checkValidity ( value, rules ) {
@@ -109,6 +94,8 @@ class Auth extends Component {
     createNotification(type){
         switch (type) {
             case "error-login":
+                this.resetForm();
+                this.props.resetError();
                 return(
                     <div>
                         <NotificationContainer>{ NotificationManager.error('Ο κωδικός ή το όνομα χρήστη είναι λανθασμένα') }</NotificationContainer>
@@ -130,7 +117,6 @@ class Auth extends Component {
               <Redirect to='/kostoumart-dashboard'/>
             );
         }
-
         return(
             <div>
                 <img src={require("../../styles/images/INTRO-IMAGE-3.png")}/>
@@ -151,7 +137,7 @@ class Auth extends Component {
                 <div id="LOGIN">
                     <span>LOGIN</span>
                 </div>
-                <form onSubmit={this.submitHandler}>
+                <form id='form' onSubmit={this.submitHandler}>
                     <div id="EMAIL">
                         <span>EMAIL</span>
                     </div>
@@ -160,7 +146,7 @@ class Auth extends Component {
                         type='email'
                         value={this.state.controls.email.value}
                         onChange={this.inputChangedHandler('email')}
-                        autoComplete='email'
+                        autocomplete='email'
                     />       
                     <div id="PASSWORD">
                         <span>PASSWORD</span>
@@ -170,7 +156,7 @@ class Auth extends Component {
                         type='password'
                         value={this.state.controls.password.value}
                         onChange={this.inputChangedHandler('password') }
-                        autoComplete='password'
+                        autocomplete='password'
                     />    
                 </form>
                 <IconButton id="BUTTON" onClick={this.submitHandler}><img src={require('../../styles/images/ROUND_BTN.png')}/></IconButton>
@@ -197,12 +183,14 @@ const mapStateToProps = state => {
         controlsError: state.error,
         controlsErrorCode: state.code,
         isAuthenticated: isAuthenticated()
+
     };
   };
   
 const mapDispatchToProps = dispatch => {
     return {
-      onAuth: (data) => dispatch(logIn(data))
+      onAuth: (data) => dispatch(logIn(data)),
+      resetError: () => dispatch(resetError())
     };
 };
   

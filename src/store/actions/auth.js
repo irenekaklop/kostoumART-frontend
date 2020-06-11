@@ -1,6 +1,12 @@
 import * as actionTypes from './actionTypes';
-import axios from '../../utils/api-url'
+import axios from "axios";
 import jwt_decode from 'jwt-decode';
+
+export const authStart = () => {
+  return {
+      type: actionTypes.AUTH_START
+  };
+};
 
 export const authSuccess = (token) => {
     return {
@@ -18,6 +24,12 @@ export const authFail = () => {
   };
 };
 
+export const authReset = () => {
+  return{
+    type: actionTypes.AUTH_RESET,
+  };
+};
+
 export const authLogout = () => {
   return {
     type: actionTypes.AUTH_LOGOUT,
@@ -27,22 +39,23 @@ export const authLogout = () => {
 };
 
 export const logIn = (data) => {
-    return dispatch => {
-        axios.instance.post('login', data)
-        .then((response) => {
-            localStorage.clear();
-            const decoded = jwt_decode(response.data);
-            localStorage.setItem('token', response.headers['x-auth']);
-            localStorage.setItem('user-name', decoded.username);
-            localStorage.setItem('user-type', decoded.role);
-            localStorage.setItem('login-time', new Date().getTime());
-            dispatch(authSuccess());
-            console.log("LocalStorage", localStorage, decoded)
-        })
-        .catch((error) => {
-            dispatch(authFail());
-        });
-    };
+  return dispatch => {
+    dispatch(authStart());
+    axios.post('http://localhost:8108/login', data)
+    .then((response) => {
+      console.log(response)
+      localStorage.clear();
+      const decoded = jwt_decode(response.data);
+      localStorage.setItem('token', response.headers['x-auth']);
+      localStorage.setItem('user-name', decoded.username);
+      localStorage.setItem('user-type', decoded.role);
+      localStorage.setItem('login-time', new Date().getTime());
+      dispatch(authSuccess());
+    })
+    .catch((error) => {
+      dispatch(authFail());
+    });
+  };
 };
 
 export const logOut = () => {
@@ -72,4 +85,10 @@ export const hasJWTToken = () => {
 
 export const isAuthenticated = () => {
   return localStorage.getItem('token') !== null;
+}
+
+export const resetError = () => {
+  return dispatch => {
+    dispatch(authReset());
+  }
 }
