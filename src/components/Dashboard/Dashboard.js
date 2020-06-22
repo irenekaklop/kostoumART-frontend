@@ -434,7 +434,7 @@ class Dashboard extends Component{
             stableSort(this.props.accessories, getComparator(this.state.order, this.state.orderBy))
             .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
             .map((accessory, index) => {
-            const {accessory_id, name, description, date, sex, material, technique, tp_title, images, location, designer, parts, actors, costume_name, use_name, CreatedBy} = accessory;
+            const {accessory_id, name, description, date, sex, material, technique, tp_title, images, location, designer, parts, actors, costume_name, use_name, createdBy} = accessory;
             var img = null;
             for (var element in accessory){
                 if (!element || element===''){
@@ -473,7 +473,7 @@ class Dashboard extends Component{
                     </TableCell>
                     <TableCell>{date}</TableCell>
                     <TableCell>{technique}</TableCell>
-                    <TableCell>{CreatedBy}</TableCell>
+                    <TableCell>{createdBy}</TableCell>
                     <TableCell align="center" style={{width:'65.961px'}}>
                         <IconButton onClick = {() => this.handleAccessoryEditing(accessory_id)}>
                             <img src={require('../../styles/images/buttons/EDIT.png')}/>
@@ -489,7 +489,6 @@ class Dashboard extends Component{
     }
 
     render() {
-        const emptyRows = this.state.rowsPerPage - Math.min(this.state.rowsPerPage, this.props.costumes.length - this.state.page * this.state.rowsPerPage);
         return (
             <React.Fragment>
                 {this.props.item === 0 &&

@@ -102,14 +102,14 @@ class  AccessoryForm extends Component{
     constructor(props) {
         super(props);
         this.state = getCleanState();
-        this.user_id = this.props.user;
+        this.createdBy = this.props.createdBy;
         this.maxLegnth= 2080;
         this.years= eras;
         this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
-        console.log("props accessory form", this.props);
+        console.log("props accessory form", this.props, this.createdBy);
         if(this.props.editing){
             let sex;
             let arrSexs = [];
@@ -151,7 +151,7 @@ class  AccessoryForm extends Component{
                     value: this.props.accessory.use_name,
                     label: this.props.accessory.use_name,
                     category: this.props.accessory.use_category,
-                    valid: this.props.accessory.useID ? true : false,
+                    valid: this.props.accessory.useId ? true : false,
                 },
                 selectedTechniqueOption: {
                     value: this.props.accessory.technique,
@@ -346,7 +346,7 @@ class  AccessoryForm extends Component{
 
     handleUpdate = () => {
         let data = this.state.accessory;
-        axios.instance.put('accessories/'+this.props.accessory.accessory_id,  { data: data, user: this.user_id})
+        axios.instance.put('accessories/'+this.props.accessory.accessory_id,  { data: data })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")
@@ -358,7 +358,7 @@ class  AccessoryForm extends Component{
     handleInsert = () => {
         console.log("inserting", this.state);
         let data = this.state.accessory;
-        axios.instance.post('accessory', { data: data, user: this.user_id })
+        axios.instance.post('accessory', { data: data, createdBy: this.createdBy })
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){

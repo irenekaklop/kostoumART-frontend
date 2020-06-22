@@ -30,7 +30,7 @@ class ItemForm extends Component {
                 <div>
                     <CostumeForm
                     handleClose={this.props.handleClose}
-                    user={Number(localStorage.getItem('user-type'))}
+                    createdBy={localStorage.getItem('user-name')}
                     costumes={this.props.costumes}
                     uses={this.props.uses}
                     theatrical_plays={this.props.theatricalPlays}
@@ -44,7 +44,7 @@ class ItemForm extends Component {
             {this.props.item===1 ?
                 <AccessoryForm
                 handleClose={this.props.handleClose}
-                user={Number(localStorage.getItem('user-type'))}
+                createdBy={localStorage.getItem('user-name')}
                 costumes={this.props.costumes}
                 accessories={this.props.accessories}
                 uses={this.props.uses}
@@ -57,7 +57,7 @@ class ItemForm extends Component {
             {this.props.item===2 ?
                 <UseForm
                 handleClose={this.props.handleClose}
-                user={Number(localStorage.getItem('user-type'))}
+                createdBy={localStorage.getItem('user-name')}
                 costumes={this.props.costumes}
                 accessories={this.props.accessories}
                 uses={this.props.uses}
@@ -70,7 +70,7 @@ class ItemForm extends Component {
             {this.props.item===3 ?
                 <TpForm
                 handleClose={this.props.handleClose}
-                user={Number(localStorage.getItem('user-type'))}
+                createdBy={localStorage.getItem('user-name')}
                 costumes={this.props.costumes}
                 accessories={this.props.accessories}
                 uses={this.props.uses}

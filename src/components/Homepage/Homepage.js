@@ -48,7 +48,7 @@ class Homepage extends Component {
 
     getCostumes () {
         this.setState({isLoading: true})
-        axios.instance.get('costumes', {params: {user: Number(localStorage.getItem('user-type'))}})
+        axios.instance.get('costumes', {params: {userType: Number(localStorage.getItem('user-type'))}})
             .then(res => {
                 if(res.statusText==='OK'){
                     const costumes = res.data;
@@ -83,7 +83,7 @@ class Homepage extends Component {
     }
 
     getAccessories () {
-        axios.instance.get("accessories", {params: {user: Number(localStorage.getItem('user-type'))}})
+        axios.instance.get("accessories", {params: {userType: Number(localStorage.getItem('user-type'))}})
             .then(res => {
                 if(res.statusText==='OK'){
                     const accessories = res.data;
@@ -105,7 +105,6 @@ class Homepage extends Component {
     }
 
     handleEditing = (itemToEdit) => {
-        console.log('Dashboard said to edit', itemToEdit);
         this.setState({editing: true, itemToEdit: itemToEdit, isFormOpen: true})
     }
 

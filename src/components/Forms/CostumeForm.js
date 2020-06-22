@@ -104,7 +104,7 @@ class CostumeForm extends Component{
     constructor(props) {
         super(props);
         this.state = getCleanState();
-        this.user_id = this.props.user;
+        this.createdBy = this.props.createdBy;
         this.maxLegnth= 2080;
         this.years= eras;
         this.handleChange = this.handleChange.bind(this);
@@ -204,7 +204,7 @@ class CostumeForm extends Component{
             }
             this.setState({costume: costumeInfo})
         }
-        console.log('costume form state', this.state);
+        console.log('costume form state', this.state, this.createdBy);
     }
 
     transformText(description) {
@@ -274,7 +274,7 @@ class CostumeForm extends Component{
             }
             updated[field].value = evt.target.value;
             updated[field].valid = evt.target.value ? true : false ;
-            updated['descriptionHtml'].value = '<p>' + evt.target.value + '</p>';
+            updated['descriptionHtml'].value = '<p>' +  evt.target.value + '</p>';
             updated['descriptionHtml'].valid = evt.target.value ? true : false ;
         }
         else if(field === 'selectedUseOption'){
@@ -347,7 +347,7 @@ class CostumeForm extends Component{
 
     handleUpdate = () => {
         let data = this.state.costume;
-        axios.instance.put('costumes/' + this.props.costume.costume_id, { data: data, user: this.user_id })
+        axios.instance.put('costumes/' + this.props.costume.costume_id, { data: data })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update");
@@ -360,7 +360,7 @@ class CostumeForm extends Component{
         console.log("inserting", this.state.costume);
         let data = this.state.costume;
         console.log(data)
-        axios.instance.post('costume', { data: data, user: this.user_id } )
+        axios.instance.post('costume', { data: data, createdBy: this.createdBy } )
         .then(res => {
         console.log("result", res);
             if(res.statusText ==="OK"){
@@ -527,7 +527,7 @@ class CostumeForm extends Component{
                         />
                         <span className="Label">ΤΕΧΝΙΚΗ *</span>
                         <Select
-                        name="selectedTechniquexOption"
+                        name="selectedTechniqueOption"
                         value={this.state.costume.selectedTechniqueOption}
                         onChange={this.handleChange('selectedTechniqueOption')}
                         options={techniques}
