@@ -142,6 +142,7 @@ class Homepage extends Component {
     }
 
     applyFilters (filters) {
+        console.log(filters)
         //Apply filters only front-end
         let updatedCostumeList = [...this.state.costumes]
         let updatedAccessoriesList = [...this.state.accessories]
