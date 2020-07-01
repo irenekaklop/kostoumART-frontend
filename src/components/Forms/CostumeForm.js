@@ -204,7 +204,6 @@ class CostumeForm extends Component{
             }
             this.setState({costume: costumeInfo})
         }
-        console.log('costume form state', this.state, this.createdBy);
     }
 
     transformText(description) {
@@ -254,7 +253,6 @@ class CostumeForm extends Component{
         if(field === 'name'){
             axios.instance.get('checkDuplicate', {params: {item: 'costume', name: evt.target.value}})
             .then(name => {
-                console.log("result from costume", name.data.response);
                 if(name.data.response.length !== 0){
                     this.createNotification('error-duplicate');
                     updated[field].valid = false;
@@ -318,7 +316,6 @@ class CostumeForm extends Component{
         this.setState({
             costume: updated
         })
-        console.log(this.state.costume)
     }
 
     handleSubmit = () => {
@@ -333,7 +330,6 @@ class CostumeForm extends Component{
     }
     
     formValidation () {
-        console.log("formValidation", this.state)
         let isFormValid = true;
         for (let formElement in this.state.costume) {
             isFormValid = isFormValid && this.state.costume[formElement].valid;
@@ -357,12 +353,9 @@ class CostumeForm extends Component{
     }
 
     handleInsert = () => {
-        console.log("inserting", this.state.costume);
         let data = this.state.costume;
-        console.log(data)
         axios.instance.post('costume', { data: data, createdBy: this.createdBy } )
         .then(res => {
-        console.log("result", res);
             if(res.statusText ==="OK"){
                 this.createNotification("insert");
                 this.props.handleClose(true);
@@ -450,8 +443,6 @@ class CostumeForm extends Component{
         for (var key in this.props.theatrical_plays){
             p_options.push({label: this.props.theatrical_plays[key].title, value:  this.props.theatrical_plays[key].title}); 
         }
-
-        console.log(u_options, p_options);
 
         return(
             <React.Fragment>

@@ -109,7 +109,6 @@ class  AccessoryForm extends Component{
     }
 
     componentDidMount(){
-        console.log("props accessory form", this.props, this.createdBy);
         if(this.props.editing){
             let sex;
             let arrSexs = [];
@@ -193,7 +192,6 @@ class  AccessoryForm extends Component{
             }
             this.setState({accessory: accessoryInfo})
         }
-        console.log('costume form state', this.state);
     }
 
     transformText(description) {
@@ -238,12 +236,10 @@ class  AccessoryForm extends Component{
     }
 
     handleChange = (field) => (evt) => {
-        console.log(evt)
         let updated = {...this.state.accessory};
         if(field === 'name'){
             axios.instance.get('checkDuplicate', {params: {item: 'accessory', name: evt.target.value}})
             .then( item => {
-                console.log("result from costume", item.data.response);
                 if(item.data.response.length !== 0){
                     this.createNotification('error-duplicate');
                     updated[field].valid = false;
@@ -295,7 +291,6 @@ class  AccessoryForm extends Component{
         this.setState({
             accessory: updated
         })
-        console.log(this.state.accessory)
     }
 
     handleMediaUpload = (files, removedFiles) => {
@@ -316,7 +311,6 @@ class  AccessoryForm extends Component{
     handleLocation(){
         if(this.state.location_select){
             this.state.location = this.state.location_select.description;
-            console.log("HandleLocation:", this.state);
         }
     }
 
@@ -332,7 +326,6 @@ class  AccessoryForm extends Component{
     }
     
     formValidation () {
-        console.log("formValidation", this.state)
         let isFormValid = true;
         for (let formElement in this.state.accessory) {
             isFormValid = isFormValid && this.state.accessory[formElement].valid;
@@ -356,11 +349,9 @@ class  AccessoryForm extends Component{
     }
 
     handleInsert = () => {
-        console.log("inserting", this.state);
         let data = this.state.accessory;
         axios.instance.post('accessory', { data: data, createdBy: this.createdBy })
         .then(res => {
-        console.log("result", res);
             if(res.statusText ==="OK"){
                 this.createNotification("insert")
                 this.props.handleClose(true);
@@ -442,8 +433,6 @@ class  AccessoryForm extends Component{
         for (var key in this.props.costumes){
             c_options.push({label: this.props.costumes[key].costume_name, value:  this.props.costumes[key].costume_name}); 
         }
-
-        console.log(u_options, p_options, c_options);
 
         return(
             <React.Fragment>

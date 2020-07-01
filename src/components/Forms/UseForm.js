@@ -53,14 +53,12 @@ class UseForm extends Component{
     constructor(props){
         super(props);
         this.state = getCleanState();
-        this.user_id = this.props.user;
+        this.createdBy = this.props.createdBy;
         this.maxLegnth= 2080;
         this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
-        console.log("Props", this.props);
-        console.log("Use Form:", this.state);
         if(this.props.editing){
             const useInfo = {
                 name: {
@@ -127,12 +125,10 @@ class UseForm extends Component{
     }
 
     handleChange = (field) => (evt) => {
-        console.log(evt)
         let updated = {...this.state.use};
         if(field === 'name'){
             axios.instance.get('checkDuplicate', {params: {item: 'use', name: evt.target.value}})
             .then( item => {
-                console.log("result from backend", item.data.response);
                 if(item.data.response.length !== 0){
                     this.createNotification('error-duplicate');
                     updated[field].valid = false;
@@ -167,7 +163,6 @@ class UseForm extends Component{
         this.setState({
             use: updated
         })
-        console.log(this.state.use)
     }
 
     handleClose(){
@@ -188,8 +183,7 @@ class UseForm extends Component{
 
     handleUpdate(){
         const data = this.state.use;
-        console.log("updating...", data)
-        axios.instance.put('uses/'+this.props.use.useID, { data: data, userId: this.user_id })
+        axios.instance.put('uses/'+this.props.use.useID, { data: data })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -200,7 +194,7 @@ class UseForm extends Component{
 
     handleInsert(){
         const data = this.state.use;
-        axios.instance.post('uses', { data: data, userId: this.user_id})
+        axios.instance.post('uses', { data: data, createdBy: this.createdBy})
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('insert')
@@ -210,7 +204,6 @@ class UseForm extends Component{
     }
 
     formValidation () {
-        console.log("formValidation", this.state)
         let isFormValid = true;
         for (let formElement in this.state.use) {
             isFormValid = isFormValid && this.state.use[formElement].valid;
