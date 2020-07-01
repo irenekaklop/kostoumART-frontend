@@ -47,7 +47,7 @@ class TpForm extends Component{
     constructor(props){
         super(props);
         this.state = getCleanState();
-        this.user_id = this.props.user;
+        this.createdBy = this.props.createdBy;
         this.maxLegnth= 2080;
         this.years = [];
         var startYear=1900;
@@ -94,17 +94,13 @@ class TpForm extends Component{
             }
             this.setState({theatricalPlay: tpInfo})
         }
-        console.log("TP state", this.state)
-        console.log("TP props", this.props)
     }
 
     handleChange = (field) => (evt) => {
         let updated = {...this.state.theatricalPlay};
-        console.log("tp evt", evt)
         if(field === 'name'){
             axios.instance.get('checkDuplicate', {params: {item: 'theatrical_play', name: evt.target.value}})
             .then(name => {
-                console.log("result from checkDuplicate", name.data.response);
                 if(name.data.response.length !== 0){
                     this.createNotification('error-duplicate');
                     updated[field].valid = false;
@@ -136,7 +132,6 @@ class TpForm extends Component{
         this.setState({
             theatricalPlay: updated
         })
-        console.log(this.state.theatricalPlay)
     }
    
     handleClose(){
@@ -157,7 +152,7 @@ class TpForm extends Component{
 
     handleUpdate(){
         let data = this.state.theatricalPlay;
-        axios.instance.put('theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data, userId: this.user_id })
+        axios.instance.put('theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
@@ -168,7 +163,7 @@ class TpForm extends Component{
 
     handleInsert(){
         let data = this.state.theatricalPlay;
-        axios.instance.post('theatricalPlays', { data: data, userId: this.user_id })
+        axios.instance.post('theatricalPlays', { data: data, createdBy: this.createdBy })
         .then(res => {
             if(res.statusText == 'OK'){
                 this.createNotification('insert');
@@ -178,7 +173,6 @@ class TpForm extends Component{
     }
 
     formValidation () {
-        console.log("formValidation", this.state)
         let isFormValid = true;
         for (let formElement in this.state.theatricalPlay) {
             isFormValid = isFormValid && this.state.theatricalPlay[formElement].valid;

@@ -62,7 +62,7 @@ class Homepage extends Component {
 
     getUses () {
         let self = this;
-        axios.instance.get("uses")
+        axios.instance.get("uses", {params: {userType: Number(localStorage.getItem('user-type'))}})
         .then(res => {
             if(res.statusText==='OK'){
                 const uses = res.data;
@@ -73,7 +73,7 @@ class Homepage extends Component {
     }
 
     getTheatricalPlays () {
-        axios.instance.get("theatricalPlays")
+        axios.instance.get("theatricalPlays", {params: {userType: Number(localStorage.getItem('user-type'))}})
         .then(res => {
             if(res.statusText==='OK'){
                 const theatricalPlays = res.data;
