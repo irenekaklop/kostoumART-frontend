@@ -195,13 +195,11 @@
 
 #Forgot_your_password_or_user_n {
     position: absolute;
-    left: 997.412px;
+    left: 587.21px;
     top: 1004.608px;
     overflow: visible;
     width: 291px;
     white-space: nowrap;
-    line-height: 21.600000381469727px;
-    margin-top: -1.8000001907348633px;
     text-align: left;
     font-family: Roboto-Regular;
     font-style: normal;
@@ -211,6 +209,26 @@
     letter-spacing: -0.17px;
 }
 
+#Retrieve {
+    position: absolute;
+    left: 587.21px;
+    top: 1030.987px;
+    overflow: visible;
+    white-space: nowrap;
+    line-height: 14.40000057220459px;
+    margin-top: 0.5vw;
+    text-align: left;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(255,222,23,1);
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+    box-shadow: none;
+}
+
 #coustumartadmin {
     position: absolute;
     left: 587.21px;
@@ -218,8 +236,6 @@
     overflow: visible;
     width: 138px;
     white-space: nowrap;
-    line-height: 21.600000381469727px;
-    margin-top: -1.8000001907348633px;
     text-align: left;
     font-family: Roboto-Light;
     font-style: normal;
@@ -292,3 +308,4 @@
     left: 574.42px;
     top: 391.846px;
 }
+
