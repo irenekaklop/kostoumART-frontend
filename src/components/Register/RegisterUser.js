@@ -107,38 +107,41 @@ class RegisterUser extends Component {
         <div style={{fontSize:'150%', marginTop: '3%', marginBottom: '5%'}}>Sign-Up</div>
         <form onSubmit={this.handleSubmit}> 
             <TextField
-                label="Email"
-                value={this.state.email.value}
-                onChange={this.handleChange('email')}
-                margin="normal"
-                required={true}
+              style={{width:'15%'}}
+              label="Email"
+              value={this.state.email.value}
+              onChange={this.handleChange('email')}
+              margin="normal"
+              required={true}
             />
             <br/>
             <TextField
-                label="Username"
-                value={this.state.username.value}
-                onChange={this.handleChange('username')}
-                margin="normal"
-                required={true}
+              style={{width:'15%'}}
+              label="Username"
+              value={this.state.username.value}
+              onChange={this.handleChange('username')}
+              margin="normal"
+              required={true}
             />
             <br/>
             <TextField
-                label="Password"
-                value={this.state.password.value}
-                onChange={this.handleChange('password')}
-                margin="normal"
-                required={true}
-                type='password'
+              style={{width:'15%'}}
+              label="Password"
+              value={this.state.password.value}
+              onChange={this.handleChange('password')}
+              margin="normal"
+              required={true}
+              type='password'
             />
             <br/>
             <TextField
-                label="Role"
-                select
-                helperText="0: Admin, 1: Editor"
-                value={this.state.role.value}
-                onChange={this.handleChange('role')}
-                margin="normal"
-                required={true} 
+              style={{width:'15%'}}
+              label="Role"
+              select
+              value={this.state.role.value}
+              onChange={this.handleChange('role')}
+              margin="normal"
+              required={true} 
             >
             {options.map((option) => (
             <MenuItem key={option.value} value={option.value}>
