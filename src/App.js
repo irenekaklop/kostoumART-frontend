@@ -24,7 +24,7 @@ class App extends Component{
 
     let routes = (
       <Switch>
-        <Route path="/register" component={RegisterUser}/>
+        <Route path="/register" exact component={RegisterUser}/>
         <Route path="/forgotPassword/:token" exact component={ResetPassword}/>
         <Route path='/auth' component={Auth}/>
         <Redirect from="/" to="/auth"/>
@@ -34,6 +34,7 @@ class App extends Component{
     if (this.props.isAuthenticated) {
       routes = (
         <Switch>
+          <Route path="/kostoumart-dashboard/register" exact component={RegisterUser}/>
           <Route path="/kostoumart-dashboard" exact component={Homepage}/>
           <Redirect from="/" to="/kostoumart-dashboard"/>
         </Switch>
