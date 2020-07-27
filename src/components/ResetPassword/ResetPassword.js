@@ -46,7 +46,10 @@ class ResetPassword extends Component {
         this.setState({isLoading: false});
       }
       else{
-        console.log(response)
+        console.log(response);
+        this.setState({
+          hasError: true
+        })
       }
     })
     .catch(error => {
@@ -131,7 +134,14 @@ class ResetPassword extends Component {
             here</Link>.
           </p>
         }
-        {!this.state.tokenExpired &&
+        {this.state.hasError &&
+          <p>
+            Something went wrong...<br/><br/>
+            If you still wish to retrieve your password, press <Link to='/auth'>
+            here</Link>.
+          </p>
+        }
+        {!this.state.tokenExpired && !this.state.hasError &&
             <React.Fragment>
 
             <div className="ResetTitle">Reset Password</div>
