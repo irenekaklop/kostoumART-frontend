@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import { IconButton } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
+import { IconButton, Button } from '@material-ui/core';
 import './Auth.css';
+
+import axios from '../../utils/api-url';
 
 import { logIn, isAuthenticated, resetError } from "../../store/actions/auth";
 
@@ -105,7 +106,35 @@ class Auth extends Component {
                 return(
                     <NotificationContainer>{ NotificationManager.success('Η εγγραφή διαγράφηκε','Success!',2000) }</NotificationContainer>
                 )
+            case "email-ok":
+                return(
+                    <NotificationContainer>{ NotificationManager.success('Σας έχει σταλεί μήνυμα ενεργοποίησης νέου κωδικού','Success!',2000) }</NotificationContainer>
+                )
+            case "email-fail":
+                return(
+                    <NotificationContainer>{ NotificationManager.error('Το email που έχετε εισάγει δεν είναι έγκυρο') }</NotificationContainer>
+                )
+            case "email-empty":
+                return(
+                    <NotificationContainer>{ NotificationManager.error('Συμπληρώστε το πεδίο email πριν κάνετε ανάκτηση κωδικού') }</NotificationContainer>
+                )
         };
+    }
+    
+
+    retrievePassword = () => {
+        if(this.state.controls.email.valid){
+            axios.instance.post('/sendResetMail', { email: this.state.controls.email.value })
+            .then(() => {
+                this.createNotification('email-ok')
+            },
+            (error) => {
+                this.createNotification('email-fail')
+            });
+        }
+        else{
+            this.createNotification('email-empty')
+        }
     }
 
     render(){
@@ -157,8 +186,10 @@ class Auth extends Component {
                         value={this.state.controls.password.value}
                         onChange={this.inputChangedHandler('password') }
                         autocomplete='password'
-                    />    
+                    />   
+                    
                 </form>
+                
                 <IconButton id="BUTTON" onClick={this.submitHandler}><img src={require('../../styles/images/ROUND_BTN.png')}/></IconButton>
                 <svg class="Line_3" viewBox="0 0 1924.593 1">
                     <path fill="transparent" stroke="rgba(255,222,23,1)" stroke-width="1px" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" shape-rendering="auto" id="Line_3" d="M 0 0 L 1924.592529296875 0">
@@ -172,6 +203,15 @@ class Auth extends Component {
                     <rect fill="rgba(255,222,23,1)" id="Rectangle_4" rx="0" ry="0" x="0" y="0" width="798.843" height="36.461">
                 </rect>
             </svg>
+                <div id="Forgot_your_password_or_user_n">
+		            <span>Forgot your password or user name ? </span>
+	            </div>
+                <button id="Retrieve" onClick={this.retrievePassword}>
+                
+                        Retrieve
+                    
+                
+                </button>
             </div>
         );
     }

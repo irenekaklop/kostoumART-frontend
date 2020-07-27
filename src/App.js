@@ -6,6 +6,8 @@ import {isAuthenticated, hasJWTToken} from './store/actions/auth';
 
 import Homepage from "./components/Homepage/Homepage";
 import Auth from './containers/Auth/Auth';
+import ResetPassword from './components/ResetPassword/ResetPassword';
+import RegisterUser from "./components/Register/RegisterUser";
 
 import './App.css'
 
@@ -22,6 +24,8 @@ class App extends Component{
 
     let routes = (
       <Switch>
+        <Route path="/register" component={RegisterUser}/>
+        <Route path="/forgotPassword/:token" exact component={ResetPassword}/>
         <Route path='/auth' component={Auth}/>
         <Redirect from="/" to="/auth"/>
       </Switch>
