@@ -339,7 +339,7 @@ class  AccessoryForm extends Component{
 
     handleUpdate = () => {
         let data = this.state.accessory;
-        axios.instance.put('accessories/'+this.props.accessory.accessory_id,  { data: data })
+        axios.instance.put('accessories/'+this.props.accessory.accessory_id,  { data: data, createdBy: this.createdBy })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update")

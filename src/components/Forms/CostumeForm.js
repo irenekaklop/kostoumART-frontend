@@ -343,7 +343,7 @@ class CostumeForm extends Component{
 
     handleUpdate = () => {
         let data = this.state.costume;
-        axios.instance.put('costumes/' + this.props.costume.costume_id, { data: data })
+        axios.instance.put('costumes/' + this.props.costume.costume_id, { data: data, createdBy: this.createdBy })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification("update");

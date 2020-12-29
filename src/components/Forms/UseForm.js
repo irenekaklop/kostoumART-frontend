@@ -183,7 +183,7 @@ class UseForm extends Component{
 
     handleUpdate(){
         const data = this.state.use;
-        axios.instance.put('uses/'+this.props.use.useID, { data: data })
+        axios.instance.put('uses/'+this.props.use.useID, { data: data, createdBy: this.createdBy })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')

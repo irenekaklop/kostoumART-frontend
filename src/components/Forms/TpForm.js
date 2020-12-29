@@ -152,7 +152,7 @@ class TpForm extends Component{
 
     handleUpdate(){
         let data = this.state.theatricalPlay;
-        axios.instance.put('theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data })
+        axios.instance.put('theatricalPlays/'+this.props.tp.theatrical_play_id, { data: data, createdBy: this.createdBy })
         .then(res => {
             if(res.statusText ==="OK"){
                 this.createNotification('update')
